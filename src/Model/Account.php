@@ -3,7 +3,6 @@
 
 namespace Nekofar\Nobitex\Model;
 
-
 class Account
 {
     /**
