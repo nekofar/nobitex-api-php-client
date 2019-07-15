@@ -2,6 +2,8 @@
 
 namespace Nekofar\Nobitex;
 
+use Http\Client\Common\HttpMethodsClient;
+use JsonMapper;
 use Nekofar\Nobitex\Auth\Basic;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +15,7 @@ class ConfigTest extends TestCase
         $password = 'password';
 
         $config = new Config(new Basic($username, $password));
-        $this->assertInstanceOf('Http\Client\Common\HttpMethodsClient', $config->createHttpClient());
+        $this->assertInstanceOf(HttpMethodsClient::class, $config->createHttpClient());
     }
 
     public function testCreateJsonMapper()
@@ -22,6 +24,6 @@ class ConfigTest extends TestCase
         $password = 'password';
 
         $config = new Config(new Basic($username, $password));
-        $this->assertInstanceOf('JsonMapper', $config->createJsonMapper());
+        $this->assertInstanceOf(JsonMapper::class, $config->createJsonMapper());
     }
 }

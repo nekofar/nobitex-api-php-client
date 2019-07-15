@@ -9,6 +9,7 @@ use Http\Client\HttpClient;
 use JsonMapper;
 use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Order;
+use Nekofar\Nobitex\Model\Trade;
 
 class Client
 {
@@ -59,7 +60,7 @@ class Client
 
         $response = $this->http->post(
             Config::DEFAULT_API_URL . '/market/orders/list',
-            null,
+            [],
             json_encode($params)
         );
 
@@ -71,5 +72,34 @@ class Client
         }
 
         return $orders;
+    }
+
+    /**
+     * @param array $params
+     * @return Trade[]
+     * @throws Exception
+     * @throws JsonMapper_Exception
+     */
+    public function getMarketTrades($params = [])
+    {
+        $trades = [];
+        $params = $params + ['srcCurrency' => 'btc', 'dstCurrency' => 'rls'];
+
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/market/trades/list',
+            [],
+            json_encode($params)
+        );
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody());
+            if (isset($json->trades)) {
+                $trades = $this->mapper->mapArray($json->trades, [], 'Nekofar\Nobitex\Model\Trade');
+            }
+        }
+
+        var_dump($trades);
+
+        return $trades;
     }
 }

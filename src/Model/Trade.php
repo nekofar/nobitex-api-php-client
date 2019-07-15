@@ -3,19 +3,12 @@
 
 namespace Nekofar\Nobitex\Model;
 
-class Order
+/**
+ * Class Trade
+ * @package Nekofar\Nobitex\Model
+ */
+class Trade
 {
-    /**
-     * @var string
-     */
-    // phpcs:ignore
-    public $type;
-
-    /**
-     * @var string
-     */
-    // phpcs:ignore
-    public $execution;
 
     /**
      * @var string
@@ -28,6 +21,18 @@ class Order
      */
     // phpcs:ignore
     public $dstCurrency;
+
+    /**
+     * @var \DateTime
+     */
+    // phpcs:ignore
+    public $timestamp;
+
+    /**
+     * @var string
+     */
+    // phpcs:ignore
+    public $market;
 
     /**
      * @var float
@@ -45,24 +50,17 @@ class Order
      * @var float
      */
     // phpcs:ignore
-    public $totalPrice;
+    public $total;
 
     /**
      * @var string
      */
     // phpcs:ignore
-    public $matchedAmount;
-
+    public $type;
 
     /**
      * @var float
      */
     // phpcs:ignore
-    public $unmatchedAmount;
-
-    /**
-     * @var bool
-     */
-    // phpcs:ignore
-    public $isMyOrder;
+    public $fee;
 }
