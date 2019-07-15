@@ -4,8 +4,11 @@
 namespace Nekofar\Nobitex;
 
 use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Exception;
 use Http\Client\HttpClient;
 use JsonMapper;
+use JsonMapper_Exception;
+use Nekofar\Nobitex\Model\Order;
 
 class Client
 {
@@ -41,5 +44,32 @@ class Client
     {
         $this->http = $http;
         $this->mapper = $mapper;
+    }
+
+    /**
+     * @param array $params
+     * @return Order[]
+     * @throws Exception
+     * @throws JsonMapper_Exception
+     */
+    public function getMarketOrders($params = [])
+    {
+        $orders = [];
+        $params = $params + ['order' => 'price', 'type' => null, 'srcCurrency' => null, 'dstCurrency' => null];
+
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/market/orders/list',
+            ['content-type' => 'application/json'],
+            json_encode($params)
+        );
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody());
+            if (isset($json->orders)) {
+                $orders = $this->mapper->mapArray($json->orders, [], 'Nekofar\Nobitex\Model\Order');
+            }
+        }
+
+        return $orders;
     }
 }

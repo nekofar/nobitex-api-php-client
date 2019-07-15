@@ -32,7 +32,8 @@
     "php-http/mock-client": "^1.0",
     "php-http/message": "^1.0",
     "guzzlehttp/psr7": "^1.0",
-    "php-http/curl-client": "^1.0"
+    "php-http/curl-client": "^1.0",
+    "vlucas/phpdotenv": "^3.4@dev"
   },
   "autoload": {
     "psr-4": {
