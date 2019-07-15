@@ -11,18 +11,38 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "guzzlehttp/guzzle": "^6.3.3"
+    "php": "^5.6 || ^7.0",
+    "ext-json": "*",
+    "psr/http-message": "^1.0",
+    "php-http/client-implementation": "^1.0",
+    "php-http/httplug": "^1.0",
+    "php-http/message-factory": "^1.0",
+    "php-http/discovery": "^1.0",
+    "netresearch/jsonmapper": "dev-master"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^3.4.2",
-    "phpcompatibility/php-compatibility": "9.2.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "v0.5.0",
-    "phpunit/phpunit": "8.2.4",
-    "phpmd/phpmd": "2.6.1"
+    "php": "^7.2",
+    "ext-json": "*",
+    "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+    "object-calisthenics/phpcs-calisthenics-rules": "^3.4@dev",
+    "phpcompatibility/php-compatibility": "dev-master",
+    "phpmd/phpmd": "dev-master",
+    "phpunit/phpunit": "^8.3@dev",
+    "squizlabs/php_codesniffer": "^3.0@dev",
+    "php-http/mock-client": "^1.0",
+    "php-http/message": "^1.0",
+    "guzzlehttp/psr7": "^1.0",
+    "php-http/curl-client": "^1.0",
+    "vlucas/phpdotenv": "^3.4@dev"
   },
   "autoload": {
     "psr-4": {
-      "Nekofar\\Skeleton\\": "src/"
+      "Nekofar\\Nobitex\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Nekofar\\Nobitex\\": "tests/"
     }
   }
 }
