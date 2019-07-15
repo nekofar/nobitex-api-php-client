@@ -79,4 +79,28 @@ class BasicTest extends TestCase
         $header = $request->getHeaderLine('X-TOTP');
         $this->assertEquals($totpToken, $header);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testAuthenticateWithFailure()
+    {
+
+        $username = 'username';
+        $password = 'password';
+        $remember = true;
+
+        $accessToken = md5('accessToken');
+
+        $httpClient = new Client();
+        $httpClient->addResponse(new Response(401));
+
+        $auth = new Basic($username, $password, $remember, null, $httpClient);
+        $auth->refreshToken();
+
+        $request = new Request('GET', '/');
+
+        $header = $auth->authenticate($request)->getHeaderLine('Authorization');
+        $this->assertNotEquals(sprintf('Token %s', $accessToken), $header);
+    }
 }
