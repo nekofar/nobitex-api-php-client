@@ -5,7 +5,11 @@ namespace Nekofar\Nobitex;
 use Dotenv\Dotenv;
 use Http\Client\Exception;
 use JsonMapper_Exception;
+use Nekofar\Nobitex\Auth\Bearer;
+use Nekofar\Nobitex\Model\Account;
+use Nekofar\Nobitex\Model\Card;
 use Nekofar\Nobitex\Model\Order;
+use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
 use PHPUnit\Framework\TestCase;
 
@@ -51,5 +55,23 @@ class ClientTest extends TestCase
 
         $this->assertIsArray($trades);
         $this->assertContainsOnlyInstancesOf(Trade::class, $trades);
+    }
+
+    /**
+     * @throws Exception
+     * @throws JsonMapper_Exception
+     */
+    public function testGetUserProfile()
+    {
+        $accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
+
+        $client = Client::create(new Config(new Bearer($accessToken)));
+
+        $profile = $client->getUserProfile();
+
+        $this->assertIsObject($profile);
+        $this->assertInstanceOf(Profile::class, $profile);
+        $this->assertContainsOnlyInstancesOf(Card::class, $profile->cards);
+        $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
 }

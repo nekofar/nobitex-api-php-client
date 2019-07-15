@@ -3,6 +3,9 @@
 
 namespace Nekofar\Nobitex\Model;
 
+use JsonMapper;
+use JsonMapper_Exception;
+
 class Profile // phpcs:ignore
 {
     /**
@@ -42,7 +45,7 @@ class Profile // phpcs:ignore
      */
     public $mobile; // phpcs:ignore
     /**
-     * @var string
+     * @var string|null
      */
     public $province; // phpcs:ignore
     /**
@@ -57,4 +60,44 @@ class Profile // phpcs:ignore
      * @var Card[]
      */
     public $cards; // phpcs:ignore
+    /**
+     * @var Account[]
+     */
+    public $accounts; // phpcs:ignore
+    /**
+     * @var array
+     */
+    public $verifications; // phpcs:ignore
+    /**
+     * @var array
+     */
+    public $pendingVerifications; // phpcs:ignore
+    /**
+     * @var array
+     */
+    public $options; // phpcs:ignore
+    /**
+     * @var bool
+     */
+    public $withdrawEligible; // phpcs:ignore
+
+
+    /**
+     * @param $object
+     * @param $propName
+     * @param $jsonValue
+     * @throws JsonMapper_Exception
+     */
+    public static function setUndefinedProperty($object, $propName, $jsonValue) // phpcs:ignore
+    {
+        $mapper = new JsonMapper();
+
+        if ($propName === 'bankCards') {
+            $object->{'cards'} = $mapper->mapArray($jsonValue, [], Card::class);
+        }
+
+        if ($propName === 'bankAccounts') {
+            $object->{'accounts'} = $mapper->mapArray($jsonValue, [], Account::class);
+        }
+    }
 }

@@ -9,6 +9,7 @@ use Http\Client\HttpClient;
 use JsonMapper;
 use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Order;
+use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
 
 class Client
@@ -98,8 +99,30 @@ class Client
             }
         }
 
-        var_dump($trades);
-
         return $trades;
+    }
+
+    /**
+     * @return Profile
+     * @throws Exception
+     * @throws JsonMapper_Exception
+     */
+    public function getUserProfile()
+    {
+        $profile = new Profile();
+
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/users/profile'
+        );
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody());
+            if (isset($json->profile)) {
+                $this->mapper->undefinedPropertyHandler = [Profile::class, 'setUndefinedProperty'];
+                $profile = $this->mapper->map($json->profile, $profile);
+            }
+        }
+
+        return $profile;
     }
 }
