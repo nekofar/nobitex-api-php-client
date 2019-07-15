@@ -10,4 +10,4 @@ composer require nekofar/nobitex
 
 ## Usage
 
-Coming soon
+We'll certainly need some stuff in here.
