@@ -3,6 +3,7 @@
 
 namespace Nekofar\Nobitex;
 
+use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 use JsonMapper;
 
@@ -24,7 +25,7 @@ class Client
      * @param Config $config
      * @return Client
      */
-    public function create(Config $config)
+    public static function create(Config $config)
     {
         return new static($config->createHttpClient(), $config->createJsonMapper());
     }
@@ -33,10 +34,10 @@ class Client
     /**
      * Client constructor.
      *
-     * @param HttpClient $http
+     * @param HttpMethodsClient $http
      * @param JsonMapper $mapper
      */
-    public function __construct(HttpClient $http, JsonMapper $mapper)
+    public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
         $this->http = $http;
         $this->mapper = $mapper;

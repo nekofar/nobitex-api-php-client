@@ -13,7 +13,7 @@ class ConfigTest extends TestCase
         $password = 'password';
 
         $config = new Config(new Basic($username, $password));
-        $this->assertInstanceOf('Http\Client\HttpClient', $config->createHttpClient());
+        $this->assertInstanceOf('Http\Client\Common\HttpMethodsClient', $config->createHttpClient());
     }
 
     public function testCreateJsonMapper()
