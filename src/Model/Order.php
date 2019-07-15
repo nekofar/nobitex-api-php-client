@@ -8,61 +8,42 @@ class Order
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $type;
-
+    public $type; // phpcs:ignore
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $execution;
-
+    public $execution; // phpcs:ignore
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $srcCurrency;
-
+    public $srcCurrency; // phpcs:ignore
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $dstCurrency;
+    public $dstCurrency; // phpcs:ignore
+    /**
+     * @var float
+     */
+    public $price; // phpcs:ignore
+    /**
+     * @var float
+     */
+    public $amount; // phpcs:ignore
+    /**
+     * @var float
+     */
+    public $totalPrice; // phpcs:ignore
+    /**
+     * @var string
+     */
+    public $matchedAmount; // phpcs:ignore
 
     /**
      * @var float
      */
-    // phpcs:ignore
-    public $price;
-
-    /**
-     * @var float
-     */
-    // phpcs:ignore
-    public $amount;
-
-    /**
-     * @var float
-     */
-    // phpcs:ignore
-    public $totalPrice;
-
-    /**
-     * @var string
-     */
-    // phpcs:ignore
-    public $matchedAmount;
-
-
-    /**
-     * @var float
-     */
-    // phpcs:ignore
-    public $unmatchedAmount;
-
+    public $unmatchedAmount; // phpcs:ignore
     /**
      * @var bool
      */
-    // phpcs:ignore
-    public $isMyOrder;
+    public $isMyOrder; // phpcs:ignore
 }

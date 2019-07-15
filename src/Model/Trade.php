@@ -9,58 +9,40 @@ namespace Nekofar\Nobitex\Model;
  */
 class Trade
 {
-
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $srcCurrency;
-
+    public $srcCurrency; // phpcs:ignore
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $dstCurrency;
-
+    public $dstCurrency; // phpcs:ignore
     /**
      * @var \DateTime
      */
-    // phpcs:ignore
-    public $timestamp;
-
+    public $timestamp; // phpcs:ignore
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $market;
-
+    public $market; // phpcs:ignore
     /**
      * @var float
      */
-    // phpcs:ignore
-    public $price;
-
+    public $price; // phpcs:ignore
     /**
      * @var float
      */
-    // phpcs:ignore
-    public $amount;
-
+    public $amount; // phpcs:ignore
     /**
      * @var float
      */
-    // phpcs:ignore
-    public $total;
-
+    public $total; // phpcs:ignore
     /**
      * @var string
      */
-    // phpcs:ignore
-    public $type;
-
+    public $type; // phpcs:ignore
     /**
      * @var float
      */
-    // phpcs:ignore
-    public $fee;
+    public $fee; // phpcs:ignore
 }
