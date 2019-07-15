@@ -5,12 +5,14 @@ namespace Nekofar\Nobitex;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\Authentication;
 use JsonMapper;
 use Nekofar\Nobitex\Auth\Basic;
+use spec\Http\Client\Common\Plugin\HeaderDefaultsPluginSpec;
 
 /**
  * Class Config
@@ -70,7 +72,12 @@ class Config
     public function createHttpClient()
     {
         return new HttpMethodsClient(
-            new PluginClient(HttpClientDiscovery::find(), [$this->auth]),
+            new PluginClient(HttpClientDiscovery::find(), [
+                $this->auth,
+                new HeaderDefaultsPlugin([
+                    'Content-Type' => 'application/json'
+                ])
+            ]),
             MessageFactoryDiscovery::find()
         );
     }

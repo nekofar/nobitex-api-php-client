@@ -59,7 +59,7 @@ class Client
 
         $response = $this->http->post(
             Config::DEFAULT_API_URL . '/market/orders/list',
-            ['content-type' => 'application/json'],
+            null,
             json_encode($params)
         );
 
