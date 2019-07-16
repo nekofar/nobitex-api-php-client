@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
@@ -43,7 +46,7 @@ class Order
      */
     public $unmatchedAmount; // phpcs:ignore
     /**
-     * @var bool
+     * @var boolean
      */
     public $isMyOrder; // phpcs:ignore
 }

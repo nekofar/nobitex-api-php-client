@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex;
 
@@ -29,7 +32,7 @@ class Client
      * Client constructor.
      *
      * @param HttpMethodsClient $http
-     * @param JsonMapper $mapper
+     * @param JsonMapper        $mapper
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {

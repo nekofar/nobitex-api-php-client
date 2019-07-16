@@ -1,12 +1,11 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
-/**
- * Class Trade
- * @package Nekofar\Nobitex\Model
- */
 class Trade
 {
     /**

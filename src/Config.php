@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex;
 
@@ -13,11 +16,6 @@ use Http\Message\Authentication;
 use JsonMapper;
 use Nekofar\Nobitex\Auth\Basic;
 
-/**
- * Class Config
- *
- * @package Nekofar\Nobitex
- */
 class Config
 {
     const DEFAULT_API_URL = 'https://api.nobitex.ir';
@@ -44,10 +42,10 @@ class Config
     }
 
     /**
-     * @param string $username
-     * @param string $password
-     * @param bool $remember
-     * @param int|null $totpToken
+     * @param string       $username
+     * @param string       $password
+     * @param boolean      $remember
+     * @param integer|null $totpToken
      * @return Config
      */
     public static function doAuth($username, $password, $remember = true, $totpToken = null)

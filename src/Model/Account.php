@@ -1,12 +1,15 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
 class Account
 {
     /**
-     * @var int
+     * @var integer
      */
     public $id; // phpcs:ignore
     /**
@@ -26,7 +29,7 @@ class Account
      */
     public $owner; // phpcs:ignore
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed; // phpcs:ignore
     /**

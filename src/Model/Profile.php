@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
@@ -17,7 +20,7 @@ class Profile // phpcs:ignore
      */
     public $email; // phpcs:ignore
     /**
-     * @var int
+     * @var integer
      */
     public $level; // phpcs:ignore
     /**
@@ -77,7 +80,7 @@ class Profile // phpcs:ignore
      */
     public $options; // phpcs:ignore
     /**
-     * @var bool
+     * @var boolean
      */
     public $withdrawEligible; // phpcs:ignore
 

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
@@ -18,7 +21,7 @@ class Card
      */
     public $owner; // phpcs:ignore
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed; // phpcs:ignore
     /**
