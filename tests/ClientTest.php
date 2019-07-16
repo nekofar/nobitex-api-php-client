@@ -15,14 +15,6 @@ use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $dotenv = Dotenv::create(__DIR__ . '/..');
-        $dotenv->load();
-    }
-
     /**
      * @throws Exception
      * @throws JsonMapper_Exception
@@ -73,5 +65,13 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Profile::class, $profile);
         $this->assertContainsOnlyInstancesOf(Card::class, $profile->cards);
         $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $dotenv = Dotenv::create(__DIR__ . '/..');
+        $dotenv->load();
     }
 }

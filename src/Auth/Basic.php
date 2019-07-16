@@ -111,22 +111,21 @@ class Basic implements Authentication
     }
 
     /**
-     * Authenticates a request.
-     *
-     * @param RequestInterface $request
-     *
-     * @return RequestInterface
+     * @return string|null
+     * @throws Exception
      */
-    public function authenticate(RequestInterface $request)
+    private function retrieveAuthToken()
     {
-        if ($this->accessToken !== null) {
-            return $request->withHeader(
-                'Authorization',
-                sprintf('Token %s', $this->accessToken)
+        $response = $this->httpClient
+            ->sendRequest(
+                $this->createAuthRequest()
             );
+
+        if ($response->getStatusCode() === 200) {
+            return json_decode($response->getBody())->key;
         }
 
-        return $request;
+        return null;
     }
 
     /**
@@ -153,20 +152,21 @@ class Basic implements Authentication
     }
 
     /**
-     * @return string|null
-     * @throws Exception
+     * Authenticates a request.
+     *
+     * @param RequestInterface $request
+     *
+     * @return RequestInterface
      */
-    private function retrieveAuthToken()
+    public function authenticate(RequestInterface $request)
     {
-        $response = $this->httpClient
-            ->sendRequest(
-                $this->createAuthRequest()
+        if ($this->accessToken !== null) {
+            return $request->withHeader(
+                'Authorization',
+                sprintf('Token %s', $this->accessToken)
             );
-
-        if ($response->getStatusCode() === 200) {
-            return json_decode($response->getBody())->key;
         }
 
-        return null;
+        return $request;
     }
 }

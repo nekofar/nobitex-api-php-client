@@ -12,7 +12,6 @@ use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\Authentication;
 use JsonMapper;
 use Nekofar\Nobitex\Auth\Basic;
-use spec\Http\Client\Common\Plugin\HeaderDefaultsPluginSpec;
 
 /**
  * Class Config

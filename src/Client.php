@@ -25,17 +25,6 @@ class Client
      */
     private $mapper;
 
-
-    /**
-     * @param Config $config
-     * @return Client
-     */
-    public static function create(Config $config)
-    {
-        return new static($config->createHttpClient(), $config->createJsonMapper());
-    }
-
-
     /**
      * Client constructor.
      *
@@ -46,6 +35,15 @@ class Client
     {
         $this->http = $http;
         $this->mapper = $mapper;
+    }
+
+    /**
+     * @param Config $config
+     * @return Client
+     */
+    public static function create(Config $config)
+    {
+        return new static($config->createHttpClient(), $config->createJsonMapper());
     }
 
     /**
