@@ -149,4 +149,26 @@ class Client
 
         return $profile;
     }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getUserLoginAttempts()
+    {
+        $attempts = [];
+
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/users/login-attempts'
+        );
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody(), true);
+            if (isset($json['attempts'])) {
+                $attempts = $json['attempts'];
+            }
+        }
+
+        return $attempts;
+    }
 }

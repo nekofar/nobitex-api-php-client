@@ -83,6 +83,21 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testGetUserLoginAttempts()
+    {
+        $accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
+
+        $client = Client::create(new Config(new Bearer($accessToken)));
+
+        $attempts = $client->getUserLoginAttempts();
+
+        $this->assertIsArray($attempts);
+        $this->assertNotEmpty($attempts);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
