@@ -102,6 +102,22 @@ class ClientTest extends TestCase
         $this->assertNotEmpty($attempts);
     }
 
+    /**
+     *
+     * @throws Exception
+     */
+    public function testGetUserReferralCode()
+    {
+        $accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
+
+        $client = Client::create(new Config(new Bearer($accessToken)));
+
+        $referralCode = $client->getUserReferralCode();
+
+        $this->assertIsString($referralCode);
+        $this->assertNotEmpty($referralCode);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

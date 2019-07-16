@@ -174,4 +174,26 @@ class Client
 
         return $attempts;
     }
+
+    /**
+     * @return string|null
+     * @throws Exception
+     */
+    public function getUserReferralCode()
+    {
+        $referralCode = null;
+
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/users/get-referral-code'
+        );
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody(), true);
+            if (isset($json['referralCode'])) {
+                $referralCode = $json['referralCode'];
+            }
+        }
+
+        return $referralCode;
+    }
 }
