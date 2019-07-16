@@ -101,6 +101,32 @@ class Client
     }
 
     /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getMarketStats($params = [])
+    {
+        $stats = [];
+        $params = $params + ['srcCurrency' => 'btc', 'dstCurrency' => 'rls'];
+
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/market/stats',
+            [],
+            json_encode($params)
+        );
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody(), true);
+            if (isset($json['stats'])) {
+                $stats = $json['stats']["{$params['srcCurrency']}-{$params['dstCurrency']}"];
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
      * @return Profile
      * @throws Exception
      * @throws JsonMapper_Exception

@@ -3,8 +3,6 @@
 
 namespace Nekofar\Nobitex\Model;
 
-use DateTime;
-
 /**
  * Class Trade
  * @package Nekofar\Nobitex\Model
@@ -20,7 +18,7 @@ class Trade
      */
     public $dstCurrency; // phpcs:ignore
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     public $timestamp; // phpcs:ignore
     /**

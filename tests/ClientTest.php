@@ -51,6 +51,22 @@ class ClientTest extends TestCase
 
     /**
      * @throws Exception
+     */
+    public function testGetMarketStats()
+    {
+        $username = getenv('NOBITEX_USERNAME') ?: 'username';
+        $password = getenv('NOBITEX_PASSWORD') ?: 'password';
+
+        $client = Client::create(Config::doAuth($username, $password));
+
+        $stats = $client->getMarketStats();
+
+        $this->assertIsArray($stats);
+        $this->assertNotEmpty($stats);
+    }
+
+    /**
+     * @throws Exception
      * @throws JsonMapper_Exception
      */
     public function testGetUserProfile()
