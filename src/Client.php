@@ -86,7 +86,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -130,7 +130,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -173,7 +173,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -205,7 +205,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -239,7 +239,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -269,7 +269,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -310,7 +310,7 @@ class Client
 
         $json = json_decode($response->getBody());
 
-        if (isset($json->message) && $json->failed === 'failed') {
+        if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
@@ -322,4 +322,50 @@ class Client
         return false;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return bool
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function addUserAccount(array $params)
+    {
+        if (!isset($params['bank']) ||
+            empty($params['bank'])) {
+            throw new Exception("Bank name is missing.");
+        }
+
+        if (!isset($params['number']) ||
+            !preg_match('/^[0-9]+$/', $params['number'])) {
+            throw new Exception("Account number is missing.");
+        }
+
+        if (!isset($params['shaba']) ||
+            !preg_match('/^IR[0-9]{24}$/', $params['shaba'])) {
+            throw new Exception("Account shaba is missing.");
+        }
+
+        $apiUrl = $this->apiUrl . '/users/account-add';
+
+        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        $json = json_decode($response->getBody());
+        if (isset($json->status) && $json->status === 'ok') {
+            return true;
+        }
+
+        return false;
+    }
 }

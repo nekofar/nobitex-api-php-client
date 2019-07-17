@@ -195,6 +195,136 @@ class ClientTest extends TestCase
     }
 
 
+    /**
+     *
+     * @throws \Http\Client\Exception
+     */
+    public function testAddUserAccount()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->willReturn(new Response('200', [], json_encode(['status' => 'ok'])));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $status = $client->addUserAccount([
+            "number" => "5041721011111111",
+            "bank" => "Resalat",
+            "shaba" => "IR111111111111111111111111",
+        ]);
+
+        $this->assertTrue($status);
+    }
+
+    /**
+     *
+     * @throws \Http\Client\Exception
+     */
+    public function testAddUserAccountFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(200),
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertFalse($client->addUserAccount([
+            "number" => "5041721011111111",
+            "bank" => "Resalat",
+            "shaba" => "IR111111111111111111111111",
+        ]));
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->addUserAccount([
+                    "number" => "5041721011111111",
+                    "bank" => "Resalat",
+                    "shaba" => "IR111111111111111111111111",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->addUserAccount([
+                    "number" => "5041721011111111",
+                    "bank" => "Resalat",
+                    "shaba" => "IR111111111111111111111111",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->addUserAccount([
+                    "number" => "",
+                    "bank" => "5041721011111111",
+                    "shaba" => "IR111111111111111111111111",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Account number is missing.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->addUserAccount([
+                    "number" => "50417210111111111",
+                    "bank" => "",
+                    "shaba" => "IR111111111111111111111111",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Bank name is missing.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->addUserAccount([
+                    "number" => "50417210111111111",
+                    "bank" => "Resalat",
+                    "shaba" => "IR1111111111111111111111110",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Account shaba is missing.', $exception->getMessage());
+            }
+        );
+    }
+
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
