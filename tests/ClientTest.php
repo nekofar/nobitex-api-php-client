@@ -56,6 +56,48 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Order::class, $orders);
     }
 
+    public function testGetMarketOrdersFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getMarketOrders();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getMarketOrders();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+    }
+
+
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
@@ -71,6 +113,81 @@ class ClientTest extends TestCase
 
         $this->assertIsArray($trades);
         $this->assertContainsOnlyInstancesOf(Trade::class, $trades);
+    }
+
+    public function testGetMarketTradesFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getMarketTrades([
+                    "srcCurrency" => "btc",
+                    "dstCurrency" => "rls"
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getMarketTrades([
+                    "srcCurrency" => "btc",
+                    "dstCurrency" => "rls"
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getMarketTrades([
+                    "srcCurrency" => "",
+                    "dstCurrency" => "rls"
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Source currency is missing.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getMarketTrades([
+                    "srcCurrency" => "btc",
+                    "dstCurrency" => ""
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Destination currency is missing.', $exception->getMessage());
+            }
+        );
     }
 
     /**
@@ -89,6 +206,82 @@ class ClientTest extends TestCase
         $this->assertNotEmpty($stats);
     }
 
+    public function testGetMarketStatsFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getMarketStats([
+                    "srcCurrency" => "btc",
+                    "dstCurrency" => "rls"
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getMarketStats([
+                    "srcCurrency" => "btc",
+                    "dstCurrency" => "rls"
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getMarketStats([
+                    "srcCurrency" => "",
+                    "dstCurrency" => "rls"
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Source currency is missing.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getMarketStats([
+                    "srcCurrency" => "btc",
+                    "dstCurrency" => ""
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Destination currency is missing.', $exception->getMessage());
+            }
+        );
+    }
+
+
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
@@ -105,6 +298,48 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
 
+    public function testGetUserProfileFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getUserProfile();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getUserProfile();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+    }
+
+
     /**
      * @throws \Http\Client\Exception
      */
@@ -120,6 +355,51 @@ class ClientTest extends TestCase
 
     /**
      *
+     */
+    public function testGetUserLoginAttemptsFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getUserLoginAttempts();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getUserLoginAttempts();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+    }
+
+
+    /**
+     *
      * @throws \Http\Client\Exception
      */
     public function testGetUserReferralCode()
@@ -130,6 +410,50 @@ class ClientTest extends TestCase
 
         $this->assertIsString($referralCode);
         $this->assertNotEmpty($referralCode);
+    }
+
+    /**
+     *
+     */
+    public function testGetUserReferralCodeFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getUserReferralCode();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->getUserReferralCode();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
     }
 
     /**
@@ -166,32 +490,79 @@ class ClientTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $httpClient->method('post')
+            ->will($this->onConsecutiveCalls(
+                new Response(200),
+                new Response(401),
+                new Response('200', [], json_encode([
+                    'status' => 'failed',
+                    'message' => 'Validation Failed'
+                ]))
+            ));
+
         /** @var HttpMethodsClient $httpClient */
         $client = new Client($httpClient, new JsonMapper());
 
-
-        $httpClient->method('post')
-            ->willReturn(new Response('200', [], json_encode(['status' => 'failure'])));
-
-        $status = $client->addUserCard([
+        $this->assertFalse($client->addUserCard([
             "number" => "5041721011111111",
-            "bank" => "Resalat"
-        ]);
-        $this->assertFalse($status);
+            "bank" => "Resalat",
+        ]));
 
-        $this->assertThrows(Exception::class, function () use ($client) {
-            $client->addUserCard([
-                "number" => "50417210111111111",
-                "bank" => "Resalat"
-            ]);
-        });
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->addUserCard([
+                    "number" => "5041721011111111",
+                    "bank" => "Resalat",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
 
-        $this->assertThrows(Exception::class, function () use ($client) {
-            $client->addUserCard([
-                "number" => "50417210111111111",
-                "bank" => ""
-            ]);
-        });
+        $this->assertThrows(
+            Exception::class,
+            function () use ($httpClient, $client) {
+                $client->addUserCard([
+                    "number" => "5041721011111111",
+                    "bank" => "Resalat",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->addUserCard([
+                    "number" => "",
+                    "bank" => "5041721011111111",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Card number is missing.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->addUserCard([
+                    "number" => "50417210111111111",
+                    "bank" => "",
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Bank name is missing.', $exception->getMessage());
+            }
+        );
     }
 
 

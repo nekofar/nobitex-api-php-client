@@ -73,7 +73,7 @@ class Client
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function getMarketOrders(array $params)
+    public function getMarketOrders($params = [])
     {
         $orders = [];
         $apiUrl = $this->apiUrl . '/market/orders/list';
