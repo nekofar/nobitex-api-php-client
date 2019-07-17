@@ -20,13 +20,25 @@ use PHPUnit\Framework\TestCase;
 class ClientTest extends TestCase
 {
     /**
+     * @var string
+     */
+    private static $username;
+    /**
+     * @var string
+     */
+    private static $password;
+    /**
+     * @var string
+     */
+    private static $accessToken;
+
+    /**
      * @throws Exception
      * @throws JsonMapper_Exception
      */
     public function testGetMarketOrders()
     {
-        $username = getenv('NOBITEX_USERNAME') ?: 'username';
-        $password = getenv('NOBITEX_PASSWORD') ?: 'password';
+        $client = Client::create(Config::doAuth(self::$username, self::$password));
 
         $orders = $client->getMarketOrders([
             "order" => "-price",
@@ -44,8 +56,7 @@ class ClientTest extends TestCase
      */
     public function testGetMarketTrades()
     {
-        $username = getenv('NOBITEX_USERNAME') ?: 'username';
-        $password = getenv('NOBITEX_PASSWORD') ?: 'password';
+        $client = Client::create(Config::doAuth(self::$username, self::$password));
 
         $trades = $client->getMarketTrades([
             "srcCurrency" => "btc",
@@ -61,8 +72,7 @@ class ClientTest extends TestCase
      */
     public function testGetMarketStats()
     {
-        $username = getenv('NOBITEX_USERNAME') ?: 'username';
-        $password = getenv('NOBITEX_PASSWORD') ?: 'password';
+        $client = Client::create(Config::doAuth(self::$username, self::$password));
 
         $stats = $client->getMarketStats([
             "srcCurrency" => "btc",
@@ -79,9 +89,7 @@ class ClientTest extends TestCase
      */
     public function testGetUserProfile()
     {
-        $accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
-
-        $client = Client::create(new Config(new Bearer($accessToken)));
+        $client = Client::create(new Config(new Bearer(self::$accessToken)));
 
         $profile = $client->getUserProfile();
 
@@ -96,9 +104,7 @@ class ClientTest extends TestCase
      */
     public function testGetUserLoginAttempts()
     {
-        $accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
-
-        $client = Client::create(new Config(new Bearer($accessToken)));
+        $client = Client::create(new Config(new Bearer(self::$accessToken)));
 
         $attempts = $client->getUserLoginAttempts();
 
@@ -112,9 +118,7 @@ class ClientTest extends TestCase
      */
     public function testGetUserReferralCode()
     {
-        $accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
-
-        $client = Client::create(new Config(new Bearer($accessToken)));
+        $client = Client::create(new Config(new Bearer(self::$accessToken)));
 
         $referralCode = $client->getUserReferralCode();
 
@@ -128,5 +132,11 @@ class ClientTest extends TestCase
 
         $dotenv = Dotenv::create(__DIR__ . '/..');
         $dotenv->load();
+
+        self::$username = getenv('NOBITEX_USERNAME') ?: 'username';
+        self::$password = getenv('NOBITEX_PASSWORD') ?: 'password';
+
+        self::$accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
     }
+
 }
