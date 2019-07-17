@@ -1,25 +1,22 @@
-sudo: false
-dist: trusty
-
 language: php
 
-notifications:
-  email:
-    on_success: never
-    on_failure: change
+php:
+  - '7.2'
+  - '7.3'
+  - nightly
 
 branches:
   only:
     - master
 
-matrix:
-  include:
-    - php: 7.3
-    - php: 7.2
-
 before_script:
   - travis_retry composer self-update
-  - travis_retry composer update --prefer-source --no-interaction --dev
+  - travis_retry composer update --no-interaction --no-suggest --dev
 
 script:
   - vendor/bin/phpcs
+  - vendor/bin/phpunit
+
+cache:
+  directories:
+    - $HOME/.composer/cache
