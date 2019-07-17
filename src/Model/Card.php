@@ -1,28 +1,35 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ *
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
+/**
+ * Class Card
+ */
 class Card
 {
     /**
      * @var string
      */
-    public $number; // phpcs:ignore
+    public $number;
     /**
      * @var string
      */
-    public $bank; // phpcs:ignore
+    public $bank;
     /**
      * @var string
      */
-    public $owner; // phpcs:ignore
+    public $owner;
     /**
      * @var bool
      */
-    public $confirmed; // phpcs:ignore
+    public $confirmed;
     /**
      * @var string
      */
-    public $status; // phpcs:ignore
+    public $status;
 }

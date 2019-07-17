@@ -1,11 +1,18 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ *
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Auth;
 
 use Http\Message\Authentication;
 use Psr\Http\Message\RequestInterface;
 
+/**
+ * Class Bearer
+ */
 class Bearer implements Authentication
 {
 

@@ -1,49 +1,56 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ *
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex\Model;
 
+/**
+ * Class Order
+ */
 class Order
 {
     /**
      * @var string
      */
-    public $type; // phpcs:ignore
+    public $type;
     /**
      * @var string
      */
-    public $execution; // phpcs:ignore
+    public $execution;
     /**
      * @var string
      */
-    public $srcCurrency; // phpcs:ignore
+    public $srcCurrency;
     /**
      * @var string
      */
-    public $dstCurrency; // phpcs:ignore
+    public $dstCurrency;
     /**
      * @var float
      */
-    public $price; // phpcs:ignore
+    public $price;
     /**
      * @var float
      */
-    public $amount; // phpcs:ignore
+    public $amount;
     /**
      * @var float
      */
-    public $totalPrice; // phpcs:ignore
+    public $totalPrice;
     /**
      * @var string
      */
-    public $matchedAmount; // phpcs:ignore
+    public $matchedAmount;
 
     /**
      * @var float
      */
-    public $unmatchedAmount; // phpcs:ignore
+    public $unmatchedAmount;
     /**
      * @var bool
      */
-    public $isMyOrder; // phpcs:ignore
+    public $isMyOrder;
 }

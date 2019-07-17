@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package Nekofar\Nobitex
+ *
+ * @author Milad Nekofar <milad@nekofar.com>
+ */
 
 namespace Nekofar\Nobitex;
 
@@ -12,16 +16,14 @@ use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\Authentication;
 use JsonMapper;
 use Nekofar\Nobitex\Auth\Basic;
-use spec\Http\Client\Common\Plugin\HeaderDefaultsPluginSpec;
 
 /**
  * Class Config
- *
- * @package Nekofar\Nobitex
  */
 class Config
 {
     const DEFAULT_API_URL = 'https://api.nobitex.ir';
+    const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
 
     /**
      * @var Basic
@@ -47,13 +49,23 @@ class Config
     /**
      * @param string $username
      * @param string $password
-     * @param bool $remember
-     * @param int|null $totpToken
+     * @param boolean $remember
+     * @param integer|null $totpToken
+     *
      * @return Config
      */
-    public static function doAuth($username, $password, $remember = true, $totpToken = null)
-    {
-        return new static(new Basic($username, $password, $remember, $totpToken));
+    public static function doAuth(
+        $username,
+        $password,
+        $remember = true,
+        $totpToken = null
+    ) {
+        return new static(new Basic(
+            $username,
+            $password,
+            $remember,
+            $totpToken
+        ));
     }
 
 
@@ -75,8 +87,8 @@ class Config
             new PluginClient(HttpClientDiscovery::find(), [
                 $this->auth,
                 new HeaderDefaultsPlugin([
-                    'Content-Type' => 'application/json'
-                ])
+                    'Content-Type' => 'application/json',
+                ]),
             ]),
             MessageFactoryDiscovery::find()
         );
