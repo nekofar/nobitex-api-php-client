@@ -7,8 +7,8 @@
 
 namespace Nekofar\Nobitex;
 
+use Exception;
 use Http\Client\Common\HttpMethodsClient;
-use Http\Client\Exception;
 use Http\Client\HttpClient;
 use JsonMapper;
 use JsonMapper_Exception;
@@ -23,14 +23,19 @@ class Client
 {
 
     /**
+     * @var string
+     */
+    private $apiUrl;
+
+    /**
      * @var HttpClient
      */
-    private $http;
+    private $httpClient;
 
     /**
      * @var JsonMapper
      */
-    private $mapper;
+    private $jsonMapper;
 
     /**
      * Client constructor.
@@ -40,8 +45,10 @@ class Client
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
-        $this->http = $http;
-        $this->mapper = $mapper;
+        $this->apiUrl = Config::DEFAULT_API_URL;
+
+        $this->httpClient = $http;
+        $this->jsonMapper = $mapper;
     }
 
     /**
@@ -62,35 +69,30 @@ class Client
      *
      * @return Order[]
      *
-     * @throws Exception
      * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function getMarketOrders(array $params)
     {
         $orders = [];
-        $params = $params + [
-                'order' => 'price',
-                'type' => null,
-                'srcCurrency' => null,
-                'dstCurrency' => null,
-            ];
+        $apiUrl = $this->apiUrl . '/market/orders/list';
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/market/orders/list',
-            [],
-            json_encode($params)
-        );
+        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody());
-            if (isset($json->orders)) {
-                $orders = $this->mapper
-                    ->mapArray(
-                        $json->orders,
-                        [],
-                        'Nekofar\Nobitex\Model\Order'
-                    );
-            }
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->orders) && $json->status === 'ok') {
+            $orders = $this->jsonMapper
+                ->mapArray($json->orders, [], Order::class);
         }
 
         return $orders;
@@ -101,32 +103,40 @@ class Client
      *
      * @return Trade[]
      *
-     * @throws Exception
      * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function getMarketTrades(array $params)
     {
+        if (!isset($params['srcCurrency']) ||
+            empty($params['srcCurrency'])) {
+            throw new Exception("Source currency is missing.");
+        }
+
+        if (!isset($params['dstCurrency']) ||
+            empty($params['dstCurrency'])) {
+            throw new Exception("Destination currency is missing.");
+        }
+
         $trades = [];
-        $params = $params + [
-                'srcCurrency' => 'btc',
-                'dstCurrency' => 'rls',
-            ];
+        $apiUrl = $this->apiUrl . '/market/trades/list';
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/market/trades/list',
-            [],
-            json_encode($params)
-        );
+        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody());
-            if (isset($json->trades)) {
-                $trades = $this->mapper->mapArray(
-                    $json->trades,
-                    [],
-                    Trade::class
-                );
-            }
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->trades) && $json->status === 'ok') {
+            $trades = $this->jsonMapper
+                ->mapArray($json->trades, [], Trade::class);
         }
 
         return $trades;
@@ -137,25 +147,39 @@ class Client
      *
      * @return array
      *
+     * @throws \Http\Client\Exception
      * @throws Exception
      */
     public function getMarketStats(array $params)
     {
+        if (!isset($params['srcCurrency']) ||
+            empty($params['srcCurrency'])) {
+            throw new Exception("Source currency is missing.");
+        }
+
+        if (!isset($params['dstCurrency']) ||
+            empty($params['dstCurrency'])) {
+            throw new Exception("Destination currency is missing.");
+        }
+
         $stats = [];
-        $params = $params + ['srcCurrency' => 'btc', 'dstCurrency' => 'rls'];
+        $apiUrl = $this->apiUrl . '/market/stats';
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/market/stats',
-            [],
-            json_encode($params)
-        );
+        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody());
-            if (isset($json->stats)) {
-                $stats = $json->stats
-                    ->{"{$params['srcCurrency']}-{$params['dstCurrency']}"};
-            }
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->stats) && $json->status === 'ok') {
+            $match = "{$params['srcCurrency']}-{$params['dstCurrency']}";
+            $stats = (array)$json->stats->{$match};
         }
 
         return $stats;
@@ -164,26 +188,33 @@ class Client
     /**
      * @return Profile
      *
-     * @throws Exception
+     * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws Exception
      */
     public function getUserProfile()
     {
         $profile = new Profile();
+        $apiUrl = $this->apiUrl . '/users/profile';
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/users/profile'
-        );
+        $response = $this->httpClient->post($apiUrl);
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody());
-            if (isset($json->profile)) {
-                $this->mapper->undefinedPropertyHandler = [
-                    Profile::class,
-                    'setUndefinedProperty',
-                ];
-                $profile = $this->mapper->map($json->profile, $profile);
-            }
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->profile) && $json->status === 'ok') {
+            $this->jsonMapper->undefinedPropertyHandler = [
+                Profile::class,
+                'setUndefinedProperty',
+            ];
+            $profile = $this->jsonMapper->map($json->profile, $profile);
         }
 
         return $profile;
@@ -192,21 +223,28 @@ class Client
     /**
      * @return array
      *
+     * @throws \Http\Client\Exception
      * @throws Exception
      */
     public function getUserLoginAttempts()
     {
         $attempts = [];
+        $apiUrl = $this->apiUrl . '/users/login-attempts';
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/users/login-attempts'
-        );
+        $response = $this->httpClient->post($apiUrl);
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody(), true);
-            if (isset($json['attempts'])) {
-                $attempts = $json['attempts'];
-            }
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->attempts) && $json->status === 'ok') {
+            $attempts = (array)$json->attempts;
         }
 
         return $attempts;
@@ -215,21 +253,28 @@ class Client
     /**
      * @return string|null
      *
+     * @throws \Http\Client\Exception
      * @throws Exception
      */
     public function getUserReferralCode()
     {
         $referralCode = null;
+        $apiUrl = $this->apiUrl . '/users/get-referral-code';
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/users/get-referral-code'
-        );
+        $response = $this->httpClient->post($apiUrl);
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody(), true);
-            if (isset($json['referralCode'])) {
-                $referralCode = $json['referralCode'];
-            }
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->referralCode) && $json->status === 'ok') {
+            $referralCode = $json->referralCode;
         }
 
         return $referralCode;
@@ -240,32 +285,38 @@ class Client
      *
      * @return bool
      *
+     * @throws \Http\Client\Exception
      * @throws Exception
-     * @throws \Exception
      */
     public function addUserCard(array $params)
     {
         if (!isset($params['bank']) ||
             empty($params['bank'])) {
-            throw new \Exception("Bank name is missing.");
+            throw new Exception("Bank name is missing.");
         }
 
         if (!isset($params['number']) ||
-            preg_match('/^[0-9]{16}$/', $params['number']) === false) {
-            throw new \Exception("Card number is missing.");
+            !preg_match('/^[0-9]{16}$/', $params['number'])) {
+            throw new Exception("Card number is missing.");
         }
 
-        $response = $this->http->post(
-            Config::DEFAULT_API_URL . '/users/cards-add',
-            [],
-            json_encode($params)
-        );
+        $apiUrl = $this->apiUrl . '/users/cards-add';
 
-        if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody(), true);
-            if (isset($json['status']) && $json['status'] === 'ok') {
-                return true;
-            }
+        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getReasonPhrase());
+        }
+
+        $json = json_decode($response->getBody());
+
+        if (isset($json->message) && $json->failed === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        $json = json_decode($response->getBody());
+        if (isset($json->status) && $json->status === 'ok') {
+            return true;
         }
 
         return false;

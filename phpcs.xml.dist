@@ -41,6 +41,7 @@
         <exclude name="Symfony.Commenting.FunctionComment.SpacingAfterParamName"/>
         <exclude name="Symfony.Functions.ScopeOrder.Invalid"/>
         <exclude name="Symfony.Functions.Arguments.Invalid"/>
+        <exclude name="Generic.Formatting.SpaceAfterCast.NoSpace"/>
     </rule>
 
     <rule ref="Squiz.Strings.ConcatenationSpacing">

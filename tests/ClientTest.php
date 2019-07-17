@@ -7,9 +7,9 @@
 namespace Nekofar\Nobitex;
 
 use Dotenv\Dotenv;
+use Exception;
 use GuzzleHttp\Psr7\Response;
 use Http\Client\Common\HttpMethodsClient;
-use Http\Client\Exception;
 use Jchook\AssertThrows\AssertThrows;
 use JsonMapper;
 use JsonMapper_Exception;
@@ -39,7 +39,7 @@ class ClientTest extends TestCase
     private static $accessToken;
 
     /**
-     * @throws Exception
+     * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
     public function testGetMarketOrders()
@@ -57,7 +57,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
     public function testGetMarketTrades()
@@ -74,7 +74,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Http\Client\Exception
      */
     public function testGetMarketStats()
     {
@@ -90,7 +90,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
     public function testGetUserProfile()
@@ -106,7 +106,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Http\Client\Exception
      */
     public function testGetUserLoginAttempts()
     {
@@ -120,7 +120,7 @@ class ClientTest extends TestCase
 
     /**
      *
-     * @throws Exception
+     * @throws \Http\Client\Exception
      */
     public function testGetUserReferralCode()
     {
@@ -134,7 +134,7 @@ class ClientTest extends TestCase
 
     /**
      *
-     * @throws Exception
+     * @throws \Http\Client\Exception
      */
     public function testAddUserCard()
     {
@@ -158,7 +158,7 @@ class ClientTest extends TestCase
 
     /**
      *
-     * @throws Exception
+     * @throws \Http\Client\Exception
      */
     public function testAddUserCardFailure()
     {
@@ -179,14 +179,14 @@ class ClientTest extends TestCase
         ]);
         $this->assertFalse($status);
 
-        $this->assertThrows(\Exception::class, function () use ($client) {
+        $this->assertThrows(Exception::class, function () use ($client) {
             $client->addUserCard([
                 "number" => "50417210111111111",
                 "bank" => "Resalat"
             ]);
         });
 
-        $this->assertThrows(\Exception::class, function () use ($client) {
+        $this->assertThrows(Exception::class, function () use ($client) {
             $client->addUserCard([
                 "number" => "50417210111111111",
                 "bank" => ""
