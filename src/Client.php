@@ -32,7 +32,7 @@ class Client
      * Client constructor.
      *
      * @param HttpMethodsClient $http
-     * @param JsonMapper        $mapper
+     * @param JsonMapper $mapper
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
@@ -55,7 +55,7 @@ class Client
      * @throws Exception
      * @throws JsonMapper_Exception
      */
-    public function getMarketOrders($params = [])
+    public function getMarketOrders(array $params)
     {
         $orders = [];
         $params = $params + ['order' => 'price', 'type' => null, 'srcCurrency' => null, 'dstCurrency' => null];
@@ -82,7 +82,7 @@ class Client
      * @throws Exception
      * @throws JsonMapper_Exception
      */
-    public function getMarketTrades($params = [])
+    public function getMarketTrades(array $params)
     {
         $trades = [];
         $params = $params + ['srcCurrency' => 'btc', 'dstCurrency' => 'rls'];
@@ -108,7 +108,7 @@ class Client
      * @return array
      * @throws Exception
      */
-    public function getMarketStats($params = [])
+    public function getMarketStats(array $params)
     {
         $stats = [];
         $params = $params + ['srcCurrency' => 'btc', 'dstCurrency' => 'rls'];

@@ -28,9 +28,11 @@ class ClientTest extends TestCase
         $username = getenv('NOBITEX_USERNAME') ?: 'username';
         $password = getenv('NOBITEX_PASSWORD') ?: 'password';
 
-        $client = Client::create(Config::doAuth($username, $password));
-
-        $orders = $client->getMarketOrders();
+        $orders = $client->getMarketOrders([
+            "order" => "-price",
+            "type" => "sell",
+            "dstCurrency" => "usdt"
+        ]);
 
         $this->assertIsArray($orders);
         $this->assertContainsOnlyInstancesOf(Order::class, $orders);
@@ -45,9 +47,10 @@ class ClientTest extends TestCase
         $username = getenv('NOBITEX_USERNAME') ?: 'username';
         $password = getenv('NOBITEX_PASSWORD') ?: 'password';
 
-        $client = Client::create(Config::doAuth($username, $password));
-
-        $trades = $client->getMarketTrades();
+        $trades = $client->getMarketTrades([
+            "srcCurrency" => "btc",
+            "dstCurrency" => "rls"
+        ]);
 
         $this->assertIsArray($trades);
         $this->assertContainsOnlyInstancesOf(Trade::class, $trades);
@@ -61,9 +64,10 @@ class ClientTest extends TestCase
         $username = getenv('NOBITEX_USERNAME') ?: 'username';
         $password = getenv('NOBITEX_PASSWORD') ?: 'password';
 
-        $client = Client::create(Config::doAuth($username, $password));
-
-        $stats = $client->getMarketStats();
+        $stats = $client->getMarketStats([
+            "srcCurrency" => "btc",
+            "dstCurrency" => "rls"
+        ]);
 
         $this->assertIsArray($stats);
         $this->assertNotEmpty($stats);
