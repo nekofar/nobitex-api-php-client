@@ -1,5 +1,9 @@
 # Nobitex Market PHP API
 
+![Travis (.com) branch](https://img.shields.io/travis/com/nekofar/nobitex-api-php/master.svg)
+![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)
+![Packagist Version](https://img.shields.io/packagist/v/nekofar/nobitex.svg)
+
 ## Installation
 
 You can install the package via composer from [Packagist][1]:
