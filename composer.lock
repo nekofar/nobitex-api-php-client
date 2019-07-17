@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-  "content-hash": "93d550711dbd651ea2d0d4dc7fd29c06",
+    "content-hash": "08b0164e4b5358364afa9c2b885a38a8",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -693,6 +693,46 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "jchook/phpunit-assert-throws",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jchook/phpunit-assert-throws.git",
+                "reference": "5082114dcaa87aafa21da02b5d0b32e9d3e991a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jchook/phpunit-assert-throws/zipball/5082114dcaa87aafa21da02b5d0b32e9d3e991a7",
+                "reference": "5082114dcaa87aafa21da02b5d0b32e9d3e991a7",
+                "shasum": ""
+            },
+            "require": {
+                "phpunit/phpunit": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Jchook\\AssertThrows\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Wes Roberts",
+                    "email": "u36g@a.zinc.email"
+                },
+                {
+                    "name": "Librarian",
+                    "email": "librarians.studios@gmail.com"
+                }
+            ],
+            "description": "Exception assertions for PHPUnit",
+            "time": "2019-04-13T22:17:20+00:00"
         },
         {
             "name": "myclabs/deep-copy",

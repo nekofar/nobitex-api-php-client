@@ -79,3 +79,4 @@ fabric.properties
 
 /.phpunit.result.cache
 /.env
+/http-client.env.json

@@ -196,4 +196,32 @@ class Client
 
         return $referralCode;
     }
+
+    /**
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function addUserCard(array $params)
+    {
+        if (!isset($params['bank']) || empty($params['bank'])) {
+            throw new \Exception("Bank name is missing.");
+        }
+
+        if (!isset($params['number']) || !preg_match('/^[0-9]{16}$/', $params['number'])) {
+            throw new \Exception("Card number is missing.");
+        }
+
+        $response = $this->http->post(Config::DEFAULT_API_URL . '/users/cards-add');
+
+        if ($response->getStatusCode() === 200) {
+            $json = json_decode($response->getBody(), true);
+            if (isset($json['status']) && $json['status'] === 'ok') {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

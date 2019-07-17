@@ -7,7 +7,11 @@
 namespace Nekofar\Nobitex;
 
 use Dotenv\Dotenv;
+use GuzzleHttp\Psr7\Response;
+use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Exception;
+use Jchook\AssertThrows\AssertThrows;
+use JsonMapper;
 use JsonMapper_Exception;
 use Nekofar\Nobitex\Auth\Bearer;
 use Nekofar\Nobitex\Model\Account;
@@ -19,6 +23,8 @@ use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
 {
+    use AssertThrows;
+
     /**
      * @var string
      */
@@ -126,9 +132,72 @@ class ClientTest extends TestCase
         $this->assertNotEmpty($referralCode);
     }
 
-    protected function setUp(): void
+    /**
+     *
+     * @throws Exception
+     */
+    public function testAddUserCard()
     {
-        parent::setUp();
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $httpClient->method('post')
+            ->willReturn(new Response('200', [], json_encode(['status' => 'ok'])));
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+        $status = $client->addUserCard([
+            "number" => "5041721011111111",
+            "bank" => "Resalat"
+        ]);
+
+        $this->assertTrue($status);
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    public function testAddUserCardFailure()
+    {
+        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var HttpMethodsClient $httpClient */
+        $client = new Client($httpClient, new JsonMapper());
+
+
+        $httpClient->method('post')
+            ->willReturn(new Response('200', [], json_encode(['status' => 'failure'])));
+
+        $status = $client->addUserCard([
+            "number" => "5041721011111111",
+            "bank" => "Resalat"
+        ]);
+        $this->assertFalse($status);
+
+        $this->assertThrows(\Exception::class, function () use ($client) {
+            $client->addUserCard([
+                "number" => "50417210111111111",
+                "bank" => "Resalat"
+            ]);
+        });
+
+        $this->assertThrows(\Exception::class, function () use ($client) {
+            $client->addUserCard([
+                "number" => "50417210111111111",
+                "bank" => ""
+            ]);
+        });
+    }
+
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
 
         $dotenv = Dotenv::create(__DIR__ . '/..');
         $dotenv->load();
