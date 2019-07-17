@@ -1,6 +1,7 @@
 <?php
 /**
  * @package Nekofar\Nobitex
+ *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
@@ -9,98 +10,110 @@ namespace Nekofar\Nobitex\Model;
 use JsonMapper;
 use JsonMapper_Exception;
 
-class Profile // phpcs:ignore
+/**
+ * Class Profile
+ */
+class Profile
 {
     /**
      * @var string
      */
-    public $username; // phpcs:ignore
+    public $username;
     /**
      * @var string
      */
-    public $email; // phpcs:ignore
+    public $email;
     /**
-     * @var integer
+     * @var int
      */
-    public $level; // phpcs:ignore
-    /**
-     * @var string
-     */
-    public $firstName; // phpcs:ignore
+    public $level;
     /**
      * @var string
      */
-    public $lastName; // phpcs:ignore
+    public $firstName;
     /**
      * @var string
      */
-    public $nationalCode; // phpcs:ignore
+    public $lastName;
     /**
      * @var string
      */
-    public $nickname; // phpcs:ignore
+    public $nationalCode;
     /**
      * @var string
      */
-    public $phone; // phpcs:ignore
+    public $nickname;
     /**
      * @var string
      */
-    public $mobile; // phpcs:ignore
+    public $phone;
+    /**
+     * @var string
+     */
+    public $mobile;
     /**
      * @var string|null
      */
-    public $province; // phpcs:ignore
+    public $province;
     /**
      * @var string
      */
-    public $city; // phpcs:ignore
+    public $city;
     /**
      * @var string
      */
-    public $address; // phpcs:ignore
+    public $address;
     /**
      * @var Card[]
      */
-    public $cards; // phpcs:ignore
+    public $cards;
     /**
      * @var Account[]
      */
-    public $accounts; // phpcs:ignore
+    public $accounts;
     /**
      * @var array
      */
-    public $verifications; // phpcs:ignore
+    public $verifications;
     /**
      * @var array
      */
-    public $pendingVerifications; // phpcs:ignore
+    public $pendingVerifications;
     /**
      * @var array
      */
-    public $options; // phpcs:ignore
+    public $options;
     /**
-     * @var boolean
+     * @var bool
      */
-    public $withdrawEligible; // phpcs:ignore
+    public $withdrawEligible;
 
 
     /**
-     * @param $object
-     * @param $propName
-     * @param $jsonValue
+     * @param object $object
+     * @param string $propName
+     * @param mixed  $jsonValue
+     *
      * @throws JsonMapper_Exception
      */
-    public static function setUndefinedProperty($object, $propName, $jsonValue) // phpcs:ignore
+    public static function setUndefinedProperty($object, $propName, $jsonValue)
     {
         $mapper = new JsonMapper();
 
-        if ($propName === 'bankCards') {
-            $object->{'cards'} = $mapper->mapArray($jsonValue, [], Card::class);
+        if ('bankCards' === $propName) {
+            $object->{'cards'} = $mapper->mapArray(
+                $jsonValue,
+                [],
+                Card::class
+            );
         }
 
-        if ($propName === 'bankAccounts') {
-            $object->{'accounts'} = $mapper->mapArray($jsonValue, [], Account::class);
+        if ('bankAccounts' === $propName) {
+            $object->{'accounts'} = $mapper->mapArray(
+                $jsonValue,
+                [],
+                Account::class
+            );
         }
     }
 }

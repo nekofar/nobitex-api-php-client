@@ -36,6 +36,17 @@
 
     <rule ref="PSR2"/>
 
-    <rule ref="ObjectCalisthenics"/>
+    <rule ref="Symfony">
+        <exclude name="Symfony.Commenting.FunctionComment.SpacingAfterParamType"/>
+        <exclude name="Symfony.Commenting.FunctionComment.SpacingAfterParamName"/>
+        <exclude name="Symfony.Functions.ScopeOrder.Invalid"/>
+        <exclude name="Symfony.Functions.Arguments.Invalid"/>
+    </rule>
+
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+        </properties>
+    </rule>
 
 </ruleset>

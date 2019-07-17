@@ -1,47 +1,51 @@
 <?php
 /**
  * @package Nekofar\Nobitex
+ *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
 namespace Nekofar\Nobitex\Model;
 
+/**
+ * Class Trade
+ */
 class Trade
 {
     /**
      * @var string
      */
-    public $srcCurrency; // phpcs:ignore
+    public $srcCurrency;
     /**
      * @var string
      */
-    public $dstCurrency; // phpcs:ignore
+    public $dstCurrency;
     /**
      * @var \DateTime
      */
-    public $timestamp; // phpcs:ignore
+    public $timestamp;
     /**
      * @var string
      */
-    public $market; // phpcs:ignore
+    public $market;
     /**
      * @var float
      */
-    public $price; // phpcs:ignore
+    public $price;
     /**
      * @var float
      */
-    public $amount; // phpcs:ignore
+    public $amount;
     /**
      * @var float
      */
-    public $total; // phpcs:ignore
+    public $total;
     /**
      * @var string
      */
-    public $type; // phpcs:ignore
+    public $type;
     /**
      * @var float
      */
-    public $fee; // phpcs:ignore
+    public $fee;
 }

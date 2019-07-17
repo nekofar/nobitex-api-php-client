@@ -1,6 +1,7 @@
 <?php
 /**
  * @package Nekofar\Nobitex
+ *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
@@ -15,6 +16,9 @@ use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
 
+/**
+ * Class Client
+ */
 class Client
 {
 
@@ -42,23 +46,34 @@ class Client
 
     /**
      * @param Config $config
+     *
      * @return Client
      */
     public static function create(Config $config)
     {
-        return new static($config->createHttpClient(), $config->createJsonMapper());
+        return new static(
+            $config->createHttpClient(),
+            $config->createJsonMapper()
+        );
     }
 
     /**
      * @param array $params
+     *
      * @return Order[]
+     *
      * @throws Exception
      * @throws JsonMapper_Exception
      */
     public function getMarketOrders(array $params)
     {
         $orders = [];
-        $params = $params + ['order' => 'price', 'type' => null, 'srcCurrency' => null, 'dstCurrency' => null];
+        $params = $params + [
+                'order' => 'price',
+                'type' => null,
+                'srcCurrency' => null,
+                'dstCurrency' => null,
+            ];
 
         $response = $this->http->post(
             Config::DEFAULT_API_URL . '/market/orders/list',
@@ -69,7 +84,12 @@ class Client
         if ($response->getStatusCode() === 200) {
             $json = json_decode($response->getBody());
             if (isset($json->orders)) {
-                $orders = $this->mapper->mapArray($json->orders, [], 'Nekofar\Nobitex\Model\Order');
+                $orders = $this->mapper
+                    ->mapArray(
+                        $json->orders,
+                        [],
+                        'Nekofar\Nobitex\Model\Order'
+                    );
             }
         }
 
@@ -78,14 +98,19 @@ class Client
 
     /**
      * @param array $params
+     *
      * @return Trade[]
+     *
      * @throws Exception
      * @throws JsonMapper_Exception
      */
     public function getMarketTrades(array $params)
     {
         $trades = [];
-        $params = $params + ['srcCurrency' => 'btc', 'dstCurrency' => 'rls'];
+        $params = $params + [
+                'srcCurrency' => 'btc',
+                'dstCurrency' => 'rls',
+            ];
 
         $response = $this->http->post(
             Config::DEFAULT_API_URL . '/market/trades/list',
@@ -96,7 +121,11 @@ class Client
         if ($response->getStatusCode() === 200) {
             $json = json_decode($response->getBody());
             if (isset($json->trades)) {
-                $trades = $this->mapper->mapArray($json->trades, [], 'Nekofar\Nobitex\Model\Trade');
+                $trades = $this->mapper->mapArray(
+                    $json->trades,
+                    [],
+                    Trade::class
+                );
             }
         }
 
@@ -105,7 +134,9 @@ class Client
 
     /**
      * @param array $params
+     *
      * @return array
+     *
      * @throws Exception
      */
     public function getMarketStats(array $params)
@@ -120,9 +151,10 @@ class Client
         );
 
         if ($response->getStatusCode() === 200) {
-            $json = json_decode($response->getBody(), true);
-            if (isset($json['stats'])) {
-                $stats = $json['stats']["{$params['srcCurrency']}-{$params['dstCurrency']}"];
+            $json = json_decode($response->getBody());
+            if (isset($json->stats)) {
+                $stats = $json->stats
+                    ->{"{$params['srcCurrency']}-{$params['dstCurrency']}"};
             }
         }
 
@@ -131,6 +163,7 @@ class Client
 
     /**
      * @return Profile
+     *
      * @throws Exception
      * @throws JsonMapper_Exception
      */
@@ -145,7 +178,10 @@ class Client
         if ($response->getStatusCode() === 200) {
             $json = json_decode($response->getBody());
             if (isset($json->profile)) {
-                $this->mapper->undefinedPropertyHandler = [Profile::class, 'setUndefinedProperty'];
+                $this->mapper->undefinedPropertyHandler = [
+                    Profile::class,
+                    'setUndefinedProperty',
+                ];
                 $profile = $this->mapper->map($json->profile, $profile);
             }
         }
@@ -155,6 +191,7 @@ class Client
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     public function getUserLoginAttempts()
@@ -177,6 +214,7 @@ class Client
 
     /**
      * @return string|null
+     *
      * @throws Exception
      */
     public function getUserReferralCode()
@@ -199,21 +237,29 @@ class Client
 
     /**
      * @param array $params
+     *
      * @return bool
+     *
      * @throws Exception
      * @throws \Exception
      */
     public function addUserCard(array $params)
     {
-        if (!isset($params['bank']) || empty($params['bank'])) {
+        if (!isset($params['bank']) ||
+            empty($params['bank'])) {
             throw new \Exception("Bank name is missing.");
         }
 
-        if (!isset($params['number']) || !preg_match('/^[0-9]{16}$/', $params['number'])) {
+        if (!isset($params['number']) ||
+            preg_match('/^[0-9]{16}$/', $params['number']) === false) {
             throw new \Exception("Card number is missing.");
         }
 
-        $response = $this->http->post(Config::DEFAULT_API_URL . '/users/cards-add');
+        $response = $this->http->post(
+            Config::DEFAULT_API_URL . '/users/cards-add',
+            [],
+            json_encode($params)
+        );
 
         if ($response->getStatusCode() === 200) {
             $json = json_decode($response->getBody(), true);
@@ -224,4 +270,5 @@ class Client
 
         return false;
     }
+
 }
