@@ -23,7 +23,6 @@ use Psr\Http\Message\RequestInterface;
  */
 class Basic implements Authentication
 {
-
     /**
      * @var string
      */

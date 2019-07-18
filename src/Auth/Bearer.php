@@ -15,7 +15,6 @@ use Psr\Http\Message\RequestInterface;
  */
 class Bearer implements Authentication
 {
-
     /**
      * @var string
      */
