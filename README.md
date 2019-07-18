@@ -25,7 +25,7 @@ $config = Config::doAuth('username', 'password')
 $client = Client::create($config)
 ```
 
-###Market Data
+### Market Data
 
 #### Market Orders
 
@@ -84,10 +84,10 @@ $status = $client->addUserAccount([
 ## Contributing and testing
 
 The test suite is built using PHPUnit. Run the suite of unit tests by running
-the `phpunit` command.
+the `phpunit` command or composer script.
 
 ```bash
-phpunit
+composer test
 ```
 
 To run these tests, you must copy create a `.env` file in project root, 
