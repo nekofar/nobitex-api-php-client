@@ -704,7 +704,6 @@ class ClientTest extends TestCase
             $dotenv = Dotenv::create(__DIR__ . '/..');
             $dotenv->load();
         } catch (Exception $e) {
-            echo $e->getMessage();
         }
 
         self::$username = getenv('NOBITEX_USERNAME') ?: 'username';
