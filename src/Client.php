@@ -72,10 +72,6 @@ class Client
 
         $response = $this->httpClient->post('/market/orders/list', [], $body);
 
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
-
         $json = json_decode($response->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
@@ -116,10 +112,6 @@ class Client
 
         $response = $this->httpClient->post('/market/trades/list', [], $body);
 
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
-
         $json = json_decode($response->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
@@ -159,10 +151,6 @@ class Client
 
         $response = $this->httpClient->post('/market/stats', [], $body);
 
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
-
         $json = json_decode($response->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
@@ -189,10 +177,6 @@ class Client
         $profile = new Profile();
 
         $response = $this->httpClient->post('/users/profile');
-
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
 
         $json = json_decode($response->getBody());
 
@@ -223,10 +207,6 @@ class Client
 
         $response = $this->httpClient->post('/users/login-attempts');
 
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
-
         $json = json_decode($response->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
@@ -251,10 +231,6 @@ class Client
         $referralCode = null;
 
         $response = $this->httpClient->post('/users/get-referral-code');
-
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
 
         $json = json_decode($response->getBody());
 
@@ -292,10 +268,6 @@ class Client
         $body = json_encode($params);
 
         $response = $this->httpClient->post('/users/cards-add', [], $body);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
 
         $json = json_decode($response->getBody());
 
@@ -339,10 +311,6 @@ class Client
         $body = json_encode($params);
 
         $response = $this->httpClient->post('/users/account-add', [], $body);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getReasonPhrase());
-        }
 
         $json = json_decode($response->getBody());
 

@@ -10,6 +10,7 @@ namespace Nekofar\Nobitex;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\Plugin\BaseUriPlugin;
+use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
@@ -86,6 +87,7 @@ class Config
     {
         return new HttpMethodsClient(
             new PluginClient(HttpClientDiscovery::find(), [
+                new ErrorPlugin(),
                 new AuthenticationPlugin($this->auth),
                 new HeaderDefaultsPlugin([
                     'Content-Type' => 'application/json',
