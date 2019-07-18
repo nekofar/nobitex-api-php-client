@@ -9,10 +9,12 @@ namespace Nekofar\Nobitex;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\UriFactoryDiscovery;
 use Http\Message\Authentication;
 use JsonMapper;
 use Nekofar\Nobitex\Auth\Basic;
@@ -35,14 +37,13 @@ class Config
      */
     private $apiUrl;
 
-
     /**
      * Config constructor.
      * @param Authentication $auth
      */
     public function __construct(Authentication $auth)
     {
-        $this->auth = new AuthenticationPlugin($auth);
+        $this->auth = $auth;
         $this->apiUrl = self::DEFAULT_API_URL;
     }
 
@@ -85,10 +86,14 @@ class Config
     {
         return new HttpMethodsClient(
             new PluginClient(HttpClientDiscovery::find(), [
-                $this->auth,
+                new AuthenticationPlugin($this->auth),
                 new HeaderDefaultsPlugin([
                     'Content-Type' => 'application/json',
                 ]),
+                new BaseUriPlugin(
+                    UriFactoryDiscovery::find()->createUri($this->apiUrl),
+                    ['replace' => true]
+                ),
             ]),
             MessageFactoryDiscovery::find()
         );

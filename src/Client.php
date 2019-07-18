@@ -21,12 +21,6 @@ use Nekofar\Nobitex\Model\Trade;
  */
 class Client
 {
-
-    /**
-     * @var string
-     */
-    private $apiUrl;
-
     /**
      * @var HttpClient
      */
@@ -45,8 +39,6 @@ class Client
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
-        $this->apiUrl = Config::DEFAULT_API_URL;
-
         $this->httpClient = $http;
         $this->jsonMapper = $mapper;
     }
@@ -76,9 +68,9 @@ class Client
     public function getMarketOrders($params = [])
     {
         $orders = [];
-        $apiUrl = $this->apiUrl . '/market/orders/list';
+        $body = json_encode($params);
 
-        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+        $response = $this->httpClient->post('/market/orders/list', [], $body);
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -120,9 +112,9 @@ class Client
         }
 
         $trades = [];
-        $apiUrl = $this->apiUrl . '/market/trades/list';
+        $body = json_encode($params);
 
-        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+        $response = $this->httpClient->post('/market/trades/list', [], $body);
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -163,9 +155,9 @@ class Client
         }
 
         $stats = [];
-        $apiUrl = $this->apiUrl . '/market/stats';
+        $body = json_encode($params);
 
-        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+        $response = $this->httpClient->post('/market/stats', [], $body);
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -195,9 +187,8 @@ class Client
     public function getUserProfile()
     {
         $profile = new Profile();
-        $apiUrl = $this->apiUrl . '/users/profile';
 
-        $response = $this->httpClient->post($apiUrl);
+        $response = $this->httpClient->post('/users/profile');
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -229,9 +220,8 @@ class Client
     public function getUserLoginAttempts()
     {
         $attempts = [];
-        $apiUrl = $this->apiUrl . '/users/login-attempts';
 
-        $response = $this->httpClient->post($apiUrl);
+        $response = $this->httpClient->post('/users/login-attempts');
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -259,9 +249,8 @@ class Client
     public function getUserReferralCode()
     {
         $referralCode = null;
-        $apiUrl = $this->apiUrl . '/users/get-referral-code';
 
-        $response = $this->httpClient->post($apiUrl);
+        $response = $this->httpClient->post('/users/get-referral-code');
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -300,9 +289,9 @@ class Client
             throw new Exception("Card number is missing.");
         }
 
-        $apiUrl = $this->apiUrl . '/users/cards-add';
+        $body = json_encode($params);
 
-        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+        $response = $this->httpClient->post('/users/cards-add', [], $body);
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
@@ -347,9 +336,9 @@ class Client
             throw new Exception("Account shaba is missing.");
         }
 
-        $apiUrl = $this->apiUrl . '/users/account-add';
+        $body = json_encode($params);
 
-        $response = $this->httpClient->post($apiUrl, [], json_encode($params));
+        $response = $this->httpClient->post('/users/account-add', [], $body);
 
         if ($response->getStatusCode() !== 200) {
             throw new Exception($response->getReasonPhrase());
