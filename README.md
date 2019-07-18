@@ -90,17 +90,6 @@ the `phpunit` command or composer script.
 composer test
 ```
 
-To run these tests, you must copy create a `.env` file in project root, 
-then provide values for the `NOBITEX_USERNAME` and
-`NOBITEX_PASSWORD` variables.
-
-```bash
-cat >> .env <<EOF
-NOBITEX_USERNAME=username
-NOBITEX_PASSWORD=password
-EOF
-```
-
 ---
 [1]: https://packagist.org/packages/nekofar/nobitex
 [2]: https://github.com/nekofar/nobitex-api-php/blob/master/LICENSE
