@@ -142,7 +142,27 @@ class ClientTest extends TestCase
      */
     public function testGetMarketTrades()
     {
-        $client = Client::create(Config::doAuth(self::$username, self::$password));
+        $json = [
+            'trades' =>
+                [
+                    [
+                        'srcCurrency' => 'Bitcoin',
+                        'dstCurrency' => 'Tether',
+                        'timestamp' => '2019-07-17T22:33:18.892390+00:00',
+                        'market' => 'BTC-USDT',
+                        'price' => '9746.2600000000',
+                        'amount' => '0.2765000000',
+                        'total' => '2694.84089000000000000000',
+                        'type' => 'buy',
+                        'fee' => '0E-10',
+                    ],
+                ],
+            'status' => 'ok',
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         $trades = $client->getMarketTrades([
             "srcCurrency" => "btc",
@@ -224,7 +244,30 @@ class ClientTest extends TestCase
      */
     public function testGetMarketStats()
     {
-        $client = Client::create(Config::doAuth(self::$username, self::$password));
+        $json = [
+            'status' => 'ok',
+            'stats' =>
+                [
+                    'btc-rls' =>
+                        [
+                            'isClosed' => false,
+                            'bestSell' => '1347087999.0000000000',
+                            'bestBuy' => '1346846000.0000000000',
+                            'volumeSrc' => '20.3949956336',
+                            'volumeDst' => '26029041640.3516083664',
+                            'latest' => '1341485999.0000000000',
+                            'dayLow' => '1182255000.0000000000',
+                            'dayHigh' => '1345687000.0000000000',
+                            'dayOpen' => '1221790000.0000000000',
+                            'dayClose' => '1341485999.0000000000',
+                            'dayChange' => '9.80',
+                        ],
+                ]
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         $stats = $client->getMarketStats([
             "srcCurrency" => "btc",
