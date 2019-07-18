@@ -6,14 +6,16 @@
 
 namespace Nekofar\Nobitex;
 
-use Dotenv\Dotenv;
 use Exception;
 use GuzzleHttp\Psr7\Response;
+use Http\Client\Common\Exception\ClientErrorException;
 use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\Plugin\ErrorPlugin;
+use Http\Client\Common\PluginClient;
+use Http\Discovery\MessageFactoryDiscovery;
 use Jchook\AssertThrows\AssertThrows;
 use JsonMapper;
 use JsonMapper_Exception;
-use Nekofar\Nobitex\Auth\Bearer;
 use Nekofar\Nobitex\Model\Account;
 use Nekofar\Nobitex\Model\Card;
 use Nekofar\Nobitex\Model\Order;
@@ -29,14 +31,40 @@ class ClientTest extends TestCase
      * @var string
      */
     private static $username;
+
     /**
      * @var string
      */
     private static $password;
+
     /**
      * @var string
      */
     private static $accessToken;
+
+    /**
+     * @var \Http\Mock\Client
+     */
+    private static $mockClient;
+
+    /**
+     * @var HttpMethodsClient
+     */
+    private static $httpClient;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$mockClient = new \Http\Mock\Client();
+
+        self::$httpClient = new HttpMethodsClient(
+            new PluginClient(self::$mockClient, [
+                new ErrorPlugin(),
+            ]),
+            MessageFactoryDiscovery::find()
+        );
+    }
 
     /**
      * @throws \Http\Client\Exception
@@ -44,7 +72,27 @@ class ClientTest extends TestCase
      */
     public function testGetMarketOrders()
     {
-        $client = Client::create(Config::doAuth(self::$username, self::$password));
+        $json = [
+            'status' => 'ok',
+            'orders' =>
+                [
+                    [
+                        'unmatchedAmount' => '0.1416000000',
+                        'amount' => '0.1416000000',
+                        'srcCurrency' => 'Bitcoin',
+                        'dstCurrency' => 'Tether(omni)',
+                        'matchedAmount' => '0E-10',
+                        'isMyOrder' => false,
+                        'price' => '5787.0000000000',
+                        'type' => 'sell',
+                        'totalPrice' => '819.43920000000000000000',
+                    ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         $orders = $client->getMarketOrders([
             "order" => "-price",
@@ -58,25 +106,12 @@ class ClientTest extends TestCase
 
     public function testGetMarketOrdersFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
-            function () use ($httpClient, $client) {
+            ClientErrorException::class,
+            function () use ($client) {
                 $client->getMarketOrders();
             },
             function ($exception) {
@@ -85,9 +120,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->getMarketOrders();
             },
             function ($exception) {
@@ -96,7 +135,6 @@ class ClientTest extends TestCase
             }
         );
     }
-
 
     /**
      * @throws \Http\Client\Exception
@@ -117,25 +155,12 @@ class ClientTest extends TestCase
 
     public function testGetMarketTradesFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
-            function () use ($httpClient, $client) {
+            ClientErrorException::class,
+            function () use ($client) {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
@@ -147,9 +172,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
@@ -208,25 +237,12 @@ class ClientTest extends TestCase
 
     public function testGetMarketStatsFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
-            function () use ($httpClient, $client) {
+            ClientErrorException::class,
+            function () use ($client) {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
@@ -238,9 +254,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
@@ -281,14 +301,88 @@ class ClientTest extends TestCase
         );
     }
 
-
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
     public function testGetUserProfile()
     {
-        $client = Client::create(new Config(new Bearer(self::$accessToken)));
+        $json = [
+            'status' => 'ok',
+            'profile' =>
+                [
+                    'firstName' => 'Milad',
+                    'lastName' => 'Nekofar',
+                    'nationalCode' => '011122333',
+                    'email' => 'name@example.com',
+                    'username' => 'name@example.com',
+                    'phone' => '02142719000-9012',
+                    'mobile' => '09151111111',
+                    'city' => 'Esfahan',
+                    'bankCards' =>
+                        [
+                            [
+                                'number' => '6037-9900-0000-0000',
+                                'bank' => 'Melli',
+                                'owner' => 'Milad Nekofar',
+                                'confirmed' => true,
+                                'status' => 'confirmed',
+                            ],
+                        ],
+                    'bankAccounts' =>
+                        [
+                            [
+                                'id' => 1999,
+                                'number' => '0346666666666',
+                                'shaba' => 'IR460170000000346666666666',
+                                'bank' => 'Melli',
+                                'owner' => 'Milad Nekofar',
+                                'confirmed' => true,
+                                'status' => 'confirmed',
+                            ],
+                        ],
+                    'verifications' =>
+                        [
+                            'email' => true,
+                            'phone' => true,
+                            'mobile' => true,
+                            'identity' => true,
+                            'selfie' => false,
+                            'bankAccount' => true,
+                            'bankCard' => true,
+                            'address' => true,
+                            'city' => true,
+                        ],
+                    'pendingVerifications' =>
+                        [
+                            'email' => false,
+                            'phone' => false,
+                            'mobile' => false,
+                            'identity' => false,
+                            'selfie' => false,
+                            'bankAccount' => false,
+                            'bankCard' => false,
+                        ],
+                    'options' =>
+                        [
+                            'fee' => '0.35',
+                            'feeUsdt' => '0.2',
+                            'isManualFee' => false,
+                            'tfa' => false,
+                            'socialLoginEnabled' => false,
+                        ],
+                    'withdrawEligible' => true,
+                ],
+            'tradeStats' =>
+                [
+                    'monthTradesTotal' => '10867181.5365000000',
+                    'monthTradesCount' => 3,
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         $profile = $client->getUserProfile();
 
@@ -300,25 +394,12 @@ class ClientTest extends TestCase
 
     public function testGetUserProfileFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
-            function () use ($httpClient, $client) {
+            ClientErrorException::class,
+            function () use ($client) {
                 $client->getUserProfile();
             },
             function ($exception) {
@@ -327,9 +408,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->getUserProfile();
             },
             function ($exception) {
@@ -339,13 +424,27 @@ class ClientTest extends TestCase
         );
     }
 
-
     /**
      * @throws \Http\Client\Exception
      */
     public function testGetUserLoginAttempts()
     {
-        $client = Client::create(new Config(new Bearer(self::$accessToken)));
+        $json = [
+            'status' => 'ok',
+            'attempts' =>
+                [
+                    [
+                        'ip' => '46.209.130.106',
+                        'username' => 'name@example.com',
+                        'status' => 'Successful',
+                        'createdAt' => '2018-11-28T14:16:08.264308+00:00',
+                    ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         $attempts = $client->getUserLoginAttempts();
 
@@ -358,25 +457,12 @@ class ClientTest extends TestCase
      */
     public function testGetUserLoginAttemptsFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
-            function () use ($httpClient, $client) {
+            ClientErrorException::class,
+            function () use ($client) {
                 $client->getUserLoginAttempts();
             },
             function ($exception) {
@@ -385,9 +471,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->getUserLoginAttempts();
             },
             function ($exception) {
@@ -397,14 +487,23 @@ class ClientTest extends TestCase
         );
     }
 
-
     /**
      *
      * @throws \Http\Client\Exception
      */
     public function testGetUserReferralCode()
     {
-        $client = Client::create(new Config(new Bearer(self::$accessToken)));
+        $json = [
+            'status' => 'ok',
+            'referredUsersCount' => 0,
+            'referralCode' => '84440',
+            'referralFeeTotalCount' => 0,
+            'referralFeeTotal' => 0,
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         $referralCode = $client->getUserReferralCode();
 
@@ -417,25 +516,12 @@ class ClientTest extends TestCase
      */
     public function testGetUserReferralCodeFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
-            function () use ($httpClient, $client) {
+            ClientErrorException::class,
+            function () use ($client) {
                 $client->getUserReferralCode();
             },
             function ($exception) {
@@ -444,9 +530,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->getUserReferralCode();
             },
             function ($exception) {
@@ -462,16 +552,9 @@ class ClientTest extends TestCase
      */
     public function testAddUserCard()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->willReturn(new Response('200', [], json_encode(['status' => 'ok'])));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response('200', [], json_encode(['status' => 'ok'])));
         $status = $client->addUserCard([
             "number" => "5041721011111111",
             "bank" => "Resalat"
@@ -486,31 +569,18 @@ class ClientTest extends TestCase
      */
     public function testAddUserCardFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(200),
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(200));
         $this->assertFalse($client->addUserCard([
             "number" => "5041721011111111",
             "bank" => "Resalat",
         ]));
 
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->addUserCard([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
@@ -522,9 +592,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->addUserCard([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
@@ -565,23 +639,15 @@ class ClientTest extends TestCase
         );
     }
 
-
     /**
      *
      * @throws \Http\Client\Exception
      */
     public function testAddUserAccount()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->willReturn(new Response('200', [], json_encode(['status' => 'ok'])));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response('200', [], json_encode(['status' => 'ok'])));
         $status = $client->addUserAccount([
             "number" => "5041721011111111",
             "bank" => "Resalat",
@@ -597,32 +663,19 @@ class ClientTest extends TestCase
      */
     public function testAddUserAccountFailure()
     {
-        $httpClient = $this->getMockBuilder(HttpMethodsClient::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client(self::$httpClient, new JsonMapper());
 
-        $httpClient->method('post')
-            ->will($this->onConsecutiveCalls(
-                new Response(200),
-                new Response(401),
-                new Response('200', [], json_encode([
-                    'status' => 'failed',
-                    'message' => 'Validation Failed'
-                ]))
-            ));
-
-        /** @var HttpMethodsClient $httpClient */
-        $client = new Client($httpClient, new JsonMapper());
-
+        self::$mockClient->addResponse(new Response(200));
         $this->assertFalse($client->addUserAccount([
             "number" => "5041721011111111",
             "bank" => "Resalat",
             "shaba" => "IR111111111111111111111111",
         ]));
 
+        self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
@@ -635,9 +688,13 @@ class ClientTest extends TestCase
             }
         );
 
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($httpClient, $client) {
+            function () use ($client) {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
@@ -693,23 +750,6 @@ class ClientTest extends TestCase
                 $this->assertEquals('Account shaba is missing.', $exception->getMessage());
             }
         );
-    }
-
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        try {
-            $dotenv = Dotenv::create(__DIR__ . '/..');
-            $dotenv->load();
-        } catch (Exception $e) {
-        }
-
-        self::$username = getenv('NOBITEX_USERNAME') ?: 'username';
-        self::$password = getenv('NOBITEX_PASSWORD') ?: 'password';
-
-        self::$accessToken = getenv('NOBITEX_ACCESS_TOKEN') ?: '';
     }
 
 }
