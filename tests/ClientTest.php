@@ -700,8 +700,12 @@ class ClientTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        $dotenv = Dotenv::create(__DIR__ . '/..');
-        $dotenv->load();
+        try {
+            $dotenv = Dotenv::create(__DIR__ . '/..');
+            $dotenv->load();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
 
         self::$username = getenv('NOBITEX_USERNAME') ?: 'username';
         self::$password = getenv('NOBITEX_PASSWORD') ?: 'password';
