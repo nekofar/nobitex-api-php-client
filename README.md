@@ -1,6 +1,7 @@
 # Nobitex Market PHP API
 
 [![Travis (.com) branch](https://img.shields.io/travis/com/nekofar/nobitex-api-php/master.svg)][3]
+[![Codecov](https://img.shields.io/codecov/c/gh/nekofar/nobitex-api-php.svg)][4]
 [![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)][2]
 [![Packagist Version](https://img.shields.io/packagist/v/nekofar/nobitex.svg)][1]
 
@@ -94,3 +95,4 @@ composer test
 [1]: https://packagist.org/packages/nekofar/nobitex
 [2]: https://github.com/nekofar/nobitex-api-php/blob/master/LICENSE
 [3]: https://travis-ci.com/nekofar/nobitex-api-php
+[4]: https://codecov.io/gh/nekofar/nobitex-api-php
