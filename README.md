@@ -14,8 +14,94 @@ composer require php-http/curl-client:~1.0 nekofar/nobitex:~1.0
 
 ## Usage
 
-We'll certainly need some stuff in here.
+### Authentication
+Use your username and password to access your own account.
 
+```php
+use \Nekofar\Nobitex\Client;
+use \Nekofar\Nobitex\Config;
+
+$config = Config::doAuth('username', 'password')
+$client = Client::create($config)
+```
+
+###Market Data
+
+#### Market Orders
+
+```php
+$orders = $client->getMarketOrders();
+```
+
+#### Market Trades
+
+```php
+$trades = $client->getMarketTrades([
+    "srcCurrency" => "btc",
+    "dstCurrency" => "rls"
+]);
+```
+
+### User Info
+
+#### User Profile
+
+```php
+$profile = $client->getUserProfile();
+```
+
+#### Login Attempts
+
+```php
+$attempts = $client->getUserLoginAttempts();
+```
+
+#### Referral Code
+
+```php
+$referralCode = $client->getUserReferralCode();
+```
+
+#### Add Bank Card
+
+```php
+$status = $client->addUserCard([
+    "number" => "5041721011111111",
+    "bank" => "Resalat"
+]);
+```
+
+#### Add Bank Account
+
+```php
+$status = $client->addUserAccount([
+    "number" => "5041721011111111",
+    "bank" => "Resalat",
+    "shaba" => "IR111111111111111111111111",
+]);
+```
+
+## Contributing and testing
+
+The test suite is built using PHPUnit. Run the suite of unit tests by running
+the `phpunit` command.
+
+```bash
+phpunit
+```
+
+To run these tests, you must copy create a `.env` file in project root, 
+then provide values for the `NOBITEX_USERNAME` and
+`NOBITEX_PASSWORD` variables.
+
+```bash
+cat >> .env <<EOF
+NOBITEX_USERNAME=username
+NOBITEX_PASSWORD=password
+EOF
+```
+
+---
 [1]: https://packagist.org/packages/nekofar/nobitex
 [2]: https://github.com/nekofar/nobitex-api-php/blob/master/LICENSE
 [3]: https://travis-ci.com/nekofar/nobitex-api-php
