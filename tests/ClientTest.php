@@ -67,6 +67,19 @@ class ClientTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function testCreate()
+    {
+        $config = Config::doAuth(self::$username, self::$password);
+        $client = Client::create($config);
+
+        $this->assertInstanceOf(Config::class, $config);
+        $this->assertInstanceOf(Client::class, $client);
+    }
+
+
+    /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
