@@ -107,6 +107,18 @@ $balance = $client->getUserWalletBalance(['currency' => 'ltc']);
 $transactions = $client->getUserWalletTransactions(['wallet' => 123456]);
 ```
 
+#### User Wallet Deposits
+
+```php
+$deposits = $client->getUserWalletDeposits(['wallet' => 123456]);
+```
+
+#### User Wallet Withdraws
+
+```php
+$withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
+```
+
 ## Contributing and testing
 
 The test suite is built using PHPUnit. Run the suite of unit tests by running

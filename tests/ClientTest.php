@@ -19,11 +19,13 @@ use JsonMapper;
 use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Account;
 use Nekofar\Nobitex\Model\Card;
+use Nekofar\Nobitex\Model\Deposit;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
 use Nekofar\Nobitex\Model\Transaction;
 use Nekofar\Nobitex\Model\Wallet;
+use Nekofar\Nobitex\Model\Withdraw;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -1162,6 +1164,224 @@ class ClientTest extends TestCase
 
         self::$mockClient->addResponse(new Response(200));
         $this->assertFalse($client->getUserWalletTransactions(['wallet' => 123456]));
+
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletDeposits()
+    {
+        $json = [
+            'status' => 'ok',
+            'deposits' =>
+                [
+                    0 =>
+                        [
+                            'txHash' => 'c5d84268a0bf02307b5a0460a68b61987a9b3009d3a82a817e41558e619ec1d2',
+                            'address' => '32KfyTNh162UoKithfDrWHZPYq5uePGmf7',
+                            'confirmed' => true,
+                            'transaction' =>
+                                [
+                                    'id' => 10,
+                                    'amount' => '3.0000000000',
+                                    'currency' => 'btc',
+                                    'description' => 'Deposit - address:36n452uGq1x4mK7bfyZR8wgE47AnBb2pzi, tx:c5d84268a0bf02307b5a0460a68b61987a9b3009d3a82a817e41558e619ec1d2',
+                                    'created_at' => '2018-11-06T03:56:18+00:00',
+                                    'calculatedFee' => '0',
+                                ],
+                            'currency' => 'Bitcoin',
+                            'blockchainUrl' => 'https://btc.com/c5d84268a0bf02307b5a0460a68b61987a9b3009d3a82a817e41558e619ec1d2',
+                            'confirmations' => 2,
+                            'requiredConfirmations' => 3,
+                            'amount' => '3.0000000000',
+                        ],
+                ],
+            'withdraws' =>
+                [
+                    0 =>
+                        [
+                            'id' => 2398,
+                            'blockchain_url' => 'https://live.blockcypher.com/ltc/tx/c1ed4229e598d4cf81e99e79fb06294a70af39443e2639e22c69bc30d6ecda67/',
+                            'is_cancelable' => false,
+                            'status' => 'Done',
+                            'amount' => '1.0000000000',
+                            'createdAt' => '2018-10-04T12:59:38.196935+00:00',
+                            'wallet_id' => 4159,
+                            'currency' => 'ltc',
+                            'address' => 'Lgn1zc77mEjk72KvXPqyXq8K1mAfcDE6YR',
+                        ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $deposits = $client->getUserWalletDeposits(['wallet' => 123456]);
+
+        $this->assertIsArray($deposits);
+        $this->assertContainsOnlyInstancesOf(Deposit::class, $deposits);
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletDepositsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWalletDeposits(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWalletDeposits(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getUserWalletDeposits(['wallet' => 0]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWalletDeposits(['wallet' => 123456]));
+
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletWithdraws()
+    {
+        $json = [
+            'status' => 'ok',
+            'deposits' =>
+                [
+                    0 =>
+                        [
+                            'txHash' => 'c5d84268a0bf02307b5a0460a68b61987a9b3009d3a82a817e41558e619ec1d2',
+                            'address' => '32KfyTNh162UoKithfDrWHZPYq5uePGmf7',
+                            'confirmed' => true,
+                            'transaction' =>
+                                [
+                                    'id' => 10,
+                                    'amount' => '3.0000000000',
+                                    'currency' => 'btc',
+                                    'description' => 'Deposit - address:36n452uGq1x4mK7bfyZR8wgE47AnBb2pzi, tx:c5d84268a0bf02307b5a0460a68b61987a9b3009d3a82a817e41558e619ec1d2',
+                                    'created_at' => '2018-11-06T03:56:18+00:00',
+                                    'calculatedFee' => '0',
+                                ],
+                            'currency' => 'Bitcoin',
+                            'blockchainUrl' => 'https://btc.com/c5d84268a0bf02307b5a0460a68b61987a9b3009d3a82a817e41558e619ec1d2',
+                            'confirmations' => 2,
+                            'requiredConfirmations' => 3,
+                            'amount' => '3.0000000000',
+                        ],
+                ],
+            'withdraws' =>
+                [
+                    0 =>
+                        [
+                            'id' => 2398,
+                            'blockchain_url' => 'https://live.blockcypher.com/ltc/tx/c1ed4229e598d4cf81e99e79fb06294a70af39443e2639e22c69bc30d6ecda67/',
+                            'is_cancelable' => false,
+                            'status' => 'Done',
+                            'amount' => '1.0000000000',
+                            'createdAt' => '2018-10-04T12:59:38.196935+00:00',
+                            'wallet_id' => 4159,
+                            'currency' => 'ltc',
+                            'address' => 'Lgn1zc77mEjk72KvXPqyXq8K1mAfcDE6YR',
+                        ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
+
+        $this->assertIsArray($withdraws);
+        $this->assertContainsOnlyInstancesOf(Withdraw::class, $withdraws);
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletWithdrawsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWalletWithdraws(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWalletWithdraws(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getUserWalletWithdraws(['wallet' => 0]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWalletWithdraws(['wallet' => 123456]));
 
     }
 
