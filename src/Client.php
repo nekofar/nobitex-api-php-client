@@ -360,4 +360,34 @@ class Client
 
         return false;
     }
+
+    /**
+     * @param array $args
+     *
+     * @return float|bool
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getUserWalletBalance(array $args)
+    {
+        if (!isset($args['currency']) ||
+            empty($args['currency'])) {
+            throw new InvalidArgumentException("Currency code is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/wallets/balance', [], $data);
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->balance) && $json->status === 'ok') {
+            return (float)$json->balance;
+        }
+
+        return false;
+    }
 }

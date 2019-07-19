@@ -1015,4 +1015,74 @@ class ClientTest extends TestCase
         $this->assertFalse($client->getUserWallets());
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletBalance()
+    {
+        $json = [
+            'balance' => '10.2649975000',
+            'status' => 'ok',
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $balance = $client->getUserWalletBalance(['currency' => 'ltc']);
+
+        $this->assertIsFloat($balance);
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletBalanceFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWalletBalance(['currency' => 'ltc']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWalletBalance(['currency' => 'ltc']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getUserWalletBalance(['currency' => '']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Currency code is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWalletBalance(['currency' => 'ltc']));
+
+    }
+
+
 }

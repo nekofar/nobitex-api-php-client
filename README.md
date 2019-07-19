@@ -94,6 +94,12 @@ $status = $client->addUserAccount([
 $wallets = $client->getUserWallets();
 ```
 
+#### User Wallet Balance
+
+```php
+$balance = $client->getUserWalletBalance(['currency' => 'ltc']);
+```
+
 ## Contributing and testing
 
 The test suite is built using PHPUnit. Run the suite of unit tests by running
