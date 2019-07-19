@@ -313,4 +313,26 @@ class Client
         return false;
     }
 
+    /**
+     * @return array|false Return an array on success or false on
+     *                     unexpected errors.
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getUserLimitations()
+    {
+        $resp = $this->httpClient->post('/users/get-referral-code');
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->limitations) && $json->status === 'ok') {
+            return json_decode(json_encode($json->limitations), true);
+        }
+
+        return false;
+    }
 }

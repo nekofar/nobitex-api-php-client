@@ -63,6 +63,12 @@ $attempts = $client->getUserLoginAttempts();
 $referralCode = $client->getUserReferralCode();
 ```
 
+#### User Limitations 
+
+```php
+$limitations = $client->getUserLimitations();
+```
+
 #### Add Bank Card
 
 ```php

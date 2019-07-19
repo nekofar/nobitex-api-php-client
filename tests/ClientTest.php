@@ -809,4 +809,60 @@ class ClientTest extends TestCase
         );
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserLimitations()
+    {
+        $json = [
+            'status' => 'ok',
+            'limitations' =>
+                [
+                    'userLevel' => 'level2',
+                    'features' =>
+                        [
+                            'crypto_trade' => false,
+                            'rial_trade' => false,
+                            'coin_deposit' => false,
+                            'rial_deposit' => false,
+                            'coin_withdrawal' => false,
+                            'rial_withdrawal' => false,
+                        ],
+                    'limits' =>
+                        [
+                            'withdrawRialDaily' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '900000000',
+                                ],
+                            'withdrawCoinDaily' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '2000000000',
+                                ],
+                            'withdrawTotalDaily' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '2000000000',
+                                ],
+                            'withdrawTotalMonthly' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '30000000000',
+                                ],
+                        ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $limitations = $client->getUserLimitations();
+
+        $this->assertIsArray($limitations);
+        $this->assertNotEmpty($limitations);
+    }
+
+
 }
