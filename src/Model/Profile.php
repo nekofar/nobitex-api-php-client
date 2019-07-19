@@ -92,7 +92,7 @@ class Profile
     /**
      * @param object $object
      * @param string $propName
-     * @param mixed  $jsonValue
+     * @param mixed $jsonValue
      *
      * @throws JsonMapper_Exception
      */
