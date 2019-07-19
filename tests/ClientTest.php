@@ -53,6 +53,7 @@ class ClientTest extends TestCase
      */
     private static $httpClient;
 
+    /** @noinspection PhpLanguageLevelInspection */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -118,6 +119,10 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Order::class, $orders);
     }
 
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
     public function testGetMarketOrdersFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -148,6 +153,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketOrders());
     }
 
     /**
@@ -187,6 +195,10 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Trade::class, $trades);
     }
 
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
     public function testGetMarketTradesFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -251,6 +263,12 @@ class ClientTest extends TestCase
                 $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketTrades([
+            "srcCurrency" => "btc",
+            "dstCurrency" => "rls"
+        ]));
     }
 
     /**
@@ -291,6 +309,9 @@ class ClientTest extends TestCase
         $this->assertIsArray($stats);
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
     public function testGetMarketStatsFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -355,6 +376,12 @@ class ClientTest extends TestCase
                 $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketStats([
+            "srcCurrency" => "btc",
+            "dstCurrency" => "rls"
+        ]));
     }
 
     /**
@@ -448,6 +475,10 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
 
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
     public function testGetUserProfileFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -478,6 +509,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserProfile());
     }
 
     /**
@@ -509,6 +543,7 @@ class ClientTest extends TestCase
 
     /**
      *
+     * @throws \Http\Client\Exception
      */
     public function testGetUserLoginAttemptsFailure()
     {
@@ -540,6 +575,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserLoginAttempts());
     }
 
     /**
@@ -567,6 +605,7 @@ class ClientTest extends TestCase
 
     /**
      *
+     * @throws \Http\Client\Exception
      */
     public function testGetUserReferralCodeFailure()
     {
@@ -598,6 +637,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserReferralCode());
     }
 
     /**
@@ -860,5 +902,43 @@ class ClientTest extends TestCase
         $this->assertIsArray($limitations);
     }
 
+    /**
+     *
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserLimitationsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserLimitations();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserLimitations();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserLimitations());
+    }
 
 }
