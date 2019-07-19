@@ -13,11 +13,13 @@ use Http\Client\HttpClient;
 use InvalidArgumentException;
 use JsonMapper;
 use JsonMapper_Exception;
+use Nekofar\Nobitex\Model\Deposit;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
 use Nekofar\Nobitex\Model\Transaction;
 use Nekofar\Nobitex\Model\Wallet;
+use Nekofar\Nobitex\Model\Withdraw;
 
 /**
  * Class Client
@@ -423,6 +425,75 @@ class Client
 
             return $this->jsonMapper
                 ->mapArray($json->transactions, [], Transaction::class);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return Deposit[]|false
+     *
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getUserWalletDeposits(array $args)
+    {
+        if (!isset($args['wallet']) ||
+            empty($args['wallet'])) {
+            throw new InvalidArgumentException("Wallet id is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->deposits) && $json->status === 'ok') {
+            return $this->jsonMapper
+                ->mapArray($json->deposits, [], Deposit::class);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return Withdraw[]|false
+     *
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getUserWalletWithdraws(array $args)
+    {
+        if (!isset($args['wallet']) ||
+            empty($args['wallet'])) {
+            throw new InvalidArgumentException("Wallet id is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->withdraws) && $json->status === 'ok') {
+            $this->jsonMapper->undefinedPropertyHandler = [
+                Withdraw::class,
+                'setUndefinedProperty',
+            ];
+
+            return $this->jsonMapper
+                ->mapArray($json->withdraws, [], Withdraw::class);
         }
 
         return false;

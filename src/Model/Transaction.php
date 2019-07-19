@@ -50,5 +50,4 @@ class Transaction
             $object->{'createdAt'} = new \DateTime($jsonValue);
         }
     }
-
 }
