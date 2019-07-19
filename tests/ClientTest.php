@@ -22,6 +22,7 @@ use Nekofar\Nobitex\Model\Card;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
+use Nekofar\Nobitex\Model\Wallet;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -939,6 +940,79 @@ class ClientTest extends TestCase
 
         self::$mockClient->addResponse(new Response(200));
         $this->assertFalse($client->getUserLimitations());
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWallets()
+    {
+        $json = [
+            'status' => 'ok',
+            'wallets' =>
+                [
+                    [
+                        'activeBalance' => '10.2649975000',
+                        'blockedBalance' => '0',
+                        'user' => 'name@example.com',
+                        'currency' => 'ltc',
+                        'id' => 4159,
+                        'balance' => '10.2649975000',
+                        'rialBalance' => 51322935,
+                        'rialBalanceSell' => 52507310,
+                        'depositAddress' => null,
+                    ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $wallets = $client->getUserWallets();
+
+        $this->assertIsArray($wallets);
+        $this->assertContainsOnlyInstancesOf(Wallet::class, $wallets);
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWallets();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWallets();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWallets());
     }
 
 }

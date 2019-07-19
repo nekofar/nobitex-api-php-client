@@ -88,6 +88,12 @@ $status = $client->addUserAccount([
 ]);
 ```
 
+#### User Wallets
+
+```php
+$wallets = $client->getUserWallets();
+```
+
 ## Contributing and testing
 
 The test suite is built using PHPUnit. Run the suite of unit tests by running

@@ -16,6 +16,7 @@ use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
+use Nekofar\Nobitex\Model\Wallet;
 
 /**
  * Class Client
@@ -331,6 +332,30 @@ class Client
 
         if (isset($json->limitations) && $json->status === 'ok') {
             return json_decode(json_encode($json->limitations), true);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return Wallet[]|bool
+     *
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getUserWallets()
+    {
+        $resp = $this->httpClient->post('/users/wallets/list');
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->wallets) && $json->status === 'ok') {
+            return $this->jsonMapper
+                ->mapArray($json->wallets, [], Wallet::class);
         }
 
         return false;
