@@ -289,7 +289,6 @@ class ClientTest extends TestCase
         ]);
 
         $this->assertIsArray($stats);
-        $this->assertNotEmpty($stats);
     }
 
     public function testGetMarketStatsFailure()
@@ -506,7 +505,6 @@ class ClientTest extends TestCase
         $attempts = $client->getUserLoginAttempts();
 
         $this->assertIsArray($attempts);
-        $this->assertNotEmpty($attempts);
     }
 
     /**
@@ -565,7 +563,6 @@ class ClientTest extends TestCase
         $referralCode = $client->getUserReferralCode();
 
         $this->assertIsString($referralCode);
-        $this->assertNotEmpty($referralCode);
     }
 
     /**
@@ -861,7 +858,6 @@ class ClientTest extends TestCase
         $limitations = $client->getUserLimitations();
 
         $this->assertIsArray($limitations);
-        $this->assertNotEmpty($limitations);
     }
 
 
