@@ -16,6 +16,7 @@ use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
+use Nekofar\Nobitex\Model\Transaction;
 use Nekofar\Nobitex\Model\Wallet;
 
 /**
@@ -386,6 +387,42 @@ class Client
 
         if (isset($json->balance) && $json->status === 'ok') {
             return (float)$json->balance;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return Transaction[]|false
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getUserWalletTransactions(array $args)
+    {
+        if (!isset($args['wallet']) ||
+            empty($args['wallet'])) {
+            throw new InvalidArgumentException("Wallet id is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/wallets/transactions/list', [], $data); // phpcs:ignore
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->transactions) && $json->status === 'ok') {
+            $this->jsonMapper->undefinedPropertyHandler = [
+                Transaction::class,
+                'setUndefinedProperty',
+            ];
+
+            return $this->jsonMapper
+                ->mapArray($json->transactions, [], Transaction::class);
         }
 
         return false;

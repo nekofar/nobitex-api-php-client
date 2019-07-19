@@ -22,6 +22,7 @@ use Nekofar\Nobitex\Model\Card;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
+use Nekofar\Nobitex\Model\Transaction;
 use Nekofar\Nobitex\Model\Wallet;
 use PHPUnit\Framework\TestCase;
 
@@ -1081,6 +1082,86 @@ class ClientTest extends TestCase
 
         self::$mockClient->addResponse(new Response(200));
         $this->assertFalse($client->getUserWalletBalance(['currency' => 'ltc']));
+
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletTransactions()
+    {
+        $json = [
+            'transactions' =>
+                [
+                    [
+                        'currency' => 'ltc',
+                        'created_at' => '2018-10-04T13:05:01.384902+00:00',
+                        'calculatedFee' => '0',
+                        'id' => 96541,
+                        'amount' => '-1.0000000000',
+                        'description' => 'Withdraw to "Lgn1zc77mEjk72KvXPqyXq8K1mAfcDE6YR"',
+                    ],
+                ],
+            'status' => 'ok',
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $transactions = $client->getUserWalletTransactions(['wallet' => 123456]);
+
+        $this->assertIsArray($transactions);
+        $this->assertContainsOnlyInstancesOf(Transaction::class, $transactions);
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletTransactionsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWalletTransactions(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWalletTransactions(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getUserWalletTransactions(['wallet' => 0]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWalletTransactions(['wallet' => 123456]));
 
     }
 
