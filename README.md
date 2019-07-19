@@ -4,6 +4,7 @@
 [![Codecov](https://img.shields.io/codecov/c/gh/nekofar/nobitex-api-php.svg)][4]
 [![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)][2]
 [![Packagist Version](https://img.shields.io/packagist/v/nekofar/nobitex.svg)][1]
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/nekofar/nobitex.svg)][1]
 
 ## Installation
 
@@ -63,6 +64,12 @@ $attempts = $client->getUserLoginAttempts();
 $referralCode = $client->getUserReferralCode();
 ```
 
+#### User Limitations 
+
+```php
+$limitations = $client->getUserLimitations();
+```
+
 #### Add Bank Card
 
 ```php
@@ -80,6 +87,24 @@ $status = $client->addUserAccount([
     "bank" => "Resalat",
     "shaba" => "IR111111111111111111111111",
 ]);
+```
+
+#### User Wallets
+
+```php
+$wallets = $client->getUserWallets();
+```
+
+#### User Wallet Balance
+
+```php
+$balance = $client->getUserWalletBalance(['currency' => 'ltc']);
+```
+
+#### User Wallet Transactions
+
+```php
+$transactions = $client->getUserWalletTransactions(['wallet' => 123456]);
 ```
 
 ## Contributing and testing

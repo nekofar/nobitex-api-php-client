@@ -13,6 +13,7 @@ use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\MessageFactoryDiscovery;
+use InvalidArgumentException;
 use Jchook\AssertThrows\AssertThrows;
 use JsonMapper;
 use JsonMapper_Exception;
@@ -21,6 +22,8 @@ use Nekofar\Nobitex\Model\Card;
 use Nekofar\Nobitex\Model\Order;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
+use Nekofar\Nobitex\Model\Transaction;
+use Nekofar\Nobitex\Model\Wallet;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -52,6 +55,7 @@ class ClientTest extends TestCase
      */
     private static $httpClient;
 
+    /** @noinspection PhpLanguageLevelInspection */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -117,6 +121,10 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Order::class, $orders);
     }
 
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
     public function testGetMarketOrdersFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -147,6 +155,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketOrders());
     }
 
     /**
@@ -186,6 +197,10 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Trade::class, $trades);
     }
 
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
     public function testGetMarketTradesFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -224,7 +239,7 @@ class ClientTest extends TestCase
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketTrades([
                     "srcCurrency" => "",
@@ -232,13 +247,13 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Source currency is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
@@ -246,10 +261,16 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Destination currency is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketTrades([
+            "srcCurrency" => "btc",
+            "dstCurrency" => "rls"
+        ]));
     }
 
     /**
@@ -288,9 +309,11 @@ class ClientTest extends TestCase
         ]);
 
         $this->assertIsArray($stats);
-        $this->assertNotEmpty($stats);
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
     public function testGetMarketStatsFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -329,7 +352,7 @@ class ClientTest extends TestCase
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketStats([
                     "srcCurrency" => "",
@@ -338,12 +361,12 @@ class ClientTest extends TestCase
             },
             function ($exception) {
                 /** @var Exception $exception */
-                $this->assertEquals('Source currency is missing.', $exception->getMessage());
+                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
@@ -352,9 +375,15 @@ class ClientTest extends TestCase
             },
             function ($exception) {
                 /** @var Exception $exception */
-                $this->assertEquals('Destination currency is missing.', $exception->getMessage());
+                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketStats([
+            "srcCurrency" => "btc",
+            "dstCurrency" => "rls"
+        ]));
     }
 
     /**
@@ -448,6 +477,10 @@ class ClientTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
 
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
     public function testGetUserProfileFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
@@ -478,6 +511,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserProfile());
     }
 
     /**
@@ -505,11 +541,11 @@ class ClientTest extends TestCase
         $attempts = $client->getUserLoginAttempts();
 
         $this->assertIsArray($attempts);
-        $this->assertNotEmpty($attempts);
     }
 
     /**
      *
+     * @throws \Http\Client\Exception
      */
     public function testGetUserLoginAttemptsFailure()
     {
@@ -541,6 +577,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserLoginAttempts());
     }
 
     /**
@@ -564,11 +603,11 @@ class ClientTest extends TestCase
         $referralCode = $client->getUserReferralCode();
 
         $this->assertIsString($referralCode);
-        $this->assertNotEmpty($referralCode);
     }
 
     /**
      *
+     * @throws \Http\Client\Exception
      */
     public function testGetUserReferralCodeFailure()
     {
@@ -600,6 +639,9 @@ class ClientTest extends TestCase
                 $this->assertEquals('Validation Failed', $exception->getMessage());
             }
         );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserReferralCode());
     }
 
     /**
@@ -667,7 +709,7 @@ class ClientTest extends TestCase
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserCard([
                     "number" => "",
@@ -675,13 +717,13 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Card number is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Card number is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserCard([
                     "number" => "50417210111111111",
@@ -689,8 +731,8 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Bank name is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Bank name is invalid.', $exception->getMessage());
             }
         );
     }
@@ -730,7 +772,7 @@ class ClientTest extends TestCase
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
+            ClientErrorException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
@@ -739,7 +781,7 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
+                /** @var ClientErrorException $exception */
                 $this->assertEquals('Unauthorized', $exception->getMessage());
             }
         );
@@ -763,7 +805,7 @@ class ClientTest extends TestCase
             }
         );
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "",
@@ -773,12 +815,12 @@ class ClientTest extends TestCase
             },
             function ($exception) {
                 /** @var Exception $exception */
-                $this->assertEquals('Account number is missing.', $exception->getMessage());
+                $this->assertEquals('Account number is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
@@ -787,13 +829,13 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Bank name is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Bank name is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
@@ -802,10 +844,326 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Account shaba is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Account shaba is invalid.', $exception->getMessage());
             }
         );
     }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserLimitations()
+    {
+        $json = [
+            'status' => 'ok',
+            'limitations' =>
+                [
+                    'userLevel' => 'level2',
+                    'features' =>
+                        [
+                            'crypto_trade' => false,
+                            'rial_trade' => false,
+                            'coin_deposit' => false,
+                            'rial_deposit' => false,
+                            'coin_withdrawal' => false,
+                            'rial_withdrawal' => false,
+                        ],
+                    'limits' =>
+                        [
+                            'withdrawRialDaily' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '900000000',
+                                ],
+                            'withdrawCoinDaily' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '2000000000',
+                                ],
+                            'withdrawTotalDaily' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '2000000000',
+                                ],
+                            'withdrawTotalMonthly' =>
+                                [
+                                    'used' => '0',
+                                    'limit' => '30000000000',
+                                ],
+                        ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $limitations = $client->getUserLimitations();
+
+        $this->assertIsArray($limitations);
+    }
+
+    /**
+     *
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserLimitationsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserLimitations();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserLimitations();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserLimitations());
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWallets()
+    {
+        $json = [
+            'status' => 'ok',
+            'wallets' =>
+                [
+                    [
+                        'activeBalance' => '10.2649975000',
+                        'blockedBalance' => '0',
+                        'user' => 'name@example.com',
+                        'currency' => 'ltc',
+                        'id' => 4159,
+                        'balance' => '10.2649975000',
+                        'rialBalance' => 51322935,
+                        'rialBalanceSell' => 52507310,
+                        'depositAddress' => null,
+                    ],
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $wallets = $client->getUserWallets();
+
+        $this->assertIsArray($wallets);
+        $this->assertContainsOnlyInstancesOf(Wallet::class, $wallets);
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWallets();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWallets();
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWallets());
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletBalance()
+    {
+        $json = [
+            'balance' => '10.2649975000',
+            'status' => 'ok',
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $balance = $client->getUserWalletBalance(['currency' => 'ltc']);
+
+        $this->assertIsFloat($balance);
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletBalanceFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWalletBalance(['currency' => 'ltc']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWalletBalance(['currency' => 'ltc']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getUserWalletBalance(['currency' => '']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Currency code is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWalletBalance(['currency' => 'ltc']));
+
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletTransactions()
+    {
+        $json = [
+            'transactions' =>
+                [
+                    [
+                        'currency' => 'ltc',
+                        'created_at' => '2018-10-04T13:05:01.384902+00:00',
+                        'calculatedFee' => '0',
+                        'id' => 96541,
+                        'amount' => '-1.0000000000',
+                        'description' => 'Withdraw to "Lgn1zc77mEjk72KvXPqyXq8K1mAfcDE6YR"',
+                    ],
+                ],
+            'status' => 'ok',
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $transactions = $client->getUserWalletTransactions(['wallet' => 123456]);
+
+        $this->assertIsArray($transactions);
+        $this->assertContainsOnlyInstancesOf(Transaction::class, $transactions);
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserWalletTransactionsFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getUserWalletTransactions(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getUserWalletTransactions(['wallet' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getUserWalletTransactions(['wallet' => 0]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getUserWalletTransactions(['wallet' => 123456]));
+
+    }
+
 
 }
