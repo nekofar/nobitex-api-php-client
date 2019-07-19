@@ -10,6 +10,7 @@ namespace Nekofar\Nobitex;
 use Exception;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
+use InvalidArgumentException;
 use JsonMapper;
 use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Order;
@@ -57,116 +58,112 @@ class Client
     }
 
     /**
-     * @param array $params
+     * @param array $args
      *
-     * @return Order[]
+     * @return Order[]|false Return and array on success or false on
+     *                       unexpected errors.
      *
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function getMarketOrders($params = [])
+    public function getMarketOrders($args = [])
     {
-        $orders = [];
-        $body = json_encode($params);
-
-        $response = $this->httpClient->post('/market/orders/list', [], $body);
-
-        $json = json_decode($response->getBody());
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/market/orders/list', [], $data);
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
         if (isset($json->orders) && $json->status === 'ok') {
-            $orders = $this->jsonMapper
+            return $this->jsonMapper
                 ->mapArray($json->orders, [], Order::class);
         }
 
-        return $orders;
+        return false;
     }
 
     /**
-     * @param array $params
+     * @param array $args
      *
-     * @return Trade[]
+     * @return Trade[]|false Return and array on success or false on
+     *                       unexpected errors.
      *
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function getMarketTrades(array $params)
+    public function getMarketTrades(array $args)
     {
-        if (!isset($params['srcCurrency']) ||
-            empty($params['srcCurrency'])) {
-            throw new Exception("Source currency is missing.");
+        if (!isset($args['srcCurrency']) ||
+            empty($args['srcCurrency'])) {
+            throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($params['dstCurrency']) ||
-            empty($params['dstCurrency'])) {
-            throw new Exception("Destination currency is missing.");
+        if (!isset($args['dstCurrency']) ||
+            empty($args['dstCurrency'])) {
+            throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
-        $trades = [];
-        $body = json_encode($params);
-
-        $response = $this->httpClient->post('/market/trades/list', [], $body);
-
-        $json = json_decode($response->getBody());
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/market/trades/list', [], $data);
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
         if (isset($json->trades) && $json->status === 'ok') {
-            $trades = $this->jsonMapper
+            return $this->jsonMapper
                 ->mapArray($json->trades, [], Trade::class);
         }
 
-        return $trades;
+        return false;
     }
 
     /**
-     * @param array $params
+     * @param array $args
      *
-     * @return array
+     * @return array|false Return an array on success or false on
+     *                     unexpected errors.
      *
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function getMarketStats(array $params)
+    public function getMarketStats(array $args)
     {
-        if (!isset($params['srcCurrency']) ||
-            empty($params['srcCurrency'])) {
-            throw new Exception("Source currency is missing.");
+        if (!isset($args['srcCurrency']) ||
+            empty($args['srcCurrency'])) {
+            throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($params['dstCurrency']) ||
-            empty($params['dstCurrency'])) {
-            throw new Exception("Destination currency is missing.");
+        if (!isset($args['dstCurrency']) ||
+            empty($args['dstCurrency'])) {
+            throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
-        $stats = [];
-        $body = json_encode($params);
-
-        $response = $this->httpClient->post('/market/stats', [], $body);
-
-        $json = json_decode($response->getBody());
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/market/stats', [], $data);
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
         if (isset($json->stats) && $json->status === 'ok') {
-            $match = "{$params['srcCurrency']}-{$params['dstCurrency']}";
-            $stats = (array)$json->stats->{$match};
+            return (array)$json->stats
+                ->{"{$args['srcCurrency']}-{$args['dstCurrency']}"};
         }
 
-        return $stats;
+        return false;
     }
 
     /**
-     * @return Profile
+     * @return Profile|false Return a Profile object on success or false on
+     *                       unexpected errors
      *
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
@@ -174,11 +171,8 @@ class Client
      */
     public function getUserProfile()
     {
-        $profile = new Profile();
-
-        $response = $this->httpClient->post('/users/profile');
-
-        $json = json_decode($response->getBody());
+        $resp = $this->httpClient->post('/users/profile');
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
@@ -189,93 +183,89 @@ class Client
                 Profile::class,
                 'setUndefinedProperty',
             ];
-            $profile = $this->jsonMapper->map($json->profile, $profile);
+
+            /** @var Profile $profile */
+            $profile = $this->jsonMapper->map($json->profile, new Profile());
+
+            return $profile;
         }
 
-        return $profile;
+        return false;
     }
 
     /**
-     * @return array
+     * @return array|false Return an array on success or false on
+     *                     unexpected errors.
      *
      * @throws \Http\Client\Exception
      * @throws Exception
      */
     public function getUserLoginAttempts()
     {
-        $attempts = [];
-
-        $response = $this->httpClient->post('/users/login-attempts');
-
-        $json = json_decode($response->getBody());
+        $resp = $this->httpClient->post('/users/login-attempts');
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
         if (isset($json->attempts) && $json->status === 'ok') {
-            $attempts = (array)$json->attempts;
+            return (array)$json->attempts;
         }
 
-        return $attempts;
+        return false;
     }
 
     /**
-     * @return string|null
+     * @return string|false
      *
      * @throws \Http\Client\Exception
      * @throws Exception
      */
     public function getUserReferralCode()
     {
-        $referralCode = null;
-
-        $response = $this->httpClient->post('/users/get-referral-code');
-
-        $json = json_decode($response->getBody());
+        $resp = $this->httpClient->post('/users/get-referral-code');
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
         if (isset($json->referralCode) && $json->status === 'ok') {
-            $referralCode = $json->referralCode;
+            return $json->referralCode;
         }
 
-        return $referralCode;
+        return false;
     }
 
     /**
-     * @param array $params
+     * @param array $args
      *
      * @return bool
      *
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function addUserCard(array $params)
+    public function addUserCard(array $args)
     {
-        if (!isset($params['bank']) ||
-            empty($params['bank'])) {
-            throw new Exception("Bank name is missing.");
+        if (!isset($args['bank']) ||
+            empty($args['bank'])) {
+            throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (!isset($params['number']) ||
-            !preg_match('/^[0-9]{16}$/', $params['number'])) {
-            throw new Exception("Card number is missing.");
+        if (!isset($args['number']) ||
+            !preg_match('/^[0-9]{16}$/', $args['number'])) {
+            throw new InvalidArgumentException("Card number is invalid.");
         }
 
-        $body = json_encode($params);
-
-        $response = $this->httpClient->post('/users/cards-add', [], $body);
-
-        $json = json_decode($response->getBody());
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/cards-add', [], $data);
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
-        $json = json_decode($response->getBody());
         if (isset($json->status) && $json->status === 'ok') {
             return true;
         }
@@ -284,45 +274,43 @@ class Client
     }
 
     /**
-     * @param array $params
+     * @param array $args
      *
      * @return bool
      *
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function addUserAccount(array $params)
+    public function addUserAccount(array $args)
     {
-        if (!isset($params['bank']) ||
-            empty($params['bank'])) {
-            throw new Exception("Bank name is missing.");
+        if (!isset($args['bank']) ||
+            empty($args['bank'])) {
+            throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (!isset($params['number']) ||
-            !preg_match('/^[0-9]+$/', $params['number'])) {
-            throw new Exception("Account number is missing.");
+        if (!isset($args['number']) ||
+            !preg_match('/^[0-9]+$/', $args['number'])) {
+            throw new InvalidArgumentException("Account number is invalid.");
         }
 
-        if (!isset($params['shaba']) ||
-            !preg_match('/^IR[0-9]{24}$/', $params['shaba'])) {
-            throw new Exception("Account shaba is missing.");
+        if (!isset($args['shaba']) ||
+            !preg_match('/^IR[0-9]{24}$/', $args['shaba'])) {
+            throw new InvalidArgumentException("Account shaba is invalid.");
         }
 
-        $body = json_encode($params);
-
-        $response = $this->httpClient->post('/users/account-add', [], $body);
-
-        $json = json_decode($response->getBody());
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/account-add', [], $data);
+        $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
             throw new Exception($json->message);
         }
 
-        $json = json_decode($response->getBody());
         if (isset($json->status) && $json->status === 'ok') {
             return true;
         }
 
         return false;
     }
+
 }

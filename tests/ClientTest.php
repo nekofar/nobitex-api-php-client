@@ -13,6 +13,7 @@ use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\MessageFactoryDiscovery;
+use InvalidArgumentException;
 use Jchook\AssertThrows\AssertThrows;
 use JsonMapper;
 use JsonMapper_Exception;
@@ -224,7 +225,7 @@ class ClientTest extends TestCase
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketTrades([
                     "srcCurrency" => "",
@@ -232,13 +233,13 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Source currency is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
@@ -246,8 +247,8 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Destination currency is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
     }
@@ -329,7 +330,7 @@ class ClientTest extends TestCase
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketStats([
                     "srcCurrency" => "",
@@ -338,12 +339,12 @@ class ClientTest extends TestCase
             },
             function ($exception) {
                 /** @var Exception $exception */
-                $this->assertEquals('Source currency is missing.', $exception->getMessage());
+                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
@@ -352,7 +353,7 @@ class ClientTest extends TestCase
             },
             function ($exception) {
                 /** @var Exception $exception */
-                $this->assertEquals('Destination currency is missing.', $exception->getMessage());
+                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
     }
@@ -667,7 +668,7 @@ class ClientTest extends TestCase
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserCard([
                     "number" => "",
@@ -675,13 +676,13 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Card number is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Card number is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserCard([
                     "number" => "50417210111111111",
@@ -689,8 +690,8 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Bank name is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Bank name is invalid.', $exception->getMessage());
             }
         );
     }
@@ -730,7 +731,7 @@ class ClientTest extends TestCase
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
-            Exception::class,
+            ClientErrorException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
@@ -739,7 +740,7 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
+                /** @var ClientErrorException $exception */
                 $this->assertEquals('Unauthorized', $exception->getMessage());
             }
         );
@@ -763,7 +764,7 @@ class ClientTest extends TestCase
             }
         );
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "",
@@ -773,12 +774,12 @@ class ClientTest extends TestCase
             },
             function ($exception) {
                 /** @var Exception $exception */
-                $this->assertEquals('Account number is missing.', $exception->getMessage());
+                $this->assertEquals('Account number is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
@@ -787,13 +788,13 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Bank name is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Bank name is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
-            Exception::class,
+            InvalidArgumentException::class,
             function () use ($client) {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
@@ -802,8 +803,8 @@ class ClientTest extends TestCase
                 ]);
             },
             function ($exception) {
-                /** @var Exception $exception */
-                $this->assertEquals('Account shaba is missing.', $exception->getMessage());
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Account shaba is invalid.', $exception->getMessage());
             }
         );
     }
