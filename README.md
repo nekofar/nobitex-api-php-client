@@ -119,6 +119,12 @@ $deposits = $client->getUserWalletDeposits(['wallet' => 123456]);
 $withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
 ```
 
+#### Generate User Wallet Address
+
+```php
+$address = $client->genUserWalletAddress(['wallet' => 123456]);
+```
+
 ## Contributing and testing
 
 The test suite is built using PHPUnit. Run the suite of unit tests by running

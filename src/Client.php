@@ -498,4 +498,32 @@ class Client
 
         return false;
     }
+
+    /**
+     * @param array $args
+     * @return bool
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function genUserWalletAddress(array $args)
+    {
+        if (!isset($args['wallet']) ||
+            empty($args['wallet'])) {
+            throw new InvalidArgumentException("Wallet id is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/wallets/generate-address', [], $data); // phpcs:ignore
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->address) && $json->status === 'ok') {
+            return $json->address;
+        }
+
+        return false;
+    }
 }

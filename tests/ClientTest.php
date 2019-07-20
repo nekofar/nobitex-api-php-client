@@ -1385,5 +1385,72 @@ class ClientTest extends TestCase
 
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGenUserWalletAddress()
+    {
+        $json = [
+            'status' => 'ok',
+            'address' => 'rwRmyGRoJkHKtojaC8SH2wxsnB2q3yNopB',
+        ];
 
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $address = $client->genUserWalletAddress(['wallet' => '123456']);
+
+        $this->assertIsString($address);
+    }
+
+    /**
+     *
+     * @throws \Http\Client\Exception
+     */
+    public function testGenUserWalletAddressFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(200));
+        $client->genUserWalletAddress(['wallet' => '123456']);
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->genUserWalletAddress(['wallet' => '123456']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->genUserWalletAddress(['wallet' => '123456']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->genUserWalletAddress(['wallet' => 0]);
+            },
+            function ($exception) {
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+            }
+        );
+    }
 }
