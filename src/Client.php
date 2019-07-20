@@ -479,7 +479,7 @@ class Client
         }
 
         $data = json_encode($args);
-        $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
+        $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data);
         $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
@@ -494,6 +494,89 @@ class Client
 
             return $this->jsonMapper
                 ->mapArray($json->withdraws, [], Withdraw::class);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return bool
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function genUserWalletAddress(array $args)
+    {
+        if (!isset($args['wallet']) ||
+            empty($args['wallet'])) {
+            throw new InvalidArgumentException("Wallet id is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/users/wallets/generate-address', [], $data); // phpcs:ignore
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->address) && $json->status === 'ok') {
+            return $json->address;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return Order|false
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function addMarketOrder(array $args)
+    {
+        if (!isset($args['type']) ||
+            empty($args['type'])) {
+            throw new InvalidArgumentException("Order type is invalid.");
+        }
+
+        if (!isset($args['srcCurrency']) ||
+            empty($args['srcCurrency'])) {
+            throw new InvalidArgumentException("Source currency is invalid.");
+        }
+
+        if (!isset($args['dstCurrency']) ||
+            empty($args['dstCurrency'])) {
+            throw new InvalidArgumentException("Destination currency is invalid.");
+        }
+
+        if (!isset($args['amount']) ||
+            empty($args['amount'])) {
+            throw new InvalidArgumentException("Order amount is invalid.");
+        }
+
+        if (!isset($args['price']) ||
+            empty($args['price'])) {
+            throw new InvalidArgumentException("Order price is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/market/orders/add', [], $data);
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->order) && $json->status === 'ok') {
+            /** @var Order $order */
+            $order = $this->jsonMapper->map($json->order, new Order());
+
+            return $order;
         }
 
         return false;

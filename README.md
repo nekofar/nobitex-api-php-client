@@ -44,6 +44,19 @@ $trades = $client->getMarketTrades([
 ]);
 ```
 
+#### Add Market Order
+
+```php
+$order = $client->addMarketOrder([
+    'type' => 'buy',
+    'srcCurrency' => 'btc',
+    'dstCurrency' => 'rls',
+    'amount' => '0.6',
+    'price' => 520000000,
+]);
+```
+
+
 ### User Info
 
 #### User Profile
@@ -117,6 +130,12 @@ $deposits = $client->getUserWalletDeposits(['wallet' => 123456]);
 
 ```php
 $withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
+```
+
+#### Generate User Wallet Address
+
+```php
+$address = $client->genUserWalletAddress(['wallet' => 123456]);
 ```
 
 ## Contributing and testing

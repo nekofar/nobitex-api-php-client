@@ -44,7 +44,6 @@ class Order
      * @var string
      */
     public $matchedAmount;
-
     /**
      * @var float
      */
@@ -53,4 +52,29 @@ class Order
      * @var bool
      */
     public $isMyOrder;
+    /**
+     * @var int
+     */
+    public $id;
+    /**
+     * @var string
+     */
+    public $status;
+    /**
+     * @var bool
+     */
+    public $partial;
+    /**
+     * @var float
+     */
+    public $fee;
+    /**
+     * @var string
+     */
+    public $user;
+    /**
+     * @var \DateTime
+     */
+    public $createdAt;
 }
+

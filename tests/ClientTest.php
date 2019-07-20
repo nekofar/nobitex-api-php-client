@@ -1385,5 +1385,256 @@ class ClientTest extends TestCase
 
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGenUserWalletAddress()
+    {
+        $json = [
+            'status' => 'ok',
+            'address' => 'rwRmyGRoJkHKtojaC8SH2wxsnB2q3yNopB',
+        ];
 
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $address = $client->genUserWalletAddress(['wallet' => '123456']);
+
+        $this->assertIsString($address);
+    }
+
+    /**
+     *
+     * @throws \Http\Client\Exception
+     */
+    public function testGenUserWalletAddressFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(200));
+        $client->genUserWalletAddress(['wallet' => '123456']);
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->genUserWalletAddress(['wallet' => '123456']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->genUserWalletAddress(['wallet' => '123456']);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->genUserWalletAddress(['wallet' => 0]);
+            },
+            function ($exception) {
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+            }
+        );
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testAddMarketOrder()
+    {
+        $json = [
+            'status' => 'ok',
+            'order' =>
+                [
+                    'type' => 'sell',
+                    'srcCurrency' => 'Bitcoin',
+                    'dstCurrency' => 'ریال',
+                    'price' => '520000000',
+                    'amount' => '0.6',
+                    'totalPrice' => '312000000.0',
+                    'matchedAmount' => 0,
+                    'unmatchedAmount' => '0.6',
+                    'isMyOrder' => false,
+                    'id' => 25,
+                    'status' => 'Active',
+                    'partial' => false,
+                    'fee' => 0,
+                    'user' => 'name@example.com',
+                    'created_at' => '2018-11-28T11:36:13.592827+00:00',
+                ],
+        ];
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $order = $client->addMarketOrder([
+            'type' => 'buy',
+            'srcCurrency' => 'btc',
+            'dstCurrency' => 'rls',
+            'amount' => '0.6',
+            'price' => 520000000,
+        ]);
+
+        $this->assertNotFalse($order);
+        $this->assertInstanceOf(Order::class, $order);
+    }
+
+    /**
+     *
+     */
+    public function testAddMarketOrderFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(200));
+        $client->addMarketOrder([
+            'type' => 'buy',
+            'srcCurrency' => 'btc',
+            'dstCurrency' => 'rls',
+            'amount' => '0.6',
+            'price' => 520000000,
+        ]);
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => 'buy',
+                    'srcCurrency' => 'btc',
+                    'dstCurrency' => 'rls',
+                    'amount' => '0.6',
+                    'price' => 520000000,
+                ]);
+            },
+            function ($exception) {
+                /** @var ClientErrorException $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => 'buy',
+                    'srcCurrency' => 'btc',
+                    'dstCurrency' => 'rls',
+                    'amount' => '0.6',
+                    'price' => 520000000,
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => '',
+                    'srcCurrency' => 'btc',
+                    'dstCurrency' => 'rls',
+                    'amount' => '0.6',
+                    'price' => 520000000,
+                ]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Order type is invalid.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => 'buy',
+                    'srcCurrency' => '',
+                    'dstCurrency' => 'rls',
+                    'amount' => '0.6',
+                    'price' => 520000000,
+                ]);
+            },
+            function ($exception) {
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => 'buy',
+                    'srcCurrency' => 'btc',
+                    'dstCurrency' => '',
+                    'amount' => '0.6',
+                    'price' => 520000000,
+                ]);
+            },
+            function ($exception) {
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => 'buy',
+                    'srcCurrency' => 'btc',
+                    'dstCurrency' => 'rls',
+                    'amount' => '',
+                    'price' => 520000000,
+                ]);
+            },
+            function ($exception) {
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Order amount is invalid.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->addMarketOrder([
+                    'type' => 'buy',
+                    'srcCurrency' => 'btc',
+                    'dstCurrency' => 'rls',
+                    'amount' => '0.6',
+                    'price' => 0,
+                ]);
+            },
+            function ($exception) {
+                /** @var InvalidArgumentException $exception */
+                $this->assertEquals('Order price is invalid.', $exception->getMessage());
+            }
+        );
+    }
 }
