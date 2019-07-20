@@ -479,7 +479,7 @@ class Client
         }
 
         $data = json_encode($args);
-        $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data);
+        $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
@@ -551,7 +551,7 @@ class Client
 
         if (!isset($args['dstCurrency']) ||
             empty($args['dstCurrency'])) {
-            throw new InvalidArgumentException("Destination currency is invalid.");
+            throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
         if (!isset($args['amount']) ||
@@ -637,7 +637,7 @@ class Client
         }
 
         $data = json_encode($args);
-        $resp = $this->httpClient->post('/market/orders/update-status', [], $data);
+        $resp = $this->httpClient->post('/market/orders/update-status', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
         if (isset($json->message) && $json->status === 'failed') {
