@@ -41,7 +41,7 @@ class Order
      */
     public $totalPrice;
     /**
-     * @var string
+     * @var float
      */
     public $matchedAmount;
     /**
@@ -77,4 +77,3 @@ class Order
      */
     public $createdAt;
 }
-

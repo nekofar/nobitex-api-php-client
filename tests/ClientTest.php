@@ -1499,6 +1499,7 @@ class ClientTest extends TestCase
 
     /**
      *
+     * @throws \Http\Client\Exception
      */
     public function testAddMarketOrderFailure()
     {
@@ -1637,4 +1638,93 @@ class ClientTest extends TestCase
             }
         );
     }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetMarketOrder()
+    {
+        $json = array(
+            'status' => 'ok',
+            'order' =>
+                array(
+                    'unmatchedAmount' => '3.0000000000',
+                    'fee' => '0E-10',
+                    'matchedAmount' => '0E-10',
+                    'partial' => false,
+                    'price' => '8500000.0000000000',
+                    'created_at' => '2018-11-28T12:25:22.696029+00:00',
+                    'user' => 'name@example.com',
+                    'id' => 5684,
+                    'srcCurrency' => 'Litecoin',
+                    'totalPrice' => '25500000.00000000000000000000',
+                    'type' => 'sell',
+                    'dstCurrency' => '﷼',
+                    'isMyOrder' => false,
+                    'status' => 'Active',
+                    'amount' => '3.0000000000',
+                ),
+        );
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $order = $client->getMarketOrder(['id' => 123456]);
+
+        $this->assertNotFalse($order);
+        $this->assertInstanceOf(Order::class, $order);
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetMarketOrderFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $client->getMarketOrder(['id' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $client->getMarketOrder(['id' => 123456]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $client->getMarketOrder(['id' => 0]);
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Order id is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->getMarketOrder(['id' => 123456]));
+    }
+
 }

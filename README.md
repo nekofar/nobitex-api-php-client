@@ -55,6 +55,11 @@ $order = $client->addMarketOrder([
     'price' => 520000000,
 ]);
 ```
+#### Market Order Status
+
+```php
+$order = $client->getMarketOrder([ 'id' => 123456 ]);
+ ```
 
 
 ### User Info

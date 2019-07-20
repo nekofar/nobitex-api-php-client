@@ -581,4 +581,38 @@ class Client
 
         return false;
     }
+
+    /**
+     * @param array $args
+     *
+     * @return Order|false
+     *
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function getMarketOrder(array $args)
+    {
+        if (!isset($args['id']) ||
+            empty($args['id'])) {
+            throw new InvalidArgumentException("Order id is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/market/orders/status', [], $data);
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->order) && $json->status === 'ok') {
+            /** @var Order $order */
+            $order = $this->jsonMapper->map($json->order, new Order());
+
+            return $order;
+        }
+
+        return false;
+    }
 }
