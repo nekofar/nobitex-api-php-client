@@ -507,7 +507,7 @@ class Client
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function genUserWalletAddress(array $args)
+    public function getUserWalletAddress(array $args)
     {
         if (!isset($args['wallet']) ||
             empty($args['wallet'])) {
@@ -624,7 +624,7 @@ class Client
      * @throws \Http\Client\Exception
      * @throws Exception
      */
-    public function updateMarketOrder(array $args)
+    public function setMarketOrderStatus(array $args)
     {
         if (!isset($args['order']) ||
             empty($args['order'])) {

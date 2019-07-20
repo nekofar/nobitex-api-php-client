@@ -1388,7 +1388,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGenUserWalletAddress()
+    public function testGetUserWalletAddress()
     {
         $json = [
             'status' => 'ok',
@@ -1399,7 +1399,7 @@ class ClientTest extends TestCase
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        $address = $client->genUserWalletAddress(['wallet' => '123456']);
+        $address = $client->getUserWalletAddress(['wallet' => '123456']);
 
         $this->assertIsString($address);
     }
@@ -1408,18 +1408,18 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testGenUserWalletAddressFailure()
+    public function testGetUserWalletAddressFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(200));
-        $client->genUserWalletAddress(['wallet' => '123456']);
+        $client->getUserWalletAddress(['wallet' => '123456']);
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
             function () use ($client) {
-                $client->genUserWalletAddress(['wallet' => '123456']);
+                $client->getUserWalletAddress(['wallet' => '123456']);
             },
             function ($exception) {
                 /** @var Exception $exception */
@@ -1434,7 +1434,7 @@ class ClientTest extends TestCase
         $this->assertThrows(
             Exception::class,
             function () use ($client) {
-                $client->genUserWalletAddress(['wallet' => '123456']);
+                $client->getUserWalletAddress(['wallet' => '123456']);
             },
             function ($exception) {
                 /** @var Exception $exception */
@@ -1445,7 +1445,7 @@ class ClientTest extends TestCase
         $this->assertThrows(
             InvalidArgumentException::class,
             function () use ($client) {
-                $client->genUserWalletAddress(['wallet' => 0]);
+                $client->getUserWalletAddress(['wallet' => 0]);
             },
             function ($exception) {
                 /** @var InvalidArgumentException $exception */
@@ -1730,7 +1730,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testUpdateMarketOrder()
+    public function testSetMarketOrderStatus()
     {
         $json = array(
             'status' => 'ok',
@@ -1741,13 +1741,13 @@ class ClientTest extends TestCase
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+        $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
     }
 
     /**
      * @throws \Http\Client\Exception
      */
-    public function testUpdateMarketOrderFailure()
+    public function testSetMarketOrderStatusFailure()
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1755,7 +1755,7 @@ class ClientTest extends TestCase
         $this->assertThrows(
             ClientErrorException::class,
             function () use ($client) {
-                $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+                $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
             },
             function ($exception) {
                 /** @var Exception $exception */
@@ -1770,7 +1770,7 @@ class ClientTest extends TestCase
         $this->assertThrows(
             Exception::class,
             function () use ($client) {
-                $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+                $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
             },
             function ($exception) {
                 /** @var Exception $exception */
@@ -1781,7 +1781,7 @@ class ClientTest extends TestCase
         $this->assertThrows(
             InvalidArgumentException::class,
             function () use ($client) {
-                $this->assertTrue($client->updateMarketOrder(['order' => 0, 'status' => 'canceled']));
+                $this->assertTrue($client->setMarketOrderStatus(['order' => 0, 'status' => 'canceled']));
             },
             function ($exception) {
                 /** @var Exception $exception */
@@ -1792,7 +1792,7 @@ class ClientTest extends TestCase
         $this->assertThrows(
             InvalidArgumentException::class,
             function () use ($client) {
-                $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => '']));
+                $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => '']));
             },
             function ($exception) {
                 /** @var Exception $exception */
@@ -1801,7 +1801,7 @@ class ClientTest extends TestCase
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+        $this->assertFalse($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
     }
 
 }
