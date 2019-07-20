@@ -615,4 +615,39 @@ class Client
 
         return false;
     }
+
+    /**
+     * @param array $args
+     *
+     * @return bool
+     *
+     * @throws \Http\Client\Exception
+     * @throws Exception
+     */
+    public function updateMarketOrder(array $args)
+    {
+        if (!isset($args['order']) ||
+            empty($args['order'])) {
+            throw new InvalidArgumentException("Order id is invalid.");
+        }
+
+        if (!isset($args['status']) ||
+            empty($args['status'])) {
+            throw new InvalidArgumentException("Order status is invalid.");
+        }
+
+        $data = json_encode($args);
+        $resp = $this->httpClient->post('/market/orders/update-status', [], $data);
+        $json = json_decode($resp->getBody());
+
+        if (isset($json->message) && $json->status === 'failed') {
+            throw new Exception($json->message);
+        }
+
+        if (isset($json->updatedStatus) && $json->status === 'ok') {
+            return true;
+        }
+
+        return false;
+    }
 }

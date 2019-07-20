@@ -1727,4 +1727,81 @@ class ClientTest extends TestCase
         $this->assertFalse($client->getMarketOrder(['id' => 123456]));
     }
 
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testUpdateMarketOrder()
+    {
+        $json = array(
+            'status' => 'ok',
+            'updatedStatus' => 'Canceled',
+        );
+
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testUpdateMarketOrderFailure()
+    {
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $this->assertThrows(
+            ClientErrorException::class,
+            function () use ($client) {
+                $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Unauthorized', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response('200', [], json_encode([
+            'status' => 'failed',
+            'message' => 'Validation Failed'
+        ])));
+        $this->assertThrows(
+            Exception::class,
+            function () use ($client) {
+                $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Validation Failed', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $this->assertTrue($client->updateMarketOrder(['order' => 0, 'status' => 'canceled']));
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Order id is invalid.', $exception->getMessage());
+            }
+        );
+
+        $this->assertThrows(
+            InvalidArgumentException::class,
+            function () use ($client) {
+                $this->assertTrue($client->updateMarketOrder(['order' => 123456, 'status' => '']));
+            },
+            function ($exception) {
+                /** @var Exception $exception */
+                $this->assertEquals('Order status is invalid.', $exception->getMessage());
+            }
+        );
+
+        self::$mockClient->addResponse(new Response(200));
+        $this->assertFalse($client->updateMarketOrder(['order' => 123456, 'status' => 'canceled']));
+    }
+
 }
