@@ -61,6 +61,15 @@ $order = $client->addMarketOrder([
 $order = $client->getMarketOrder([ 'id' => 123456 ]);
  ```
 
+#### Market Order Update
+
+```php
+$order = $client->setMarketOrderStatus([ 
+    'order' => 123456, 
+    'status' => 'canceled' 
+]);
+ ```
+
 
 ### User Info
 
@@ -140,7 +149,7 @@ $withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
 #### Generate User Wallet Address
 
 ```php
-$address = $client->genUserWalletAddress(['wallet' => 123456]);
+$address = $client->getUserWalletAddress(['wallet' => 123456]);
 ```
 
 ## Contributing and testing
