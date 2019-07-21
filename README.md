@@ -1,22 +1,30 @@
 # Nobitex Market PHP API
 
+[![Packagist Version](https://img.shields.io/packagist/v/nekofar/nobitex.svg)][1]
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/nekofar/nobitex.svg)][1]
 [![Travis (.com) branch](https://img.shields.io/travis/com/nekofar/nobitex-api-php/master.svg)][3]
 [![Codecov](https://img.shields.io/codecov/c/gh/nekofar/nobitex-api-php.svg)][4]
 [![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)][2]
-[![Packagist Version](https://img.shields.io/packagist/v/nekofar/nobitex.svg)][1]
-[![PHP from Packagist](https://img.shields.io/packagist/php-v/nekofar/nobitex.svg)][1]
+
+This is a PHP wrapper for the [Nobitex API][6].
 
 ## Installation
 
-You can install the package via composer from [Packagist][1]:
+This wrapper relies on HTTPlug, which defines how HTTP message should be sent and received. 
+You can use any library to send HTTP messages that implements [php-http/client-implementation][5].
 
 ```bash
-composer require php-http/curl-client:~1.0 nekofar/nobitex:~1.0
+composer require nekofar/nobitex:^1.0@dev
+```
+
+To install with cURL you may run the following command:
+
+```bash
+composer require nekofar/nobitex:^1.0@dev php-http/curl-client:^1.0
 ```
 
 ## Usage
 
-### Authentication
 Use your username and password to access your own account.
 
 ```php
@@ -25,137 +33,14 @@ use \Nekofar\Nobitex\Config;
 
 $config = Config::doAuth('username', 'password')
 $client = Client::create($config)
+
+print_r($client->getUserProfile());
 ```
 
-### Market Data
-
-#### Market Orders
-
-```php
-$orders = $client->getMarketOrders();
-```
-
-#### Market Trades
-
-```php
-$trades = $client->getMarketTrades([
-    "srcCurrency" => "btc",
-    "dstCurrency" => "rls"
-]);
-```
-
-#### Add Market Order
-
-```php
-$order = $client->addMarketOrder([
-    'type' => 'buy',
-    'srcCurrency' => 'btc',
-    'dstCurrency' => 'rls',
-    'amount' => '0.6',
-    'price' => 520000000,
-]);
-```
-#### Market Order Status
-
-```php
-$order = $client->getMarketOrder([ 'id' => 123456 ]);
- ```
-
-#### Market Order Update
-
-```php
-$order = $client->setMarketOrderStatus([ 
-    'order' => 123456, 
-    'status' => 'canceled' 
-]);
- ```
-
-
-### User Info
-
-#### User Profile
-
-```php
-$profile = $client->getUserProfile();
-```
-
-#### Login Attempts
-
-```php
-$attempts = $client->getUserLoginAttempts();
-```
-
-#### Referral Code
-
-```php
-$referralCode = $client->getUserReferralCode();
-```
-
-#### User Limitations 
-
-```php
-$limitations = $client->getUserLimitations();
-```
-
-#### Add Bank Card
-
-```php
-$status = $client->addUserCard([
-    "number" => "5041721011111111",
-    "bank" => "Resalat"
-]);
-```
-
-#### Add Bank Account
-
-```php
-$status = $client->addUserAccount([
-    "number" => "5041721011111111",
-    "bank" => "Resalat",
-    "shaba" => "IR111111111111111111111111",
-]);
-```
-
-#### User Wallets
-
-```php
-$wallets = $client->getUserWallets();
-```
-
-#### User Wallet Balance
-
-```php
-$balance = $client->getUserWalletBalance(['currency' => 'ltc']);
-```
-
-#### User Wallet Transactions
-
-```php
-$transactions = $client->getUserWalletTransactions(['wallet' => 123456]);
-```
-
-#### User Wallet Deposits
-
-```php
-$deposits = $client->getUserWalletDeposits(['wallet' => 123456]);
-```
-
-#### User Wallet Withdraws
-
-```php
-$withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
-```
-
-#### Generate User Wallet Address
-
-```php
-$address = $client->getUserWalletAddress(['wallet' => 123456]);
-```
-
-## Contributing and testing
+## Contributing
 
 The test suite is built using PHPUnit. Run the suite of unit tests by running
-the `phpunit` command or composer script.
+the `phpunit` command or this composer script.
 
 ```bash
 composer test
@@ -166,3 +51,5 @@ composer test
 [2]: https://github.com/nekofar/nobitex-api-php/blob/master/LICENSE
 [3]: https://travis-ci.com/nekofar/nobitex-api-php
 [4]: https://codecov.io/gh/nekofar/nobitex-api-php
+[5]: https://packagist.org/providers/php-http/client-implementation
+[6]: https://github.com/nobitex/docs-api
