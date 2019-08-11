@@ -1,5 +1,6 @@
 {
   "name": "nekofar/nobitex",
+  "version": "1.0.0",
   "description": "PHP wrapper for the Nobitex API",
   "type": "library",
   "keywords": [
