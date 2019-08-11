@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/gh/nekofar/nobitex-api-php.svg)][4]
 [![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)][2]
 
-This is a PHP wrapper for the [Nobitex API][6].
+> This is a PHP wrapper for the [Nobitex API][6].
 
 ## Installation
 
