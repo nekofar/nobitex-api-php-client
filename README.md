@@ -34,7 +34,16 @@ use \Nekofar\Nobitex\Config;
 $config = Config::doAuth('username', 'password')
 $client = Client::create($config)
 
-print_r($client->getUserProfile());
+try {
+    $profile = $client->getUserProfile();
+
+    echo 'Email: ' . $profile->email . PHP_EOL;
+    echo 'Last name: ' . $profile->lastName . PHP_EOL;
+    echo 'First name: ' . $profile->firstName . PHP_EOL;
+
+} catche (\Exception $e) {
+    echo 'Error: ' . $e->getMessage();
+}
 ```
 
 ## Contributing
