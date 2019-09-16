@@ -5,6 +5,7 @@
 [![Travis (.com) branch](https://img.shields.io/travis/com/nekofar/nobitex-api-php/master.svg)][3]
 [![Codecov](https://img.shields.io/codecov/c/gh/nekofar/nobitex-api-php.svg)][4]
 [![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)][2]
+[![Twitter: nekofar](https://img.shields.io/twitter/follow/nekofar.svg?style=flat)][7]
 
 > This is a PHP wrapper for the [Nobitex API][6].
 
@@ -62,3 +63,4 @@ composer test
 [4]: https://codecov.io/gh/nekofar/nobitex-api-php
 [5]: https://packagist.org/providers/php-http/client-implementation
 [6]: https://github.com/nobitex/docs-api
+[7]: https://twitter.com/nekofar
