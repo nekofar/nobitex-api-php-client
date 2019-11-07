@@ -62,5 +62,5 @@ composer test
 [3]: https://travis-ci.com/nekofar/nobitex-api-php
 [4]: https://codecov.io/gh/nekofar/nobitex-api-php
 [5]: https://packagist.org/providers/php-http/client-implementation
-[6]: https://github.com/nobitex/docs-api
+[6]: https://apidocs.nobitex.market/en/
 [7]: https://twitter.com/nekofar
