@@ -21,7 +21,7 @@
   "require": {
     "php": ">=5.6",
     "ext-json": "*",
-    "netresearch/jsonmapper": "^1.5",
+    "netresearch/jsonmapper": "^4.0",
     "php-http/client-implementation": "^1.0",
     "php-http/discovery": "^1.0",
     "php-http/httplug": "^1.0",
