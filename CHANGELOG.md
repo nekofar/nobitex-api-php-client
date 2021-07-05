@@ -1,4 +1,11 @@
 # Changelog
+### [1.0.5](https://github.com/nekofar/nobitex-api-php-client/compare/v1.0.4...v1.0.5) (2021-07-05)
+
+
+### Bug Fixes
+
+* solve missing captcha issue on authentication ([f003c59](https://github.com/nekofar/nobitex-api-php-client/commit/f003c5979207e3927b89e5922a7c6fad6d5d1a57))
+
 ### [1.0.4](https://github.com/nekofar/nobitex-api-php-client/compare/v1.0.3...v1.0.4) (2021-07-05)
 
 
