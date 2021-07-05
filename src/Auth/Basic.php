@@ -152,6 +152,7 @@ class Basic implements Authentication
                     'username' => $this->username,
                     'password' => $this->password,
                     'remember' => $this->remember === true ? 'yes' : 'no',
+                    'captcha'  => 'api'
                 ])
             );
 
