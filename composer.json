@@ -21,24 +21,24 @@
   "require": {
     "php": ">=5.6",
     "ext-json": "*",
-    "netresearch/jsonmapper": "^1.5",
+    "netresearch/jsonmapper": "^4.0",
     "php-http/client-implementation": "^1.0",
-    "php-http/discovery": "^1.0",
+    "php-http/discovery": "^1.14",
     "php-http/httplug": "^1.0",
+    "php-http/message": "^1.11",
     "php-http/message-factory": "^1.0",
     "psr/http-message": "^1.0"
   },
   "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-    "escapestudios/symfony2-coding-standard": "^3.8",
-    "guzzlehttp/psr7": "^1.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+    "escapestudios/symfony2-coding-standard": "^3.12",
+    "guzzlehttp/psr7": "^2.0",
     "jchook/phpunit-assert-throws": "^1.0",
     "php-http/curl-client": "^1.0",
-    "php-http/message": "^1.0",
     "php-http/mock-client": "^1.0",
     "phpcompatibility/php-compatibility": "^9.2",
-    "phpunit/phpunit": "^8.2",
-    "squizlabs/php_codesniffer": "^3.4"
+    "phpunit/phpunit": "^9.5",
+    "squizlabs/php_codesniffer": "^3.6"
   },
   "config": {
     "optimize-autoloader": true,
