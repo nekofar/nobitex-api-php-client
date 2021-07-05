@@ -32,7 +32,7 @@
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
     "escapestudios/symfony2-coding-standard": "^3.12",
-    "guzzlehttp/psr7": "^1.0",
+    "guzzlehttp/psr7": "^2.0",
     "jchook/phpunit-assert-throws": "^1.0",
     "php-http/curl-client": "^1.0",
     "php-http/mock-client": "^1.0",
