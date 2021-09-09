@@ -1,11 +1,11 @@
 # Nobitex Market PHP API
 
-[![Packagist Version](https://img.shields.io/packagist/v/nekofar/nobitex.svg)][1]
-[![PHP from Packagist](https://img.shields.io/packagist/php-v/nekofar/nobitex.svg)][1]
-[![Travis (.com) branch](https://img.shields.io/travis/com/nekofar/nobitex-api-php/master.svg)][3]
-[![Codecov](https://img.shields.io/codecov/c/gh/nekofar/nobitex-api-php.svg)][4]
-[![Packagist](https://img.shields.io/packagist/l/nekofar/nobitex.svg)][2]
-[![Twitter: nekofar](https://img.shields.io/twitter/follow/nekofar.svg?style=flat)][7]
+[![Packagist Version][icon-version]][link-version]
+[![PHP from Packagist][icon-php-version]][link-php-version]
+[![Tests Status][icon-workflow]][link-workflow]
+[![Coverage Status][icon-coverage]][link-coverage]
+[![License][icon-license]][link-license]
+[![Twitter: nekofar][icon-twitter]][link-twitter]
 
 > This is a PHP wrapper for the [Nobitex API][6].
 
@@ -56,11 +56,24 @@ the `phpunit` command or this composer script.
 composer test
 ```
 
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
 ---
-[1]: https://packagist.org/packages/nekofar/nobitex
-[2]: https://github.com/nekofar/nobitex-api-php/blob/master/LICENSE
-[3]: https://travis-ci.com/nekofar/nobitex-api-php
-[4]: https://codecov.io/gh/nekofar/nobitex-api-php
+[link-version]: https://packagist.org/packages/nekofar/nobitex
+[link-php-version]: https://packagist.org/packages/nekofar/nobitex
+[link-workflow]: https://github.com/nekofar/nobitex-api-php-client/actions/workflows/tests.yml
+[link-coverage]: https://codecov.io/gh/nekofar/nobitex-api-php-client
+[link-license]: https://github.com/nekofar/nobitex-api-php-client/blob/master/LICENSE
+[link-twitter]: https://twitter.com/nekofar
+
+[icon-version]: https://img.shields.io/packagist/v/nekofar/nobitex.svg
+[icon-php-version]: https://img.shields.io/packagist/php-v/nekofar/nobitex.svg
+[icon-workflow]: https://img.shields.io/github/workflow/status/nekofar/nobitex-api-php-client/Tests
+[icon-coverage]: https://codecov.io/gh/nekofar/nobitex-api-php-client/graph/badge.svg
+[icon-license]: https://img.shields.io/packagist/l/nekofar/nobitex.svg
+[icon-twitter]: https://img.shields.io/twitter/follow/nekofar.svg?style=flat
+
 [5]: https://packagist.org/providers/php-http/client-implementation
 [6]: https://apidocs.nobitex.market/en/
-[7]: https://twitter.com/nekofar
