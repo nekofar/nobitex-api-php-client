@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "php": "^7.3",
+    "php": "^7.3 || ^8.0",
     "ext-json": "*",
     "netresearch/jsonmapper": "^4.0",
     "php-http/client-implementation": "^1.0",
