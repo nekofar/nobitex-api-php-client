@@ -37,7 +37,7 @@
     "php-http/curl-client": "^2.0",
     "php-http/mock-client": "^1.0",
     "phpcompatibility/php-compatibility": "^9.2",
-    "phpstan/phpstan": "^0.12.98",
+    "phpstan/phpstan": "^0.12.99",
     "phpstan/phpstan-phpunit": "^0.12.22",
     "phpstan/phpstan-strict-rules": "^0.12.11",
     "phpunit/phpunit": "^9.5",
