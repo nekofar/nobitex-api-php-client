@@ -6,6 +6,8 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "chore(deps): "
+    target-branch: develop
+    open-pull-requests-limit: 10
 
   - package-ecosystem: "composer"
     directory: "/"
@@ -13,4 +15,6 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "chore(deps): "
+    target-branch: develop
+    open-pull-requests-limit: 10
 
