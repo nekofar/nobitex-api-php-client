@@ -9,7 +9,6 @@
     "crypto",
     "bitcoin"
   ],
-  "homepage": "https://github.com/nekofar/nobitex-api-php",
   "license": "MIT",
   "authors": [
     {
@@ -65,7 +64,11 @@
     "test": "vendor/bin/phpunit",
     "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
   },
-  "support": {
-    "issues": "https://github.com/nekofar/nobitex-api-php/issues"
-  }
+  "non-feature-branches": [
+    "develop",
+    "bugfix/.*",
+    "hotfix/.*",
+    "feature/.*",
+    "release/.*"
+  ]
 }
