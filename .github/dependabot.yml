@@ -5,8 +5,9 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "chore(deps): "
-    target-branch: develop
+      prefix: "chore" 
+      include: "scope"
+    target-branch: "develop"
     open-pull-requests-limit: 10
 
   - package-ecosystem: "composer"
@@ -14,7 +15,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "chore(deps): "
-    target-branch: develop
+      prefix: "chore" 
+      include: "scope"
+    target-branch: "develop"
     open-pull-requests-limit: 10
-
