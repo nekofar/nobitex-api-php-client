@@ -67,11 +67,17 @@ class Withdraw
      */
     public static function setUndefinedProperty(object $object, string $propName, $jsonValue): void
     {
+        if (!in_array($propName, ['blockchain_url', 'is_cancelable', 'wallet_id'], true)) {
+            return;
+        }
+
         if ('blockchain_url' === $propName) {
+            // @phpstan-ignore-next-line
             $object->{'blockchainUrl'} = $jsonValue;
         }
 
         if ('is_cancelable' === $propName) {
+            // @phpstan-ignore-next-line
             $object->{'isCancelable'} = $jsonValue;
         }
 
@@ -79,6 +85,7 @@ class Withdraw
             return;
         }
 
+        // @phpstan-ignore-next-line
         $object->{'walletId'} = $jsonValue;
     }
 }

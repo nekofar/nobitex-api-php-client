@@ -58,6 +58,7 @@ class Transaction
             return;
         }
 
+        // @phpstan-ignore-next-line
         $object->{'createdAt'} = new DateTime($jsonValue);
     }
 }
