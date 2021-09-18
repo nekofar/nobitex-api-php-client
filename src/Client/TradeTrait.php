@@ -20,7 +20,6 @@ use Nekofar\Nobitex\Model\Trade;
 trait TradeTrait
 {
 
-
     /**
      * @var \Http\Client\Common\HttpMethodsClient
      */

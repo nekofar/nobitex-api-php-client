@@ -33,7 +33,6 @@ trait WalletTrait
      */
     private $jsonMapper;
 
-
     /**
      * @return array<\Nekofar\Nobitex\Model\Wallet>|bool
      *
