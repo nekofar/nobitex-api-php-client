@@ -3,3 +3,10 @@ parameters:
     paths:
         - src
         - tests
+
+    ignoreErrors:
+        - '#Call to an undefined method Http\\Client\\HttpClient::#'
+        - '#Access to an undefined property object::\$status#'
+        - '#Only booleans are allowed in a ternary operator condition,#'
+        - '#Variable property access on mixed.#'
+        - '#Property Nekofar\\Nobitex\\Config::\$auth#'
