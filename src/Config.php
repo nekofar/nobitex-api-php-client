@@ -57,14 +57,13 @@ class Config
      * @param boolean $remember
      * @param integer|null $totpToken
      *
-     * @return \Nekofar\Nobitex\Config
      */
     public static function doAuth(
         $username,
         $password,
         $remember = true,
         $totpToken = null
-    ) {
+    ): Config {
         return new static(new Basic(
             $username,
             $password,
@@ -75,18 +74,16 @@ class Config
 
 
     /**
-     * @return \JsonMapper
      */
-    public function createJsonMapper()
+    public function createJsonMapper(): JsonMapper
     {
         return new JsonMapper();
     }
 
 
     /**
-     * @return \Http\Client\Common\HttpMethodsClient
      */
-    public function createHttpClient()
+    public function createHttpClient(): HttpMethodsClient
     {
         return new HttpMethodsClient(
             new PluginClient(HttpClientDiscovery::find(), [

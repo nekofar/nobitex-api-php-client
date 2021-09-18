@@ -49,9 +49,8 @@ class Client
     /**
      * @param \Nekofar\Nobitex\Config $config
      *
-     * @return \Nekofar\Nobitex\Client
      */
-    public static function create(Config $config)
+    public static function create(Config $config): Client
     {
         return new static(
             $config->createHttpClient(),

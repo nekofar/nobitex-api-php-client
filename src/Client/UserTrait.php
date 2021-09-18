@@ -110,12 +110,11 @@ trait UserTrait
     /**
      * @param array $args
      *
-     * @return bool
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function addUserCard(array $args)
+    public function addUserCard(array $args): bool
     {
         if (!isset($args['bank']) ||
             in_array($args['bank'], [null, ''], true)
@@ -147,12 +146,11 @@ trait UserTrait
     /**
      * @param array $args
      *
-     * @return bool
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function addUserAccount(array $args)
+    public function addUserAccount(array $args): bool
     {
         if (!isset($args['bank']) ||
             in_array($args['bank'], [null, ''], true)

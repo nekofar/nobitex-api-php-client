@@ -162,9 +162,8 @@ class Basic implements Authentication
      *
      * @param \Psr\Http\Message\RequestInterface $request
      *
-     * @return \Psr\Http\Message\RequestInterface
      */
-    public function authenticate(RequestInterface $request)
+    public function authenticate(RequestInterface $request): RequestInterface
     {
         if ($this->accessToken !== null) {
             return $request->withHeader(

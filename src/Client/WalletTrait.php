@@ -200,12 +200,11 @@ trait WalletTrait
     /**
      * @param array $args
      *
-     * @return bool
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function getUserWalletAddress(array $args)
+    public function getUserWalletAddress(array $args): bool
     {
         if (!isset($args['wallet']) ||
             in_array($args['wallet'], [null, ''], true)

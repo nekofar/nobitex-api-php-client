@@ -31,10 +31,11 @@ trait OrderTrait
     private $jsonMapper;
 
     /**
+     * Return and array on success or false on unexpected errors.
+     *
      * @param array $args
      *
-     * @return \Nekofar\Nobitex\Model\Order[]|false Return and array on success or false on
-     *                                              unexpected errors.
+     * @return \Nekofar\Nobitex\Model\Order[]|false
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
@@ -155,12 +156,11 @@ trait OrderTrait
     /**
      * @param array $args
      *
-     * @return bool
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function setMarketOrderStatus(array $args)
+    public function setMarketOrderStatus(array $args): bool
     {
         if (!isset($args['order']) ||
             in_array($args['order'], [null, ''], true)

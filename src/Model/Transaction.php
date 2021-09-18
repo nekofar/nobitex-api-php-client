@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Model;
+use DateTime;
 
 use DateTime;
 
