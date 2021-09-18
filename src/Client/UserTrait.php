@@ -132,11 +132,7 @@ trait UserTrait
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'status') && 'ok' === $json->status) {
-            return true;
-        }
-
-        return false;
+        return property_exists($json, 'status') && 'ok' === $json->status;
     }
 
     /**
@@ -168,11 +164,7 @@ trait UserTrait
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'status') && 'ok' === $json->status) {
-            return true;
-        }
-
-        return false;
+        return property_exists($json, 'status') && 'ok' === $json->status;
     }
 
     /**

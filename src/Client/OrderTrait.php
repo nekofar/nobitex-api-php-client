@@ -166,10 +166,6 @@ trait OrderTrait
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'updatedStatus') && 'ok' === $json->status) {
-            return true;
-        }
-
-        return false;
+        return property_exists($json, 'updatedStatus') && 'ok' === $json->status;
     }
 }
