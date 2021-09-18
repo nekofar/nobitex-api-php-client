@@ -28,7 +28,7 @@ class Profile
     public $email;
 
     /**
-     * @var int
+     * @var integer
      */
     public $level;
 

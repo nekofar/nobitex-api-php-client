@@ -61,12 +61,12 @@ class Order
     public $unmatchedAmount;
 
     /**
-     * @var bool
+     * @var boolean
      */
     public $isMyOrder;
 
     /**
-     * @var int
+     * @var integer
      */
     public $id;
 
@@ -76,7 +76,7 @@ class Order
     public $status;
 
     /**
-     * @var bool
+     * @var boolean
      */
     public $partial;
 

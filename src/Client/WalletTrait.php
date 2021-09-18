@@ -60,7 +60,7 @@ trait WalletTrait
     /**
      * @param array<string, integer|string> $args
      *
-     * @return float|bool
+     * @return float|boolean
      *
      * @throws \Http\Client\Exception
      * @throws \Exception

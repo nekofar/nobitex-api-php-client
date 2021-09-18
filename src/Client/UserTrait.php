@@ -63,7 +63,7 @@ trait UserTrait
     /**
      * Return an array on success or false on unexpected errors.
      *
-     * @return array|false
+     * @return array<string,string|array>|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
@@ -169,7 +169,7 @@ trait UserTrait
     /**
      * Return an array on success or false on unexpected errors.
      *
-     * @return array|false
+     * @return array<string,string|array>|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception

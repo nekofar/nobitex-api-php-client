@@ -34,7 +34,7 @@ trait StatTrait
      *
      * @param array<string, integer|string> $args
      *
-     * @return array|false
+     * @return array<string,string|array>|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
