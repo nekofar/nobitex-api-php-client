@@ -70,7 +70,6 @@ class Basic implements Authentication
      */
     private $totpToken;
 
-
     /**
      * Basic constructor.
      *
@@ -119,9 +118,7 @@ class Basic implements Authentication
     }
 
     /**
-     * @return string|null
-     *
-     * @throws Exception
+     * Authenticates a request.
      */
     private function retrieveAuthToken()
     {
@@ -138,9 +135,8 @@ class Basic implements Authentication
     }
 
     /**
-     * @return RequestInterface
      */
-    private function createAuthRequest()
+    private function createAuthRequest(): RequestInterface
     {
         $request = $this->requestFactory
             ->createRequest(

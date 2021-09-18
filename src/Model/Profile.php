@@ -107,15 +107,12 @@ class Profile
      */
     public $withdrawEligible;
 
-
     /**
-     * @param object $object
-     * @param string $propName
      * @param mixed $jsonValue
      *
      * @throws \JsonMapper_Exception
      */
-    public static function setUndefinedProperty($object, $propName, $jsonValue)
+    public static function setUndefinedProperty(object $object, string $propName, $jsonValue): void
     {
         $mapper = new JsonMapper();
 

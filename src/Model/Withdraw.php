@@ -61,13 +61,11 @@ class Withdraw
     public $address;
 
     /**
-     * @param object $object
-     * @param string $propName
      * @param mixed $jsonValue
      *
      * @throws \Exception
      */
-    public static function setUndefinedProperty($object, $propName, $jsonValue)
+    public static function setUndefinedProperty(object $object, string $propName, $jsonValue): void
     {
         if ('blockchain_url' === $propName) {
             $object->{'blockchainUrl'} = $jsonValue;
