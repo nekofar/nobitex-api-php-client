@@ -22,7 +22,7 @@ class ConfigTest extends TestCase
         $password = 'password';
 
         $config = new Config(new Basic($username, $password));
-        $this->assertInstanceOf(HttpMethodsClient::class, $config->createHttpClient());
+        self::assertInstanceOf(HttpMethodsClient::class, $config->createHttpClient());
     }
 
     public function testCreateJsonMapper()
@@ -31,6 +31,6 @@ class ConfigTest extends TestCase
         $password = 'password';
 
         $config = new Config(new Basic($username, $password));
-        $this->assertInstanceOf(JsonMapper::class, $config->createJsonMapper());
+        self::assertInstanceOf(JsonMapper::class, $config->createJsonMapper());
     }
 }

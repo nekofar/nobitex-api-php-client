@@ -33,7 +33,7 @@ class BasicTest extends TestCase
         $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
 
         $auth = new Basic($username, $password, $remember, null, $httpClient);
-        $this->assertEquals($accessToken, $auth->refreshToken());
+        self::assertEquals($accessToken, $auth->refreshToken());
     }
 
     /**
@@ -57,7 +57,7 @@ class BasicTest extends TestCase
         $request = new Request('GET', '/');
 
         $header = $auth->authenticate($request)->getHeaderLine('Authorization');
-        $this->assertEquals(sprintf('Token %s', $accessToken), $header);
+        self::assertEquals(sprintf('Token %s', $accessToken), $header);
     }
 
     /**
@@ -84,7 +84,7 @@ class BasicTest extends TestCase
         $request = $httpClient->getLastRequest();
 
         $header = $request->getHeaderLine('X-TOTP');
-        $this->assertEquals($totpToken, $header);
+        self::assertEquals($totpToken, $header);
     }
 
     /**
@@ -108,6 +108,6 @@ class BasicTest extends TestCase
         $request = new Request('GET', '/');
 
         $header = $auth->authenticate($request)->getHeaderLine('Authorization');
-        $this->assertNotEquals(sprintf('Token %s', $accessToken), $header);
+        self::assertNotEquals(sprintf('Token %s', $accessToken), $header);
     }
 }

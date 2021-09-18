@@ -24,6 +24,6 @@ class BearerTest extends TestCase
         $request = new Request('GET', '/');
 
         $header = $auth->authenticate($request)->getHeaderLine('Authorization');
-        $this->assertEquals(sprintf('Token %s', $accessToken), $header);
+        self::assertEquals(sprintf('Token %s', $accessToken), $header);
     }
 }
