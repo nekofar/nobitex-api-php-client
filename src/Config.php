@@ -32,7 +32,7 @@ class Config
     const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
 
     /**
-     * @var Basic
+     * @var \Nekofar\Nobitex\Auth\Basic
      */
     private $auth;
 
@@ -43,7 +43,7 @@ class Config
 
     /**
      * Config constructor.
-     * @param Authentication $auth
+     * @param \Http\Message\Authentication $auth
      */
     public function __construct(Authentication $auth)
     {
@@ -57,7 +57,7 @@ class Config
      * @param boolean $remember
      * @param integer|null $totpToken
      *
-     * @return Config
+     * @return \Nekofar\Nobitex\Config
      */
     public static function doAuth(
         $username,
@@ -75,7 +75,7 @@ class Config
 
 
     /**
-     * @return JsonMapper
+     * @return \JsonMapper
      */
     public function createJsonMapper()
     {
@@ -84,7 +84,7 @@ class Config
 
 
     /**
-     * @return HttpMethodsClient
+     * @return \Http\Client\Common\HttpMethodsClient
      */
     public function createHttpClient()
     {

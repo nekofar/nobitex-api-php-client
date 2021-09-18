@@ -27,22 +27,22 @@ trait WalletTrait
 {
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
 
     /**
-     * @return Wallet[]|bool
+     * @return \Nekofar\Nobitex\Model\Wallet[]|bool
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserWallets()
     {
@@ -67,7 +67,7 @@ trait WalletTrait
      * @return float|bool
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserWalletBalance(array $args)
     {
@@ -95,10 +95,10 @@ trait WalletTrait
     /**
      * @param array $args
      *
-     * @return Transaction[]|false
+     * @return \Nekofar\Nobitex\Model\Transaction[]|false
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserWalletTransactions(array $args)
     {
@@ -132,11 +132,11 @@ trait WalletTrait
     /**
      * @param array $args
      *
-     * @return Deposit[]|false
+     * @return \Nekofar\Nobitex\Model\Deposit[]|false
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserWalletDeposits(array $args)
     {
@@ -165,11 +165,11 @@ trait WalletTrait
     /**
      * @param array $args
      *
-     * @return Withdraw[]|false
+     * @return \Nekofar\Nobitex\Model\Withdraw[]|false
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserWalletWithdraws(array $args)
     {
@@ -206,7 +206,7 @@ trait WalletTrait
      * @return bool
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserWalletAddress(array $args)
     {

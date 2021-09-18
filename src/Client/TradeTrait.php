@@ -25,25 +25,25 @@ trait TradeTrait
 
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
      * @param array $args
      *
-     * @return Trade[]|false Return and array on success or false on
-     *                       unexpected errors.
+     * @return \Nekofar\Nobitex\Model\Trade[]|false Return and array on success or false on
+ * unexpected errors.
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function getMarketTrades(array $args)
     {

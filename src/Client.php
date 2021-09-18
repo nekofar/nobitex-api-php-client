@@ -26,20 +26,20 @@ class Client
     use Client\WalletTrait;
 
     /**
-     * @var HttpClient
+     * @var \Http\Client\HttpClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
      * Client constructor.
      *
-     * @param HttpMethodsClient $http
-     * @param JsonMapper $mapper
+     * @param \Http\Client\Common\HttpMethodsClient $http
+     * @param \JsonMapper $mapper
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
@@ -48,9 +48,9 @@ class Client
     }
 
     /**
-     * @param Config $config
+     * @param \Nekofar\Nobitex\Config $config
      *
-     * @return Client
+     * @return \Nekofar\Nobitex\Client
      */
     public static function create(Config $config)
     {

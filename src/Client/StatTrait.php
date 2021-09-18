@@ -22,12 +22,12 @@ trait StatTrait
 {
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
@@ -38,7 +38,7 @@ trait StatTrait
      *                     unexpected errors.
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getMarketStats(array $args)
     {

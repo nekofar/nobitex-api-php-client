@@ -24,24 +24,24 @@ trait OrderTrait
 {
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
      * @param array $args
      *
-     * @return Order[]|false Return and array on success or false on
-     *                       unexpected errors.
+     * @return \Nekofar\Nobitex\Model\Order[]|false Return and array on success or false on
+     *                                              unexpected errors.
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getMarketOrders($args = [])
     {
@@ -65,10 +65,10 @@ trait OrderTrait
     /**
      * @param array $args
      *
-     * @return Order|false
+     * @return \Nekofar\Nobitex\Model\Order|false
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function addMarketOrder(array $args)
     {
@@ -111,7 +111,7 @@ trait OrderTrait
         }
 
         if (isset($json->order) && 'ok' === $json->status) {
-            /** @var Order $order */
+            /** @var \Nekofar\Nobitex\Model\Order $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
             return $order;
@@ -123,11 +123,11 @@ trait OrderTrait
     /**
      * @param array $args
      *
-     * @return OrderTrait|false
+     * @return \Nekofar\Nobitex\Client\OrderTrait|false
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getMarketOrder(array $args)
     {
@@ -146,7 +146,7 @@ trait OrderTrait
         }
 
         if (isset($json->order) && 'ok' === $json->status) {
-            /** @var OrderTrait $order */
+            /** @var \Nekofar\Nobitex\Client\OrderTrait $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
             return $order;
@@ -161,7 +161,7 @@ trait OrderTrait
      * @return bool
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function setMarketOrderStatus(array $args)
     {

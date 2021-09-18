@@ -24,22 +24,22 @@ trait UserTrait
 {
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
-     * @return Profile|false Return a Profile object on success or false on
-     *                       unexpected errors
+     * @return \Nekofar\Nobitex\Model\Profile|false Return a Profile object on success or false on
+ * unexpected errors
      *
      * @throws \Http\Client\Exception
-     * @throws JsonMapper_Exception
-     * @throws Exception
+     * @throws \JsonMapper_Exception
+     * @throws \Exception
      */
     public function getUserProfile()
     {
@@ -56,7 +56,7 @@ trait UserTrait
                 'setUndefinedProperty',
             ];
 
-            /** @var Profile $profile */
+            /** @var \Nekofar\Nobitex\Model\Profile $profile */
             $profile = $this->jsonMapper->map($json->profile, new Profile());
 
             return $profile;
@@ -70,7 +70,7 @@ trait UserTrait
      *                     unexpected errors.
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserLoginAttempts()
     {
@@ -92,7 +92,7 @@ trait UserTrait
      * @return string|false
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserReferralCode()
     {
@@ -116,7 +116,7 @@ trait UserTrait
      * @return bool
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function addUserCard(array $args)
     {
@@ -153,7 +153,7 @@ trait UserTrait
      * @return bool
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function addUserAccount(array $args)
     {
@@ -195,7 +195,7 @@ trait UserTrait
      *                     unexpected errors.
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserLimitations()
     {
