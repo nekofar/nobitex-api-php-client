@@ -126,13 +126,11 @@ trait OrderTrait
     /**
      * @param array<string, integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Client\OrderTrait|false
-     *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function getMarketOrder(array $args)
+    public function getMarketOrder(array $args): ?Order
     {
         if (
             !array_key_exists('id', $args) ||
@@ -150,13 +148,10 @@ trait OrderTrait
         }
 
         if (isset($json->order) && 'ok' === $json->status) {
-            /** @var \Nekofar\Nobitex\Client\OrderTrait $order */
-            $order = $this->jsonMapper->map($json->order, new Order());
-
-            return $order;
+            return $this->jsonMapper->map($json->order, new Order());
         }
 
-        return false;
+        return null;
     }
 
     /**

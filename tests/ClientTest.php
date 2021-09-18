@@ -1744,7 +1744,7 @@ class ClientTest extends TestCase
         );
 
         self::$mockClient->addResponse(new Response(200));
-        self::assertFalse($client->getMarketOrder(['id' => 123456]));
+        self::assertNull($client->getMarketOrder(['id' => 123456]));
     }
 
     /**

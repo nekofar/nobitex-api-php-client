@@ -46,7 +46,7 @@ class Basic implements Authentication
     private $remember;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $accessToken;
 
@@ -97,18 +97,16 @@ class Basic implements Authentication
         $this->totpToken = $totpToken;
 
         $this->httpClient = $httpClient ? $httpClient : HttpClientDiscovery::find(); // phpcs:ignore
-        $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find(); // phpcs:ignore
+        $this->requestFactory = $requestFactory ? $requestFactory : MessageFactoryDiscovery::find(); // phpcs:ignore
         $this->streamFactory = $streamFactory ? $streamFactory : StreamFactoryDiscovery::find(); // phpcs:ignore
     }
 
     /**
      * Refresh authentication access token.
      *
-     * @return boolean|string
-     *
      * @throws \Http\Client\Exception
      */
-    public function refreshToken()
+    public function refreshToken(): ?string
     {
         $this->accessToken = $this->retrieveAuthToken();
 
