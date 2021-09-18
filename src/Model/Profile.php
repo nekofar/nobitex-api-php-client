@@ -124,12 +124,14 @@ class Profile
             );
         }
 
-        if ('bankAccounts' === $propName) {
-            $object->{'accounts'} = $mapper->mapArray(
-                $jsonValue,
-                [],
-                Account::class,
-            );
+        if ('bankAccounts' !== $propName) {
+            return;
         }
+
+        $object->{'accounts'} = $mapper->mapArray(
+            $jsonValue,
+            [],
+            Account::class,
+        );
     }
 }

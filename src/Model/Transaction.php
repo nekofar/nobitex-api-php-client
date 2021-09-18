@@ -54,8 +54,10 @@ class Transaction
      */
     public static function setUndefinedProperty(object $object, string $propName, $jsonValue): void
     {
-        if ('created_at' === $propName) {
-            $object->{'createdAt'} = new DateTime($jsonValue);
+        if ('created_at' !== $propName) {
+            return;
         }
+
+        $object->{'createdAt'} = new DateTime($jsonValue);
     }
 }

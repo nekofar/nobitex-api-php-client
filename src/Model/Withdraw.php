@@ -75,8 +75,10 @@ class Withdraw
             $object->{'isCancelable'} = $jsonValue;
         }
 
-        if ('wallet_id' === $propName) {
-            $object->{'walletId'} = $jsonValue;
+        if ('wallet_id' !== $propName) {
+            return;
         }
+
+        $object->{'walletId'} = $jsonValue;
     }
 }
