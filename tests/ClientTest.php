@@ -1693,7 +1693,7 @@ class ClientTest extends TestCase
 
         $order = $client->getMarketOrder(['id' => 123456]);
 
-        self::assertNotFalse($order);
+        self::assertNotEmpty($order);
     }
 
     /**
