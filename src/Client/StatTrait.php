@@ -38,6 +38,7 @@ trait StatTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getMarketStats(array $args)
     {

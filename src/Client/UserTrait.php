@@ -114,6 +114,7 @@ trait UserTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function addUserCard(array $args): bool
     {
@@ -141,6 +142,7 @@ trait UserTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function addUserAccount(array $args): bool
     {

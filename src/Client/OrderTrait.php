@@ -66,6 +66,7 @@ trait OrderTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function addMarketOrder(array $args)
     {
@@ -145,6 +146,7 @@ trait OrderTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function setMarketOrderStatus(array $args): bool
     {

@@ -65,6 +65,7 @@ trait WalletTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getUserWalletBalance(array $args)
     {
@@ -94,6 +95,7 @@ trait WalletTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getUserWalletTransactions(array $args)
     {
@@ -130,6 +132,7 @@ trait WalletTrait
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getUserWalletDeposits(array $args)
     {
@@ -161,6 +164,7 @@ trait WalletTrait
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getUserWalletWithdraws(array $args)
     {
@@ -194,6 +198,7 @@ trait WalletTrait
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getUserWalletAddress(array $args): bool
     {
