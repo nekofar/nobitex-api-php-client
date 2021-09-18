@@ -120,7 +120,7 @@ class Profile
             $object->{'cards'} = $mapper->mapArray(
                 $jsonValue,
                 [],
-                Card::class
+                Card::class,
             );
         }
 
@@ -128,7 +128,7 @@ class Profile
             $object->{'accounts'} = $mapper->mapArray(
                 $jsonValue,
                 [],
-                Account::class
+                Account::class,
             );
         }
     }

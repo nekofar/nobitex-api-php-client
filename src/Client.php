@@ -50,7 +50,7 @@ class Client
     {
         return new static(
             $config->createHttpClient(),
-            $config->createJsonMapper()
+            $config->createJsonMapper(),
         );
     }
 }

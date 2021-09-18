@@ -63,7 +63,7 @@ class Config
             $username,
             $password,
             $remember,
-            $totpToken
+            $totpToken,
         ));
     }
 
@@ -89,10 +89,10 @@ class Config
                 ]),
                 new BaseUriPlugin(
                     UriFactoryDiscovery::find()->createUri($this->apiUrl),
-                    ['replace' => true]
+                    ['replace' => true],
                 ),
             ]),
-            MessageFactoryDiscovery::find()
+            MessageFactoryDiscovery::find(),
         );
     }
 }

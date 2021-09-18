@@ -122,7 +122,7 @@ class Basic implements Authentication
     {
         $response = $this->httpClient
             ->sendRequest(
-                $this->createAuthRequest()
+                $this->createAuthRequest(),
             );
 
         if ($response->getStatusCode() === 200) {
@@ -149,7 +149,7 @@ class Basic implements Authentication
                     'password' => $this->password,
                     'remember' => $this->remember === true ? 'yes' : 'no',
                     'captcha'  => 'api',
-                ])
+                ]),
             );
 
         return $request;
@@ -163,7 +163,7 @@ class Basic implements Authentication
         if ($this->accessToken !== null) {
             return $request->withHeader(
                 'Authorization',
-                sprintf('Token %s', $this->accessToken)
+                sprintf('Token %s', $this->accessToken),
             );
         }
 
