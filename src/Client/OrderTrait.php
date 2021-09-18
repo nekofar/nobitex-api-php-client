@@ -46,11 +46,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/list', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->orders) && $json->status === 'ok') {
+        if (isset($json->orders) && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->orders, [], Order::class);
         }
@@ -98,11 +98,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/add', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->order) && $json->status === 'ok') {
+        if (isset($json->order) && 'ok' === $json->status) {
             /** @var Order $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
@@ -132,11 +132,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/status', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->order) && $json->status === 'ok') {
+        if (isset($json->order) && 'ok' === $json->status) {
             /** @var OrderTrait $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
@@ -170,11 +170,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/update-status', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->updatedStatus) && $json->status === 'ok') {
+        if (isset($json->updatedStatus) && 'ok' === $json->status) {
             return true;
         }
 

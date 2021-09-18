@@ -46,11 +46,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/list');
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->wallets) && $json->status === 'ok') {
+        if (isset($json->wallets) && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->wallets, [], Wallet::class);
         }
@@ -77,11 +77,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/balance', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->balance) && $json->status === 'ok') {
+        if (isset($json->balance) && 'ok' === $json->status) {
             return (float)$json->balance;
         }
 
@@ -107,11 +107,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/transactions/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->transactions) && $json->status === 'ok') {
+        if (isset($json->transactions) && 'ok' === $json->status) {
             $this->jsonMapper->undefinedPropertyHandler = [
                 Transaction::class,
                 'setUndefinedProperty',
@@ -144,11 +144,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->deposits) && $json->status === 'ok') {
+        if (isset($json->deposits) && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->deposits, [], Deposit::class);
         }
@@ -176,11 +176,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->withdraws) && $json->status === 'ok') {
+        if (isset($json->withdraws) && 'ok' === $json->status) {
             $this->jsonMapper->undefinedPropertyHandler = [
                 Withdraw::class,
                 'setUndefinedProperty',
@@ -212,11 +212,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/generate-address', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->address) && $json->status === 'ok') {
+        if (isset($json->address) && 'ok' === $json->status) {
             return $json->address;
         }
 

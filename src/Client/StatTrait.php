@@ -53,11 +53,11 @@ trait StatTrait
         $resp = $this->httpClient->post('/market/stats', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->stats) && $json->status === 'ok') {
+        if (isset($json->stats) && 'ok' === $json->status) {
             return (array)$json->stats
                 ->{"{$args['srcCurrency']}-{$args['dstCurrency']}"};
         }

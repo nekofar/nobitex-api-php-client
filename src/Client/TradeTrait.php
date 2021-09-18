@@ -58,11 +58,11 @@ trait TradeTrait
         $resp = $this->httpClient->post('/market/trades/list', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->trades) && $json->status === 'ok') {
+        if (isset($json->trades) && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->trades, [], Trade::class);
         }
