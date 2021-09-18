@@ -33,7 +33,7 @@ trait OrderTrait
     /**
      * Return and array on success or false on unexpected errors.
      *
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return \Nekofar\Nobitex\Model\Order[]|false
      *
@@ -61,7 +61,7 @@ trait OrderTrait
 
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return \Nekofar\Nobitex\Model\Order|false
      *
@@ -109,7 +109,7 @@ trait OrderTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return \Nekofar\Nobitex\Client\OrderTrait|false
      *
@@ -142,7 +142,7 @@ trait OrderTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      *
      * @throws \Http\Client\Exception

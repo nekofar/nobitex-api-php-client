@@ -59,7 +59,7 @@ trait WalletTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return float|bool
      *
@@ -88,7 +88,7 @@ trait WalletTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return \Nekofar\Nobitex\Model\Transaction[]|false
      *
@@ -123,7 +123,7 @@ trait WalletTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return \Nekofar\Nobitex\Model\Deposit[]|false
      *
@@ -154,7 +154,7 @@ trait WalletTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      * @return \Nekofar\Nobitex\Model\Withdraw[]|false
      *
@@ -190,7 +190,7 @@ trait WalletTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      *
      * @throws \Http\Client\Exception

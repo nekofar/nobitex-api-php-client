@@ -32,10 +32,10 @@ trait TradeTrait
     private $jsonMapper;
 
     /**
-     * @param array $args
+     * Return and array on success or false on unexpected errors.
+     * @param array<string,integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Model\Trade[]|false Return and array on success or false on
- * unexpected errors.
+     * @return \Nekofar\Nobitex\Model\Trade[]|false
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception

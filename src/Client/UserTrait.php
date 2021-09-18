@@ -31,8 +31,8 @@ trait UserTrait
     private $jsonMapper;
 
     /**
-     * @return \Nekofar\Nobitex\Model\Profile|false Return a Profile object on success or false on
- * unexpected errors
+     * Return a Profile object on success or false on unexpected errors
+     * @return \Nekofar\Nobitex\Model\Profile|false
      *
      * @throws \Http\Client\Exception
      * @throws \JsonMapper_Exception
@@ -63,8 +63,8 @@ trait UserTrait
     }
 
     /**
-     * @return array|false Return an array on success or false on
-     *                     unexpected errors.
+     * Return an array on success or false on unexpected errors.
+     * @return array|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
@@ -108,7 +108,7 @@ trait UserTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      *
      * @throws \Http\Client\Exception
@@ -136,7 +136,7 @@ trait UserTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
      *
      * @throws \Http\Client\Exception
@@ -168,8 +168,8 @@ trait UserTrait
     }
 
     /**
-     * @return array|false Return an array on success or false on
-     *                     unexpected errors.
+     * Return an array on success or false on unexpected errors.
+     * @return array|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception

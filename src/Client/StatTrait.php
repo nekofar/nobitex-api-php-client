@@ -30,10 +30,10 @@ trait StatTrait
     private $jsonMapper;
 
     /**
-     * @param array $args
+     * Return an array on success or false on unexpected errors.
+     * @param array<string, integer|string> $args
      *
-     * @return array|false Return an array on success or false on
-     *                     unexpected errors.
+     * @return array|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
