@@ -41,13 +41,13 @@ trait StatTrait
     public function getMarketStats(array $args)
     {
         if (!isset($args['srcCurrency']) ||
-            empty($args['srcCurrency'])
+            in_array($args['srcCurrency'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
         if (!isset($args['dstCurrency']) ||
-            empty($args['dstCurrency'])
+            in_array($args['dstCurrency'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }

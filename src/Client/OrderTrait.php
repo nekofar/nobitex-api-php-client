@@ -70,31 +70,31 @@ trait OrderTrait
     public function addMarketOrder(array $args)
     {
         if (!isset($args['type']) ||
-            empty($args['type'])
+            in_array($args['type'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Order type is invalid.");
         }
 
         if (!isset($args['srcCurrency']) ||
-            empty($args['srcCurrency'])
+            in_array($args['srcCurrency'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
         if (!isset($args['dstCurrency']) ||
-            empty($args['dstCurrency'])
+            in_array($args['dstCurrency'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
         if (!isset($args['amount']) ||
-            empty($args['amount'])
+            in_array($args['amount'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Order amount is invalid.");
         }
 
         if (!isset($args['price']) ||
-            empty($args['price'])
+            in_array($args['price'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Order price is invalid.");
         }
@@ -163,13 +163,13 @@ trait OrderTrait
     public function setMarketOrderStatus(array $args)
     {
         if (!isset($args['order']) ||
-            empty($args['order'])
+            in_array($args['order'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
         if (!isset($args['status']) ||
-            empty($args['status'])
+            in_array($args['status'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Order status is invalid.");
         }

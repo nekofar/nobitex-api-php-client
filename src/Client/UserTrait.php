@@ -118,7 +118,7 @@ trait UserTrait
     public function addUserCard(array $args)
     {
         if (!isset($args['bank']) ||
-            empty($args['bank'])
+            in_array($args['bank'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
@@ -155,7 +155,7 @@ trait UserTrait
     public function addUserAccount(array $args)
     {
         if (!isset($args['bank']) ||
-            empty($args['bank'])
+            in_array($args['bank'], [null, ''], true)
         ) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
