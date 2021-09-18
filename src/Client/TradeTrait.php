@@ -54,7 +54,7 @@ trait TradeTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/trades/list', [], $data);
-        $json = json_decode((string)$resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
         if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
