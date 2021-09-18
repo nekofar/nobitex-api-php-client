@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class BearerTest extends TestCase
 {
 
-    public function testAuthenticate()
+    public function testAuthenticate(): void
     {
         $accessToken = md5('accessToken');
 

@@ -78,7 +78,7 @@ class ClientTest extends TestCase
     /**
      *
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $config = Config::doAuth(self::$username, self::$password);
         $client = Client::create($config);
@@ -92,7 +92,7 @@ class ClientTest extends TestCase
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
-    public function testGetMarketOrders()
+    public function testGetMarketOrders(): void
     {
         $json = [
             'status' => 'ok',
@@ -130,7 +130,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetMarketOrdersFailure()
+    public function testGetMarketOrdersFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -169,7 +169,7 @@ class ClientTest extends TestCase
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
-    public function testGetMarketTrades()
+    public function testGetMarketTrades(): void
     {
         $json = [
             'trades' =>
@@ -206,7 +206,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetMarketTradesFailure()
+    public function testGetMarketTradesFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -281,7 +281,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetMarketStats()
+    public function testGetMarketStats(): void
     {
         $json = [
             'status' => 'ok',
@@ -319,7 +319,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetMarketStatsFailure()
+    public function testGetMarketStatsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -395,7 +395,7 @@ class ClientTest extends TestCase
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
      */
-    public function testGetUserProfile()
+    public function testGetUserProfile(): void
     {
         $json = [
             'status' => 'ok',
@@ -486,7 +486,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserProfileFailure()
+    public function testGetUserProfileFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -524,7 +524,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserLoginAttempts()
+    public function testGetUserLoginAttempts(): void
     {
         $json = [
             'status' => 'ok',
@@ -552,7 +552,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testGetUserLoginAttemptsFailure()
+    public function testGetUserLoginAttemptsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -591,7 +591,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testGetUserReferralCode()
+    public function testGetUserReferralCode(): void
     {
         $json = [
             'status' => 'ok',
@@ -614,7 +614,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testGetUserReferralCodeFailure()
+    public function testGetUserReferralCodeFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -653,7 +653,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testAddUserCard()
+    public function testAddUserCard(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -670,7 +670,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testAddUserCardFailure()
+    public function testAddUserCardFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -746,7 +746,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testAddUserAccount()
+    public function testAddUserAccount(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -764,7 +764,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testAddUserAccountFailure()
+    public function testAddUserAccountFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -858,7 +858,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserLimitations()
+    public function testGetUserLimitations(): void
     {
         $json = [
             'status' => 'ok',
@@ -913,7 +913,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testGetUserLimitationsFailure()
+    public function testGetUserLimitationsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -952,7 +952,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWallets()
+    public function testGetUserWallets(): void
     {
         $json = [
             'status' => 'ok',
@@ -986,7 +986,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletsFailure()
+    public function testGetUserWalletsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1024,7 +1024,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletBalance()
+    public function testGetUserWalletBalance(): void
     {
         $json = [
             'balance' => '10.2649975000',
@@ -1043,7 +1043,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletBalanceFailure()
+    public function testGetUserWalletBalanceFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1093,7 +1093,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletTransactions()
+    public function testGetUserWalletTransactions(): void
     {
         $json = [
             'transactions' =>
@@ -1123,7 +1123,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletTransactionsFailure()
+    public function testGetUserWalletTransactionsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1174,7 +1174,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletDeposits()
+    public function testGetUserWalletDeposits(): void
     {
         $json = [
             'status' => 'ok',
@@ -1232,7 +1232,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletDepositsFailure()
+    public function testGetUserWalletDepositsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1283,7 +1283,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletWithdraws()
+    public function testGetUserWalletWithdraws(): void
     {
         $json = [
             'status' => 'ok',
@@ -1341,7 +1341,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletWithdrawsFailure()
+    public function testGetUserWalletWithdrawsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1391,7 +1391,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletAddress()
+    public function testGetUserWalletAddress(): void
     {
         $json = [
             'status' => 'ok',
@@ -1411,7 +1411,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testGetUserWalletAddressFailure()
+    public function testGetUserWalletAddressFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1460,7 +1460,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testAddMarketOrder()
+    public function testAddMarketOrder(): void
     {
         $json = [
             'status' => 'ok',
@@ -1504,7 +1504,7 @@ class ClientTest extends TestCase
      *
      * @throws \Http\Client\Exception
      */
-    public function testAddMarketOrderFailure()
+    public function testAddMarketOrderFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1646,7 +1646,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetMarketOrder()
+    public function testGetMarketOrder(): void
     {
         $json = array(
             'status' => 'ok',
@@ -1684,7 +1684,7 @@ class ClientTest extends TestCase
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      */
-    public function testGetMarketOrderFailure()
+    public function testGetMarketOrderFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1733,7 +1733,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testSetMarketOrderStatus()
+    public function testSetMarketOrderStatus(): void
     {
         $json = array(
             'status' => 'ok',
@@ -1750,7 +1750,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      */
-    public function testSetMarketOrderStatusFailure()
+    public function testSetMarketOrderStatusFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 

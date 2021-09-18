@@ -21,7 +21,7 @@ class BasicTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testRefreshToken()
+    public function testRefreshToken(): void
     {
         $username = 'username';
         $password = 'password';
@@ -39,7 +39,7 @@ class BasicTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testAuthenticate()
+    public function testAuthenticate(): void
     {
 
         $username = 'username';
@@ -63,7 +63,7 @@ class BasicTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testAuthenticateWithToken()
+    public function testAuthenticateWithToken(): void
     {
 
         $username = 'username';
@@ -90,7 +90,7 @@ class BasicTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testAuthenticateWithFailure()
+    public function testAuthenticateWithFailure(): void
     {
 
         $username = 'username';

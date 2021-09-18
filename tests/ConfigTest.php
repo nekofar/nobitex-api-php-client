@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
 {
-    public function testCreateHttpClient()
+    public function testCreateHttpClient(): void
     {
         $username = 'username';
         $password = 'password';
@@ -25,7 +25,7 @@ class ConfigTest extends TestCase
         self::assertInstanceOf(HttpMethodsClient::class, $config->createHttpClient());
     }
 
-    public function testCreateJsonMapper()
+    public function testCreateJsonMapper(): void
     {
         $username = 'username';
         $password = 'password';
