@@ -28,7 +28,7 @@ use Nekofar\Nobitex\Auth\Basic;
  */
 class Config
 {
-    protected const DEFAULT_API_URL = 'https://api.nobitex.ir';
+    public const DEFAULT_API_URL = 'https://api.nobitex.ir';
     protected const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
 
     /**

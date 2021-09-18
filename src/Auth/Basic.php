@@ -83,11 +83,12 @@ class Basic implements Authentication
         string $username,
         string $password,
         bool $remember = true,
-        int $totpToken = null,
-        HttpClient $httpClient = null,
-        RequestFactory $requestFactory = null,
-        StreamFactory $streamFactory = null
-    ) {
+        ?int $totpToken = null,
+        ?HttpClient $httpClient = null,
+        ?RequestFactory $requestFactory = null,
+        ?StreamFactory $streamFactory = null
+    )
+    {
         $this->apiUrl = Config::DEFAULT_API_URL;
 
         $this->username = $username;
@@ -126,7 +127,7 @@ class Basic implements Authentication
             );
 
         if ($response->getStatusCode() === 200) {
-            return json_decode((string) $response->getBody())->key;
+            return json_decode((string)$response->getBody())->key;
         }
 
         return null;
@@ -148,7 +149,7 @@ class Basic implements Authentication
                     'username' => $this->username,
                     'password' => $this->password,
                     'remember' => $this->remember === true ? 'yes' : 'no',
-                    'captcha'  => 'api',
+                    'captcha' => 'api',
                 ]),
             );
 
