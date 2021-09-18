@@ -124,7 +124,7 @@ trait UserTrait
 
         if (
             !array_key_exists('number', $args) ||
-            !preg_match('/^[0-9]{16}$/', $args['number'])
+            1 !== preg_match('/^\d{16}$/', (string) $args['number'])
         ) {
             throw new InvalidArgumentException("Card number is invalid.");
         }
@@ -158,14 +158,14 @@ trait UserTrait
 
         if (
             !array_key_exists('number', $args) ||
-            !preg_match('/^[0-9]+$/', $args['number'])
+            1 !== preg_match('/^\d+$/', (string) $args['number'])
         ) {
             throw new InvalidArgumentException("Account number is invalid.");
         }
 
         if (
             !array_key_exists('shaba', $args) ||
-            !preg_match('/^IR[0-9]{24}$/', $args['shaba'])
+            1 !== preg_match('/^IR\d{24}$/', (string) $args['shaba'])
         ) {
             throw new InvalidArgumentException("Account shaba is invalid.");
         }
@@ -199,7 +199,12 @@ trait UserTrait
         }
 
         if (isset($json->limitations) && 'ok' === $json->status) {
-            return json_decode(json_encode($json->limitations), true);
+            return json_decode(
+                json_encode($json->limitations, JSON_THROW_ON_ERROR),
+                true,
+                512,
+                JSON_THROW_ON_ERROR,
+            );
         }
 
         return false;
