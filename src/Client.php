@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Nekofar\Nobitex;
 
 use Http\Client\Common\HttpMethodsClient;
-use Http\Client\HttpClient;
 use JsonMapper;
 
 /**

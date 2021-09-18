@@ -11,9 +11,7 @@ declare(strict_types=1);
 namespace Nekofar\Nobitex\Client;
 
 use Exception;
-use Http\Client\Common\HttpMethodsClient;
 use InvalidArgumentException;
-use JsonMapper;
 
 /**
  * Trait Stat

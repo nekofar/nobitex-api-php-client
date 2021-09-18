@@ -11,10 +11,7 @@ declare(strict_types=1);
 namespace Nekofar\Nobitex\Client;
 
 use Exception;
-use Http\Client\Common\HttpMethodsClient;
 use InvalidArgumentException;
-use JsonMapper;
-use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Profile;
 
 /**
