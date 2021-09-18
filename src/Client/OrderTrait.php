@@ -35,7 +35,7 @@ trait OrderTrait
      *
      * @param array<string, integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Model\Order[]|false
+     * @return array<\Nekofar\Nobitex\Model\Order>|false
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception

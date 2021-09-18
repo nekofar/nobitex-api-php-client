@@ -36,7 +36,7 @@ trait TradeTrait
      *
      * @param array<string,integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Model\Trade[]|false
+     * @return array<\Nekofar\Nobitex\Model\Trade>|false
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception

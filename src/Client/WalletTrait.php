@@ -35,7 +35,7 @@ trait WalletTrait
 
 
     /**
-     * @return \Nekofar\Nobitex\Model\Wallet[]|bool
+     * @return array<\Nekofar\Nobitex\Model\Wallet>|bool
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
@@ -90,7 +90,7 @@ trait WalletTrait
     /**
      * @param array<string, integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Model\Transaction[]|false
+     * @return array<\Nekofar\Nobitex\Model\Transaction>|false
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
@@ -125,7 +125,7 @@ trait WalletTrait
     /**
      * @param array<string, integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Model\Deposit[]|false
+     * @return array<\Nekofar\Nobitex\Model\Deposit>|false
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
@@ -156,7 +156,7 @@ trait WalletTrait
     /**
      * @param array<string, integer|string> $args
      *
-     * @return \Nekofar\Nobitex\Model\Withdraw[]|false
+     * @return array<\Nekofar\Nobitex\Model\Withdraw>|false
      *
      * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
