@@ -88,22 +88,26 @@ class Profile
     public $accounts;
 
     /**
-     * @var array<boolean>
+     * @codingStandardsIgnoreStart
+     *
+     * @var array
      */
-    public $verifications;
+    public $verifications; // @phpstan-ignore-line
 
     /**
-     * @var array<boolean>
+     * @var array
      */
-    public $pendingVerifications;
+    public $pendingVerifications; // @phpstan-ignore-line
 
     /**
-     * @var array<string|boolean>
+     * @var array
      */
-    public $options;
+    public $options; // @phpstan-ignore-line
 
     /**
-     * @var bool
+     * @var boolean
+     *
+     * @codingStandardsIgnoreEnd
      */
     public $withdrawEligible;
 
@@ -114,24 +118,18 @@ class Profile
      */
     public static function setUndefinedProperty(object $object, string $propName, $jsonValue): void
     {
-        $mapper = new JsonMapper();
-
-        if ('bankCards' === $propName) {
-            $object->{'cards'} = $mapper->mapArray(
-                $jsonValue,
-                [],
-                Card::class,
-            );
-        }
-
-        if ('bankAccounts' !== $propName) {
+        if (!in_array($propName, ['bankAccounts', 'bankCards'], true)) {
             return;
         }
 
-        $object->{'accounts'} = $mapper->mapArray(
-            $jsonValue,
-            [],
-            Account::class,
-        );
+        $mapper = new JsonMapper();
+
+        if ('bankCards' === $propName) {
+            // @phpstan-ignore-next-line
+            $object->{'cards'} = $mapper->mapArray($jsonValue, [], Card::class);
+        }
+
+        // @phpstan-ignore-next-line
+        $object->{'accounts'} = $mapper->mapArray($jsonValue, [], Account::class);
     }
 }
