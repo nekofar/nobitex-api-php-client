@@ -41,7 +41,7 @@ trait OrderTrait
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function getMarketOrders($args = [])
+    public function getMarketOrders(array $args = [])
     {
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/list', [], $data);

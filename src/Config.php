@@ -43,7 +43,6 @@ class Config
 
     /**
      * Config constructor.
-     * @param \Http\Message\Authentication $auth
      */
     public function __construct(Authentication $auth)
     {
@@ -52,17 +51,13 @@ class Config
     }
 
     /**
-     * @param string $username
-     * @param string $password
-     * @param boolean $remember
-     * @param integer|null $totpToken
      *
      */
     public static function doAuth(
-        $username,
-        $password,
-        $remember = true,
-        $totpToken = null
+        string $username,
+        string $password,
+        bool $remember = true,
+        ?int $totpToken = null
     ): Config {
         return new static(new Basic(
             $username,

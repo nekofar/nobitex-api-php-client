@@ -37,8 +37,6 @@ class Client
     /**
      * Client constructor.
      *
-     * @param \Http\Client\Common\HttpMethodsClient $http
-     * @param \JsonMapper $mapper
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
@@ -47,7 +45,6 @@ class Client
     }
 
     /**
-     * @param \Nekofar\Nobitex\Config $config
      *
      */
     public static function create(Config $config): Client
