@@ -137,10 +137,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrders();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -152,10 +152,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrders();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -213,13 +213,13 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -231,13 +231,13 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -245,13 +245,13 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Source currency is invalid.', $exception->getMessage());
             }
@@ -259,13 +259,13 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => ""
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
@@ -326,13 +326,13 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -344,13 +344,13 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -358,13 +358,13 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Source currency is invalid.', $exception->getMessage());
             }
@@ -372,13 +372,13 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => ""
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
@@ -493,10 +493,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserProfile();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -508,10 +508,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserProfile();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -559,10 +559,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLoginAttempts();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -574,10 +574,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLoginAttempts();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -621,10 +621,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserReferralCode();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -636,10 +636,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserReferralCode();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -683,13 +683,13 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -701,13 +701,13 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -715,13 +715,13 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "",
                     "bank" => "5041721011111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Card number is invalid.', $exception->getMessage());
             }
@@ -729,13 +729,13 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "50417210111111111",
                     "bank" => "",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Bank name is invalid.', $exception->getMessage());
             }
@@ -778,14 +778,14 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var ClientErrorException $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -797,28 +797,28 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "",
                     "bank" => "5041721011111111",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Account number is invalid.', $exception->getMessage());
             }
@@ -826,14 +826,14 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
                     "bank" => "",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Bank name is invalid.', $exception->getMessage());
             }
@@ -841,14 +841,14 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
                     "bank" => "Resalat",
                     "shaba" => "IR1111111111111111111111110",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Account shaba is invalid.', $exception->getMessage());
             }
@@ -920,10 +920,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLimitations();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -935,10 +935,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLimitations();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -993,10 +993,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWallets();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1008,10 +1008,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWallets();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1050,10 +1050,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletBalance(['currency' => 'ltc']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1065,10 +1065,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletBalance(['currency' => 'ltc']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1076,10 +1076,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletBalance(['currency' => '']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Currency code is invalid.', $exception->getMessage());
             }
@@ -1130,10 +1130,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletTransactions(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1145,10 +1145,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletTransactions(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1156,10 +1156,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletTransactions(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
@@ -1239,10 +1239,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletDeposits(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1254,10 +1254,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletDeposits(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1265,10 +1265,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletDeposits(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
@@ -1348,10 +1348,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletWithdraws(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1363,10 +1363,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletWithdraws(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1374,10 +1374,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletWithdraws(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
@@ -1421,10 +1421,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletAddress(['wallet' => '123456']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1436,10 +1436,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletAddress(['wallet' => '123456']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1447,10 +1447,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletAddress(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
@@ -1520,7 +1520,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1529,7 +1529,7 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var ClientErrorException $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1541,7 +1541,7 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1550,7 +1550,7 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1558,7 +1558,7 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => '',
                     'srcCurrency' => 'btc',
@@ -1567,7 +1567,7 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Order type is invalid.', $exception->getMessage());
             }
@@ -1575,7 +1575,7 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => '',
@@ -1584,7 +1584,7 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Source currency is invalid.', $exception->getMessage());
             }
@@ -1592,7 +1592,7 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1601,7 +1601,7 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
@@ -1609,7 +1609,7 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1618,7 +1618,7 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Order amount is invalid.', $exception->getMessage());
             }
@@ -1626,7 +1626,7 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1635,7 +1635,7 @@ class ClientTest extends TestCase
                     'price' => 0,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
                 self::assertEquals('Order price is invalid.', $exception->getMessage());
             }
@@ -1691,10 +1691,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrder(['id' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1706,10 +1706,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrder(['id' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1717,10 +1717,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrder(['id' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Order id is invalid.', $exception->getMessage());
             }
@@ -1757,10 +1757,10 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Unauthorized', $exception->getMessage());
             }
@@ -1772,10 +1772,10 @@ class ClientTest extends TestCase
         ])));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Validation Failed', $exception->getMessage());
             }
@@ -1783,10 +1783,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 self::assertTrue($client->setMarketOrderStatus(['order' => 0, 'status' => 'canceled']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Order id is invalid.', $exception->getMessage());
             }
@@ -1794,10 +1794,10 @@ class ClientTest extends TestCase
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => '']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
                 self::assertEquals('Order status is invalid.', $exception->getMessage());
             }
