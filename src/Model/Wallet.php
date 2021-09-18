@@ -19,34 +19,42 @@ class Wallet
      * @var float
      */
     public $activeBalance;
+
     /**
      * @var float
      */
     public $blockedBalance;
+
     /**
      * @var string
      */
     public $user;
+
     /**
      * @var string
      */
     public $currency;
+
     /**
      * @var integer
      */
     public $id;
+
     /**
      * @var float
      */
     public $balance;
+
     /**
      * @var float
      */
     public $rialBalance;
+
     /**
      * @var float
      */
     public $rialBalanceSell;
+
     /**
      * @var string|null
      */

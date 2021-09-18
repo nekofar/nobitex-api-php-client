@@ -19,34 +19,42 @@ class Withdraw
      * @var integer
      */
     public $id;
+
     /**
      * @var string
      */
     public $blockchainUrl;
+
     /**
      * @var boolean
      */
     public $isCancelable;
+
     /**
      * @var string
      */
     public $status;
+
     /**
      * @var float
      */
     public $amount;
+
     /**
      * @var \DateTime
      */
     public $createdAt;
+
     /**
      * @var integer
      */
     public $walletId;
+
     /**
      * @var string
      */
     public $currency;
+
     /**
      * @var string
      */

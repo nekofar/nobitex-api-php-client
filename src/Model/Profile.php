@@ -22,70 +22,87 @@ class Profile
      * @var string
      */
     public $username;
+
     /**
      * @var string
      */
     public $email;
+
     /**
      * @var int
      */
     public $level;
+
     /**
      * @var string
      */
     public $firstName;
+
     /**
      * @var string
      */
     public $lastName;
+
     /**
      * @var string
      */
     public $nationalCode;
+
     /**
      * @var string
      */
     public $nickname;
+
     /**
      * @var string
      */
     public $phone;
+
     /**
      * @var string
      */
     public $mobile;
+
     /**
      * @var string|null
      */
     public $province;
+
     /**
      * @var string
      */
     public $city;
+
     /**
      * @var string
      */
     public $address;
+
     /**
      * @var Card[]
      */
     public $cards;
+
     /**
      * @var Account[]
      */
     public $accounts;
+
     /**
      * @var array
      */
     public $verifications;
+
     /**
      * @var array
      */
     public $pendingVerifications;
+
     /**
      * @var array
      */
     public $options;
+
     /**
      * @var bool
      */
