@@ -44,20 +44,17 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/profile');
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'profile') && 'ok' === $json->status) {
+        if (isset($json->profile) && 'ok' === $json->status) {
             $this->jsonMapper->undefinedPropertyHandler = [
                 Profile::class,
                 'setUndefinedProperty',
             ];
 
-            /** @var \Nekofar\Nobitex\Model\Profile $profile */
-            $profile = $this->jsonMapper->map($json->profile, new Profile());
-
-            return $profile;
+            return $this->jsonMapper->map($json->profile, new Profile());
         }
 
         return false;
@@ -76,11 +73,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/login-attempts');
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'attempts') && 'ok' === $json->status) {
+        if (isset($json->attempts) && 'ok' === $json->status) {
             return (array) $json->attempts;
         }
 
@@ -98,11 +95,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/get-referral-code');
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'referralCode') && 'ok' === $json->status) {
+        if (isset($json->referralCode) && 'ok' === $json->status) {
             return $json->referralCode;
         }
 
@@ -130,11 +127,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/cards-add', [], $data);
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        return property_exists($json, 'status') && 'ok' === $json->status;
+        return isset($json->status) && 'ok' === $json->status;
     }
 
     /**
@@ -162,11 +159,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/account-add', [], $data);
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        return property_exists($json, 'status') && 'ok' === $json->status;
+        return isset($json->status) && 'ok' === $json->status;
     }
 
     /**
@@ -182,11 +179,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/get-referral-code');
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'limitations') && 'ok' === $json->status) {
+        if (isset($json->limitations) && 'ok' === $json->status) {
             return json_decode(json_encode($json->limitations), true);
         }
 

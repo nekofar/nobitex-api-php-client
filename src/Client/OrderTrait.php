@@ -47,11 +47,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/list', [], $data);
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'orders') && 'ok' === $json->status) {
+        if (isset($json->orders) && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->orders, [], Order::class);
         }
@@ -94,11 +94,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/add', [], $data);
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'order') && 'ok' === $json->status) {
+        if (isset($json->order) && 'ok' === $json->status) {
             /** @var \Nekofar\Nobitex\Model\Order $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
@@ -127,11 +127,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/status', [], $data);
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (property_exists($json, 'order') && 'ok' === $json->status) {
+        if (isset($json->order) && 'ok' === $json->status) {
             /** @var \Nekofar\Nobitex\Client\OrderTrait $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
@@ -162,10 +162,10 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/update-status', [], $data); // phpcs:ignore
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json, 'message') && 'failed' === $json->status) {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        return property_exists($json, 'updatedStatus') && 'ok' === $json->status;
+        return isset($json->updatedStatus) && 'ok' === $json->status;
     }
 }
