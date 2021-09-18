@@ -144,7 +144,6 @@ trait OrderTrait
     /**
      * @param array<string, integer|string> $args
      *
-     *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */

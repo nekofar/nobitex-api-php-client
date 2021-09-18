@@ -33,6 +33,7 @@ trait TradeTrait
 
     /**
      * Return and array on success or false on unexpected errors.
+     *
      * @param array<string,integer|string> $args
      *
      * @return \Nekofar\Nobitex\Model\Trade[]|false

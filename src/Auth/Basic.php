@@ -157,8 +157,6 @@ class Basic implements Authentication
 
     /**
      * Authenticates a request.
-     *
-     *
      */
     public function authenticate(RequestInterface $request): RequestInterface
     {

@@ -36,7 +36,6 @@ class Client
 
     /**
      * Client constructor.
-     *
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {

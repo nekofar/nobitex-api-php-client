@@ -32,6 +32,7 @@ trait UserTrait
 
     /**
      * Return a Profile object on success or false on unexpected errors
+     *
      * @return \Nekofar\Nobitex\Model\Profile|false
      *
      * @throws \Http\Client\Exception
@@ -64,6 +65,7 @@ trait UserTrait
 
     /**
      * Return an array on success or false on unexpected errors.
+     *
      * @return array|false
      *
      * @throws \Http\Client\Exception
@@ -110,7 +112,6 @@ trait UserTrait
     /**
      * @param array<string, integer|string> $args
      *
-     *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
@@ -137,7 +138,6 @@ trait UserTrait
 
     /**
      * @param array<string, integer|string> $args
-     *
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
@@ -169,6 +169,7 @@ trait UserTrait
 
     /**
      * Return an array on success or false on unexpected errors.
+     *
      * @return array|false
      *
      * @throws \Http\Client\Exception

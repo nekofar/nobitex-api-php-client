@@ -31,6 +31,7 @@ trait StatTrait
 
     /**
      * Return an array on success or false on unexpected errors.
+     *
      * @param array<string, integer|string> $args
      *
      * @return array|false
