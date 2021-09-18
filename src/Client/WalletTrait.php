@@ -69,7 +69,8 @@ trait WalletTrait
      */
     public function getUserWalletBalance(array $args)
     {
-        if (!isset($args['currency']) ||
+        if (
+            !isset($args['currency']) ||
             empty($args['currency'])
         ) {
             throw new InvalidArgumentException("Currency code is invalid.");
@@ -100,7 +101,8 @@ trait WalletTrait
      */
     public function getUserWalletTransactions(array $args)
     {
-        if (!isset($args['wallet']) ||
+        if (
+            !isset($args['wallet']) ||
             empty($args['wallet'])
         ) {
             throw new InvalidArgumentException("Wallet id is invalid.");
@@ -138,7 +140,8 @@ trait WalletTrait
      */
     public function getUserWalletDeposits(array $args)
     {
-        if (!isset($args['wallet']) ||
+        if (
+            !isset($args['wallet']) ||
             empty($args['wallet'])
         ) {
             throw new InvalidArgumentException("Wallet id is invalid.");
@@ -171,7 +174,8 @@ trait WalletTrait
      */
     public function getUserWalletWithdraws(array $args)
     {
-        if (!isset($args['wallet']) ||
+        if (
+            !isset($args['wallet']) ||
             empty($args['wallet'])
         ) {
             throw new InvalidArgumentException("Wallet id is invalid.");
@@ -208,7 +212,8 @@ trait WalletTrait
      */
     public function getUserWalletAddress(array $args)
     {
-        if (!isset($args['wallet']) ||
+        if (
+            !isset($args['wallet']) ||
             empty($args['wallet'])
         ) {
             throw new InvalidArgumentException("Wallet id is invalid.");
