@@ -27,5 +27,20 @@
     <!-- Exclude the Node Modules directory. -->
     <exclude-pattern>/node_modules/*</exclude-pattern>
 
-    <rule ref="NekofarCodingStandard" />
+    <rule ref="NekofarCodingStandard">
+        <exclude name="Symfony.Commenting.FunctionComment.ParamNameNoMatch" />
+        <exclude name="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint" />
+
+        <exclude name="Squiz.Commenting.FunctionComment.ParamNameNoMatch" />
+        <exclude name="Squiz.Commenting.FunctionComment.InvalidTypeHint" />
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing" />
+    </rule>
+
+    <!-- Lines can be 80 chars long (warnings), errors at 100 chars -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="100"/>
+            <property name="absoluteLineLimit" value="100"/>
+        </properties>
+    </rule>
 </ruleset>
