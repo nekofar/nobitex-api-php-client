@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
@@ -69,28 +70,38 @@ trait OrderTrait
      */
     public function addMarketOrder(array $args)
     {
-        if (!isset($args['type']) ||
-            empty($args['type'])) {
+        if (
+            !isset($args['type']) ||
+            empty($args['type'])
+        ) {
             throw new InvalidArgumentException("Order type is invalid.");
         }
 
-        if (!isset($args['srcCurrency']) ||
-            empty($args['srcCurrency'])) {
+        if (
+            !isset($args['srcCurrency']) ||
+            empty($args['srcCurrency'])
+        ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($args['dstCurrency']) ||
-            empty($args['dstCurrency'])) {
+        if (
+            !isset($args['dstCurrency']) ||
+            empty($args['dstCurrency'])
+        ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
-        if (!isset($args['amount']) ||
-            empty($args['amount'])) {
+        if (
+            !isset($args['amount']) ||
+            empty($args['amount'])
+        ) {
             throw new InvalidArgumentException("Order amount is invalid.");
         }
 
-        if (!isset($args['price']) ||
-            empty($args['price'])) {
+        if (
+            !isset($args['price']) ||
+            empty($args['price'])
+        ) {
             throw new InvalidArgumentException("Order price is invalid.");
         }
 
@@ -123,8 +134,10 @@ trait OrderTrait
      */
     public function getMarketOrder(array $args)
     {
-        if (!isset($args['id']) ||
-            empty($args['id'])) {
+        if (
+            !isset($args['id']) ||
+            empty($args['id'])
+        ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
@@ -156,13 +169,17 @@ trait OrderTrait
      */
     public function setMarketOrderStatus(array $args)
     {
-        if (!isset($args['order']) ||
-            empty($args['order'])) {
+        if (
+            !isset($args['order']) ||
+            empty($args['order'])
+        ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
-        if (!isset($args['status']) ||
-            empty($args['status'])) {
+        if (
+            !isset($args['status']) ||
+            empty($args['status'])
+        ) {
             throw new InvalidArgumentException("Order status is invalid.");
         }
 
