@@ -115,11 +115,17 @@ trait UserTrait
      */
     public function addUserCard(array $args): bool
     {
-        if (!array_key_exists('bank', $args) || in_array($args['bank'], [null, ''], true)) {
+        if (
+            !array_key_exists('bank', $args) ||
+            in_array($args['bank'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (!array_key_exists('number', $args) || !preg_match('/^[0-9]{16}$/', $args['number'])) {
+        if (
+            !array_key_exists('number', $args) ||
+            !preg_match('/^[0-9]{16}$/', $args['number'])
+        ) {
             throw new InvalidArgumentException("Card number is invalid.");
         }
 
@@ -143,15 +149,24 @@ trait UserTrait
      */
     public function addUserAccount(array $args): bool
     {
-        if (!array_key_exists('bank', $args) || in_array($args['bank'], [null, ''], true)) {
+        if (
+            !array_key_exists('bank', $args) ||
+            in_array($args['bank'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (!array_key_exists('number', $args) || !preg_match('/^[0-9]+$/', $args['number'])) {
+        if (
+            !array_key_exists('number', $args) ||
+            !preg_match('/^[0-9]+$/', $args['number'])
+        ) {
             throw new InvalidArgumentException("Account number is invalid.");
         }
 
-        if (!array_key_exists('shaba', $args) || !preg_match('/^IR[0-9]{24}$/', $args['shaba'])) {
+        if (
+            !array_key_exists('shaba', $args) ||
+            !preg_match('/^IR[0-9]{24}$/', $args['shaba'])
+        ) {
             throw new InvalidArgumentException("Account shaba is invalid.");
         }
 

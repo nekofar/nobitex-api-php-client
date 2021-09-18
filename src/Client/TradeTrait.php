@@ -44,11 +44,17 @@ trait TradeTrait
      */
     public function getMarketTrades(array $args)
     {
-        if (!array_key_exists('srcCurrency', $args) || in_array($args['srcCurrency'], [null, ''], true)) {
+        if (
+            !array_key_exists('srcCurrency', $args)
+            || in_array($args['srcCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!array_key_exists('dstCurrency', $args) || in_array($args['dstCurrency'], [null, ''], true)) {
+        if (
+            !array_key_exists('dstCurrency', $args)
+            || in_array($args['dstCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 

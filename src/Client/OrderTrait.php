@@ -70,23 +70,38 @@ trait OrderTrait
      */
     public function addMarketOrder(array $args)
     {
-        if (!array_key_exists('type', $args) || in_array($args['type'], [null, ''], true)) {
+        if (
+            !array_key_exists('type', $args) ||
+            in_array($args['type'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Order type is invalid.");
         }
 
-        if (!array_key_exists('srcCurrency', $args) || in_array($args['srcCurrency'], [null, ''], true)) {
+        if (
+            !array_key_exists('srcCurrency', $args) ||
+            in_array($args['srcCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!array_key_exists('dstCurrency', $args) || in_array($args['dstCurrency'], [null, ''], true)) {
+        if (
+            !array_key_exists('dstCurrency', $args) ||
+            in_array($args['dstCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
-        if (!array_key_exists('amount', $args) || in_array($args['amount'], [null, ''], true)) {
+        if (
+            !array_key_exists('amount', $args) ||
+            in_array($args['amount'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Order amount is invalid.");
         }
 
-        if (!array_key_exists('price', $args) || in_array($args['price'], [null, '', 0], true)) {
+        if (
+            !array_key_exists('price', $args) ||
+            in_array($args['price'], [null, '', 0], true)
+        ) {
             throw new InvalidArgumentException("Order price is invalid.");
         }
 
@@ -119,7 +134,10 @@ trait OrderTrait
      */
     public function getMarketOrder(array $args)
     {
-        if (!array_key_exists('id', $args) || in_array($args['id'], [null, '', 0], true)) {
+        if (
+            !array_key_exists('id', $args) ||
+            in_array($args['id'], [null, '', 0], true)
+        ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
@@ -150,11 +168,17 @@ trait OrderTrait
      */
     public function setMarketOrderStatus(array $args): bool
     {
-        if (!array_key_exists('order', $args) || in_array($args['order'], [null, '', 0], true)) {
+        if (
+            !array_key_exists('order', $args) ||
+            in_array($args['order'], [null, '', 0], true)
+        ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
-        if (!array_key_exists('status', $args) || in_array($args['status'], [null, ''], true)) {
+        if (
+            !array_key_exists('status', $args) ||
+            in_array($args['status'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Order status is invalid.");
         }
 
