@@ -28,7 +28,7 @@ class Transaction
      */
     public $calculatedFee;
     /**
-     * @var int
+     * @var integer
      */
     public $id;
     /**

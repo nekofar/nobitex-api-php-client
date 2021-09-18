@@ -32,7 +32,7 @@ class Wallet
      */
     public $currency;
     /**
-     * @var int
+     * @var integer
      */
     public $id;
     /**

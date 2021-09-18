@@ -24,7 +24,7 @@ class Deposit
      */
     public $address;
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed;
     /**
@@ -40,11 +40,11 @@ class Deposit
      */
     public $blockchainUrl;
     /**
-     * @var int
+     * @var integer
      */
     public $confirmations;
     /**
-     * @var int
+     * @var integer
      */
     public $requiredConfirmations;
     /**

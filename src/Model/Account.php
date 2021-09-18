@@ -16,7 +16,7 @@ namespace Nekofar\Nobitex\Model;
 class Account
 {
     /**
-     * @var int
+     * @var integer
      */
     public $id;
     /**
@@ -36,7 +36,7 @@ class Account
      */
     public $owner;
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed;
     /**

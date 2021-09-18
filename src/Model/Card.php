@@ -28,7 +28,7 @@ class Card
      */
     public $owner;
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed;
     /**

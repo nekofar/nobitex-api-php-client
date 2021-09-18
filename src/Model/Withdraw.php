@@ -16,7 +16,7 @@ namespace Nekofar\Nobitex\Model;
 class Withdraw
 {
     /**
-     * @var int
+     * @var integer
      */
     public $id;
     /**
@@ -24,7 +24,7 @@ class Withdraw
      */
     public $blockchainUrl;
     /**
-     * @var bool
+     * @var boolean
      */
     public $isCancelable;
     /**
@@ -40,7 +40,7 @@ class Withdraw
      */
     public $createdAt;
     /**
-     * @var int
+     * @var integer
      */
     public $walletId;
     /**
