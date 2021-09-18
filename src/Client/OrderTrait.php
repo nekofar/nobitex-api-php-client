@@ -47,11 +47,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/list', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json,'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->orders) && 'ok' === $json->status) {
+        if (property_exists($json, 'orders') && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->orders, [], Order::class);
         }
@@ -70,33 +70,23 @@ trait OrderTrait
      */
     public function addMarketOrder(array $args)
     {
-        if (!isset($args['type']) ||
-            in_array($args['type'], [null, ''], true)
-        ) {
+        if (!array_key_exists('type', $args) || in_array($args['type'], [null, ''], true)) {
             throw new InvalidArgumentException("Order type is invalid.");
         }
 
-        if (!isset($args['srcCurrency']) ||
-            in_array($args['srcCurrency'], [null, ''], true)
-        ) {
+        if (!array_key_exists('srcCurrency', $args) || in_array($args['srcCurrency'], [null, ''], true)) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($args['dstCurrency']) ||
-            in_array($args['dstCurrency'], [null, ''], true)
-        ) {
+        if (!array_key_exists('dstCurrency', $args) || in_array($args['dstCurrency'], [null, ''], true)) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
-        if (!isset($args['amount']) ||
-            in_array($args['amount'], [null, ''], true)
-        ) {
+        if (!array_key_exists('amount', $args) || in_array($args['amount'], [null, ''], true)) {
             throw new InvalidArgumentException("Order amount is invalid.");
         }
 
-        if (!isset($args['price']) ||
-            in_array($args['price'], [null, ''], true)
-        ) {
+        if (!array_key_exists('price', $args) || in_array($args['price'], [null, ''], true)) {
             throw new InvalidArgumentException("Order price is invalid.");
         }
 
@@ -104,11 +94,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/add', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->order) && 'ok' === $json->status) {
+        if (property_exists($json, 'order') && 'ok' === $json->status) {
             /** @var \Nekofar\Nobitex\Model\Order $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
@@ -129,9 +119,7 @@ trait OrderTrait
      */
     public function getMarketOrder(array $args)
     {
-        if (!isset($args['id']) ||
-            empty($args['id'])
-        ) {
+        if (!array_key_exists('id', $args) || in_array($args['id'], [null, ''], true)) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
@@ -139,11 +127,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/status', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->order) && 'ok' === $json->status) {
+        if (property_exists($json, 'order') && 'ok' === $json->status) {
             /** @var \Nekofar\Nobitex\Client\OrderTrait $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
@@ -162,15 +150,11 @@ trait OrderTrait
      */
     public function setMarketOrderStatus(array $args): bool
     {
-        if (!isset($args['order']) ||
-            in_array($args['order'], [null, ''], true)
-        ) {
+        if (!array_key_exists('order', $args) || in_array($args['order'], [null, ''], true)) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
-        if (!isset($args['status']) ||
-            in_array($args['status'], [null, ''], true)
-        ) {
+        if (!array_key_exists('status', $args) || in_array($args['status'], [null, ''], true)) {
             throw new InvalidArgumentException("Order status is invalid.");
         }
 
@@ -178,11 +162,11 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/update-status', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->updatedStatus) && 'ok' === $json->status) {
+        if (property_exists($json, 'updatedStatus') && 'ok' === $json->status) {
             return true;
         }
 

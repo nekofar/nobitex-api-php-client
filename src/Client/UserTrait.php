@@ -43,11 +43,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/profile');
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->profile) && 'ok' === $json->status) {
+        if (property_exists($json, 'profile') && 'ok' === $json->status) {
             $this->jsonMapper->undefinedPropertyHandler = [
                 Profile::class,
                 'setUndefinedProperty',
@@ -74,11 +74,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/login-attempts');
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->attempts) && 'ok' === $json->status) {
+        if (property_exists($json, 'attempts') && 'ok' === $json->status) {
             return (array)$json->attempts;
         }
 
@@ -96,11 +96,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/get-referral-code');
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->referralCode) && 'ok' === $json->status) {
+        if (property_exists($json, 'referralCode') && 'ok' === $json->status) {
             return $json->referralCode;
         }
 
@@ -116,15 +116,11 @@ trait UserTrait
      */
     public function addUserCard(array $args): bool
     {
-        if (!isset($args['bank']) ||
-            in_array($args['bank'], [null, ''], true)
-        ) {
+        if (!array_key_exists('bank', $args) || in_array($args['bank'], [null, ''], true)) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (!isset($args['number']) ||
-            !preg_match('/^[0-9]{16}$/', $args['number'])
-        ) {
+        if (!array_key_exists('number', $args) || !preg_match('/^[0-9]{16}$/', $args['number'])) {
             throw new InvalidArgumentException("Card number is invalid.");
         }
 
@@ -132,11 +128,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/cards-add', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->status) && 'ok' === $json->status) {
+        if (property_exists($json, 'status') && 'ok' === $json->status) {
             return true;
         }
 
@@ -152,21 +148,15 @@ trait UserTrait
      */
     public function addUserAccount(array $args): bool
     {
-        if (!isset($args['bank']) ||
-            in_array($args['bank'], [null, ''], true)
-        ) {
+        if (!array_key_exists('bank', $args) || in_array($args['bank'], [null, ''], true)) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (!isset($args['number']) ||
-            !preg_match('/^[0-9]+$/', $args['number'])
-        ) {
+        if (!array_key_exists('number', $args) || !preg_match('/^[0-9]+$/', $args['number'])) {
             throw new InvalidArgumentException("Account number is invalid.");
         }
 
-        if (!isset($args['shaba']) ||
-            !preg_match('/^IR[0-9]{24}$/', $args['shaba'])
-        ) {
+        if (!array_key_exists('shaba', $args) || !preg_match('/^IR[0-9]{24}$/', $args['shaba'])) {
             throw new InvalidArgumentException("Account shaba is invalid.");
         }
 
@@ -174,11 +164,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/account-add', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->status) && 'ok' === $json->status) {
+        if (property_exists($json, 'status') && 'ok' === $json->status) {
             return true;
         }
 
@@ -197,11 +187,11 @@ trait UserTrait
         $resp = $this->httpClient->post('/users/get-referral-code');
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->limitations) && 'ok' === $json->status) {
+        if (property_exists($json, 'limitations') && 'ok' === $json->status) {
             return json_decode(json_encode($json->limitations), true);
         }
 

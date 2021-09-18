@@ -40,15 +40,11 @@ trait StatTrait
      */
     public function getMarketStats(array $args)
     {
-        if (!isset($args['srcCurrency']) ||
-            in_array($args['srcCurrency'], [null, ''], true)
-        ) {
+        if (!array_key_exists('srcCurrency', $args) || in_array($args['srcCurrency'], [null, ''], true)) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($args['dstCurrency']) ||
-            in_array($args['dstCurrency'], [null, ''], true)
-        ) {
+        if (!array_key_exists('dstCurrency', $args) || in_array($args['dstCurrency'], [null, ''], true)) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
@@ -56,13 +52,12 @@ trait StatTrait
         $resp = $this->httpClient->post('/market/stats', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->stats) && 'ok' === $json->status) {
-            return (array)$json->stats
-                ->{"{$args['srcCurrency']}-{$args['dstCurrency']}"};
+        if (property_exists($json, 'stats') && 'ok' === $json->status) {
+            return (array)$json->stats->{"{$args['srcCurrency']}-{$args['dstCurrency']}"};
         }
 
         return false;

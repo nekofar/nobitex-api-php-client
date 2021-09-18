@@ -46,11 +46,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/list');
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->wallets) && 'ok' === $json->status) {
+        if (property_exists($json, 'wallets') && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->wallets, [], Wallet::class);
         }
@@ -68,9 +68,7 @@ trait WalletTrait
      */
     public function getUserWalletBalance(array $args)
     {
-        if (!isset($args['currency']) ||
-            in_array($args['currency'], [null, ''], true)
-        ) {
+        if (!array_key_exists('currency', $args) || in_array($args['currency'], [null, ''], true)) {
             throw new InvalidArgumentException("Currency code is invalid.");
         }
 
@@ -78,11 +76,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/balance', [], $data);
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->balance) && 'ok' === $json->status) {
+        if (property_exists($json, 'balance') && 'ok' === $json->status) {
             return (float)$json->balance;
         }
 
@@ -99,9 +97,7 @@ trait WalletTrait
      */
     public function getUserWalletTransactions(array $args)
     {
-        if (!isset($args['wallet']) ||
-            in_array($args['wallet'], [null, ''], true)
-        ) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
@@ -109,11 +105,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/transactions/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->transactions) && 'ok' === $json->status) {
+        if (property_exists($json, 'transactions') && 'ok' === $json->status) {
             $this->jsonMapper->undefinedPropertyHandler = [
                 Transaction::class,
                 'setUndefinedProperty',
@@ -137,9 +133,7 @@ trait WalletTrait
      */
     public function getUserWalletDeposits(array $args)
     {
-        if (!isset($args['wallet']) ||
-            in_array($args['wallet'], [null, ''], true)
-        ) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
@@ -147,11 +141,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->deposits) && 'ok' === $json->status) {
+        if (property_exists($json, 'deposits') && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->deposits, [], Deposit::class);
         }
@@ -170,9 +164,7 @@ trait WalletTrait
      */
     public function getUserWalletWithdraws(array $args)
     {
-        if (!isset($args['wallet']) ||
-            in_array($args['wallet'], [null, ''], true)
-        ) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
@@ -180,11 +172,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->withdraws) && 'ok' === $json->status) {
+        if (property_exists($json, 'withdraws') && 'ok' === $json->status) {
             $this->jsonMapper->undefinedPropertyHandler = [
                 Withdraw::class,
                 'setUndefinedProperty',
@@ -206,9 +198,7 @@ trait WalletTrait
      */
     public function getUserWalletAddress(array $args): bool
     {
-        if (!isset($args['wallet']) ||
-            in_array($args['wallet'], [null, ''], true)
-        ) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
@@ -216,11 +206,11 @@ trait WalletTrait
         $resp = $this->httpClient->post('/users/wallets/generate-address', [], $data); // phpcs:ignore
         $json = json_decode($resp->getBody());
 
-        if (isset($json->message) && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->address) && 'ok' === $json->status) {
+        if (property_exists($json, 'address') && 'ok' === $json->status) {
             return $json->address;
         }
 
