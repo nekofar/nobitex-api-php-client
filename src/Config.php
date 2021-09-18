@@ -59,7 +59,7 @@ class Config
         bool $remember = true,
         ?int $totpToken = null
     ): Config {
-        return new static(new Basic(
+        return new self(new Basic(
             $username,
             $password,
             $remember,

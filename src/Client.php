@@ -48,7 +48,7 @@ class Client
      */
     public static function create(Config $config): Client
     {
-        return new static(
+        return new self(
             $config->createHttpClient(),
             $config->createJsonMapper(),
         );
