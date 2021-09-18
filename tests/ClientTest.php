@@ -60,7 +60,6 @@ class ClientTest extends TestCase
      */
     private static $httpClient;
 
-    /** @noinspection PhpLanguageLevelInspection */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -74,19 +73,6 @@ class ClientTest extends TestCase
             MessageFactoryDiscovery::find()
         );
     }
-
-    /**
-     *
-     */
-    public function testCreate(): void
-    {
-        $config = Config::doAuth(self::$username, self::$password);
-        $client = Client::create($config);
-
-        self::assertInstanceOf(Config::class, $config);
-        self::assertInstanceOf(Client::class, $client);
-    }
-
 
     /**
      * @throws \Http\Client\Exception
@@ -484,7 +470,6 @@ class ClientTest extends TestCase
         $profile = $client->getUserProfile();
 
         self::assertIsObject($profile);
-        self::assertInstanceOf(Profile::class, $profile);
         self::assertContainsOnlyInstancesOf(Card::class, $profile->cards);
         self::assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
@@ -1433,7 +1418,7 @@ class ClientTest extends TestCase
 
         $address = $client->getUserWalletAddress(['wallet' => '123456']);
 
-        self::assertIsString($address);
+        self::assertNotEmpty($address);
     }
 
     /**
@@ -1528,7 +1513,6 @@ class ClientTest extends TestCase
         ]);
 
         self::assertNotFalse($order);
-        self::assertInstanceOf(Order::class, $order);
     }
 
     /**
@@ -1710,7 +1694,6 @@ class ClientTest extends TestCase
         $order = $client->getMarketOrder(['id' => 123456]);
 
         self::assertNotFalse($order);
-        self::assertInstanceOf(Order::class, $order);
     }
 
     /**
