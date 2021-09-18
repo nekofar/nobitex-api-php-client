@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Nekofar\Nobitex\Model;
 
 use JsonMapper;
-use JsonMapper_Exception;
 
 /**
  * Class Profile
@@ -79,12 +78,12 @@ class Profile
     public $address;
 
     /**
-     * @var Card[]
+     * @var array<\Nekofar\Nobitex\Model\Card>
      */
     public $cards;
 
     /**
-     * @var Account[]
+     * @var array<\Nekofar\Nobitex\Model\Account>
      */
     public $accounts;
 
@@ -114,7 +113,7 @@ class Profile
      * @param string $propName
      * @param mixed $jsonValue
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      */
     public static function setUndefinedProperty($object, $propName, $jsonValue)
     {

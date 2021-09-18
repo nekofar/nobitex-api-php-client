@@ -31,7 +31,7 @@ class Deposit
     public $confirmed;
 
     /**
-     * @var Transaction
+     * @var \Nekofar\Nobitex\Model\Transaction
      */
     public $transaction;
 

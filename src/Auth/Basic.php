@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Auth;
 
-use Http\Client\Exception;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -52,17 +51,17 @@ class Basic implements Authentication
     private $accessToken;
 
     /**
-     * @var HttpClient
+     * @var \Http\Client\HttpClient
      */
     private $httpClient;
 
     /**
-     * @var RequestFactory
+     * @var \Http\Message\RequestFactory
      */
     private $requestFactory;
 
     /**
-     * @var StreamFactory
+     * @var \Http\Message\StreamFactory
      */
     private $streamFactory;
 
@@ -110,7 +109,7 @@ class Basic implements Authentication
      *
      * @return boolean|string
      *
-     * @throws Exception
+     * @throws \Http\Client\Exception
      */
     public function refreshToken()
     {
