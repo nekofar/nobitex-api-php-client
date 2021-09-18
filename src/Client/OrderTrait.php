@@ -45,7 +45,7 @@ trait OrderTrait
     {
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/list', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json,'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -92,7 +92,7 @@ trait OrderTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/add', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -125,7 +125,7 @@ trait OrderTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/status', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -160,7 +160,7 @@ trait OrderTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/update-status', [], $data); // phpcs:ignore
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);

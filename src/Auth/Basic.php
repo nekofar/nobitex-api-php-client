@@ -128,7 +128,7 @@ class Basic implements Authentication
             );
 
         if ($response->getStatusCode() === 200) {
-            return json_decode($response->getBody())->key;
+            return json_decode((string)$response->getBody())->key;
         }
 
         return null;

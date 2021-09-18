@@ -146,7 +146,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -225,7 +225,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -338,7 +338,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -502,7 +502,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -568,7 +568,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -630,7 +630,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -657,7 +657,7 @@ class ClientTest extends TestCase
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode(['status' => 'ok'])));
+        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'])));
         $status = $client->addUserCard([
             "number" => "5041721011111111",
             "bank" => "Resalat"
@@ -695,7 +695,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -750,7 +750,7 @@ class ClientTest extends TestCase
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode(['status' => 'ok'])));
+        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'])));
         $status = $client->addUserAccount([
             "number" => "5041721011111111",
             "bank" => "Resalat",
@@ -791,7 +791,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -929,7 +929,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1002,7 +1002,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1059,7 +1059,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1139,7 +1139,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1248,7 +1248,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1357,7 +1357,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1430,7 +1430,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1535,7 +1535,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1700,7 +1700,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));
@@ -1766,7 +1766,7 @@ class ClientTest extends TestCase
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ])));

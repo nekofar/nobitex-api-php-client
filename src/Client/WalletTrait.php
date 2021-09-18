@@ -44,7 +44,7 @@ trait WalletTrait
     public function getUserWallets()
     {
         $resp = $this->httpClient->post('/users/wallets/list');
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -74,7 +74,7 @@ trait WalletTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/wallets/balance', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -103,7 +103,7 @@ trait WalletTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/wallets/transactions/list', [], $data); // phpcs:ignore
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -139,7 +139,7 @@ trait WalletTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -170,7 +170,7 @@ trait WalletTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/wallets/deposits/list', [], $data); // phpcs:ignore
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -204,7 +204,7 @@ trait WalletTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/wallets/generate-address', [], $data); // phpcs:ignore
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);

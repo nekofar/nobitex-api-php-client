@@ -41,7 +41,7 @@ trait UserTrait
     public function getUserProfile()
     {
         $resp = $this->httpClient->post('/users/profile');
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -72,7 +72,7 @@ trait UserTrait
     public function getUserLoginAttempts()
     {
         $resp = $this->httpClient->post('/users/login-attempts');
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -94,7 +94,7 @@ trait UserTrait
     public function getUserReferralCode()
     {
         $resp = $this->httpClient->post('/users/get-referral-code');
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -126,7 +126,7 @@ trait UserTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/cards-add', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -158,7 +158,7 @@ trait UserTrait
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/users/account-add', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
@@ -177,7 +177,7 @@ trait UserTrait
     public function getUserLimitations()
     {
         $resp = $this->httpClient->post('/users/get-referral-code');
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string)$resp->getBody());
 
         if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
