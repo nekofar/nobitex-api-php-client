@@ -59,7 +59,6 @@ trait OrderTrait
         return false;
     }
 
-
     /**
      * @param array<string, integer|string> $args
      *

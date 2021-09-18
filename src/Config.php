@@ -67,14 +67,12 @@ class Config
         ));
     }
 
-
     /**
      */
     public function createJsonMapper(): JsonMapper
     {
         return new JsonMapper();
     }
-
 
     /**
      */
