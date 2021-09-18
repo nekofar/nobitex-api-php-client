@@ -86,7 +86,7 @@ trait OrderTrait
             throw new InvalidArgumentException("Order amount is invalid.");
         }
 
-        if (!array_key_exists('price', $args) || in_array($args['price'], [null, ''], true)) {
+        if (!array_key_exists('price', $args) || in_array($args['price'], [null, '', 0], true)) {
             throw new InvalidArgumentException("Order price is invalid.");
         }
 
@@ -119,7 +119,7 @@ trait OrderTrait
      */
     public function getMarketOrder(array $args)
     {
-        if (!array_key_exists('id', $args) || in_array($args['id'], [null, ''], true)) {
+        if (!array_key_exists('id', $args) || in_array($args['id'], [null, '', 0], true)) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
@@ -150,7 +150,7 @@ trait OrderTrait
      */
     public function setMarketOrderStatus(array $args): bool
     {
-        if (!array_key_exists('order', $args) || in_array($args['order'], [null, ''], true)) {
+        if (!array_key_exists('order', $args) || in_array($args['order'], [null, '', 0], true)) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 

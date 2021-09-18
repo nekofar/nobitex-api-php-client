@@ -135,7 +135,7 @@ trait WalletTrait
      */
     public function getUserWalletDeposits(array $args)
     {
-        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, '', 0], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
@@ -167,7 +167,7 @@ trait WalletTrait
      */
     public function getUserWalletWithdraws(array $args)
     {
-        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, '', 0], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
@@ -201,7 +201,7 @@ trait WalletTrait
      */
     public function getUserWalletAddress(array $args): bool
     {
-        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, ''], true)) {
+        if (!array_key_exists('wallet', $args) || in_array($args['wallet'], [null, '', 0], true)) {
             throw new InvalidArgumentException("Wallet id is invalid.");
         }
 
