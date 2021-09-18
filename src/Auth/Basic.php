@@ -41,7 +41,7 @@ class Basic implements Authentication
     private $password;
 
     /**
-     * @var string
+     * @var boolean
      */
     private $remember;
 
@@ -87,8 +87,7 @@ class Basic implements Authentication
         ?HttpClient $httpClient = null,
         ?RequestFactory $requestFactory = null,
         ?StreamFactory $streamFactory = null
-    )
-    {
+    ) {
         $this->apiUrl = Config::DEFAULT_API_URL;
 
         $this->username = $username;
@@ -97,9 +96,9 @@ class Basic implements Authentication
 
         $this->totpToken = $totpToken;
 
-        $this->httpClient = $httpClient ?: HttpClientDiscovery::find();
+        $this->httpClient = $httpClient ? $httpClient : HttpClientDiscovery::find(); // phpcs:ignore
         $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find(); // phpcs:ignore
-        $this->streamFactory = $streamFactory ?: StreamFactoryDiscovery::find();
+        $this->streamFactory = $streamFactory ? $streamFactory : StreamFactoryDiscovery::find(); // phpcs:ignore
     }
 
     /**
@@ -119,6 +118,21 @@ class Basic implements Authentication
     /**
      * Authenticates a request.
      */
+    public function authenticate(RequestInterface $request): RequestInterface
+    {
+        return null !== $this->accessToken ? $request->withHeader(
+            'Authorization',
+            sprintf('Token %s', $this->accessToken),
+        ) : $request;
+    }
+
+    /**
+     * Authenticates a request.
+     *
+     * @return mixed|null
+     *
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     private function retrieveAuthToken()
     {
         $response = $this->httpClient
@@ -126,48 +140,32 @@ class Basic implements Authentication
                 $this->createAuthRequest(),
             );
 
-        if ($response->getStatusCode() === 200) {
-            return json_decode((string)$response->getBody())->key;
+        if (200 === $response->getStatusCode()) {
+            return json_decode((string) $response->getBody())->key;
         }
 
         return null;
     }
 
     /**
+     * @throws \JsonException
      */
     private function createAuthRequest(): RequestInterface
     {
-        $request = $this->requestFactory
+        return $this->requestFactory
             ->createRequest(
                 'POST',
                 $this->apiUrl . '/auth/login/',
                 [
                     'Content-Type' => 'application/json',
-                    'X-TOTP' => $this->totpToken ?: null,
+                    'X-TOTP' => $this->totpToken,
                 ],
                 json_encode([
                     'username' => $this->username,
                     'password' => $this->password,
-                    'remember' => $this->remember === true ? 'yes' : 'no',
+                    'remember' => $this->remember === true ? 'yes' : 'no', // phpcs:ignore
                     'captcha' => 'api',
-                ]),
+                ], JSON_THROW_ON_ERROR),
             );
-
-        return $request;
-    }
-
-    /**
-     * Authenticates a request.
-     */
-    public function authenticate(RequestInterface $request): RequestInterface
-    {
-        if ($this->accessToken !== null) {
-            return $request->withHeader(
-                'Authorization',
-                sprintf('Token %s', $this->accessToken),
-            );
-        }
-
-        return $request;
     }
 }
