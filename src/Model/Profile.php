@@ -88,17 +88,17 @@ class Profile
     public $accounts;
 
     /**
-     * @var array
+     * @var array<boolean>
      */
     public $verifications;
 
     /**
-     * @var array
+     * @var array<boolean>
      */
     public $pendingVerifications;
 
     /**
-     * @var array
+     * @var array<string|boolean>
      */
     public $options;
 
