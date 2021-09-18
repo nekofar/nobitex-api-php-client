@@ -1,9 +1,12 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Model;
 
@@ -13,29 +16,35 @@ namespace Nekofar\Nobitex\Model;
 class Account
 {
     /**
-     * @var int
+     * @var integer
      */
     public $id;
+
     /**
      * @var string
      */
     public $number;
+
     /**
      * @var string
      */
     public $shaba;
+
     /**
      * @var string
      */
     public $bank;
+
     /**
      * @var string
      */
     public $owner;
+
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed;
+
     /**
      * @var string
      */

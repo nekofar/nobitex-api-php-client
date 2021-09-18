@@ -1,16 +1,17 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
+declare(strict_types=1);
+
 namespace Nekofar\Nobitex\Client;
 
 use Exception;
-use Http\Client\Common\HttpMethodsClient;
 use InvalidArgumentException;
-use JsonMapper;
 
 /**
  * Trait Stat
@@ -19,47 +20,52 @@ trait StatTrait
 {
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
-     * @param array $args
+     * Return an array on success or false on unexpected errors.
      *
-     * @return array|false Return an array on success or false on
-     *                     unexpected errors.
+     * @param array<string, integer|string> $args
+     *
+     * @return array<string,string|array>|false
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function getMarketStats(array $args)
     {
-        if (!isset($args['srcCurrency']) ||
-            empty($args['srcCurrency'])) {
+        if (
+            !array_key_exists('srcCurrency', $args) ||
+            in_array($args['srcCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($args['dstCurrency']) ||
-            empty($args['dstCurrency'])) {
+        if (
+            !array_key_exists('dstCurrency', $args) ||
+            in_array($args['dstCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/stats', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->stats) && $json->status === 'ok') {
-            return (array)$json->stats
-                ->{"{$args['srcCurrency']}-{$args['dstCurrency']}"};
+        if (isset($json->stats) && 'ok' === $json->status) {
+            return (array) $json->stats->{"{$args['srcCurrency']}-{$args['dstCurrency']}"};
         }
 
         return false;

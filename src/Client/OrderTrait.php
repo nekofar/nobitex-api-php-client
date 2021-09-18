@@ -1,17 +1,17 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
+declare(strict_types=1);
+
 namespace Nekofar\Nobitex\Client;
 
 use Exception;
-use Http\Client\Common\HttpMethodsClient;
 use InvalidArgumentException;
-use JsonMapper;
-use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Order;
 
 /**
@@ -21,36 +21,37 @@ trait OrderTrait
 {
 
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
-     * @param array $args
+     * Return and array on success or false on unexpected errors.
      *
-     * @return Order[]|false Return and array on success or false on
-     *                       unexpected errors.
+     * @param array<string, integer|string> $args
      *
-     * @throws JsonMapper_Exception
+     * @return array<\Nekofar\Nobitex\Model\Order>|false
+     *
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getMarketOrders($args = [])
+    public function getMarketOrders(array $args = [])
     {
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/list', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->orders) && $json->status === 'ok') {
+        if (isset($json->orders) && 'ok' === $json->status) {
             return $this->jsonMapper
                 ->mapArray($json->orders, [], Order::class);
         }
@@ -58,52 +59,62 @@ trait OrderTrait
         return false;
     }
 
-
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
-     * @return Order|false
+     * @return \Nekofar\Nobitex\Model\Order|false
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function addMarketOrder(array $args)
     {
-        if (!isset($args['type']) ||
-            empty($args['type'])) {
+        if (
+            !array_key_exists('type', $args) ||
+            in_array($args['type'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Order type is invalid.");
         }
 
-        if (!isset($args['srcCurrency']) ||
-            empty($args['srcCurrency'])) {
+        if (
+            !array_key_exists('srcCurrency', $args) ||
+            in_array($args['srcCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($args['dstCurrency']) ||
-            empty($args['dstCurrency'])) {
+        if (
+            !array_key_exists('dstCurrency', $args) ||
+            in_array($args['dstCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
-        if (!isset($args['amount']) ||
-            empty($args['amount'])) {
+        if (
+            !array_key_exists('amount', $args) ||
+            in_array($args['amount'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Order amount is invalid.");
         }
 
-        if (!isset($args['price']) ||
-            empty($args['price'])) {
+        if (
+            !array_key_exists('price', $args) ||
+            in_array($args['price'], [null, '', 0], true)
+        ) {
             throw new InvalidArgumentException("Order price is invalid.");
         }
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/add', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->order) && $json->status === 'ok') {
-            /** @var Order $order */
+        if (isset($json->order) && 'ok' === $json->status) {
+            /** @var \Nekofar\Nobitex\Model\Order $order */
             $order = $this->jsonMapper->map($json->order, new Order());
 
             return $order;
@@ -113,71 +124,67 @@ trait OrderTrait
     }
 
     /**
-     * @param array $args
+     * @param array<string, integer|string> $args
      *
-     * @return OrderTrait|false
-     *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getMarketOrder(array $args)
+    public function getMarketOrder(array $args): ?Order
     {
-        if (!isset($args['id']) ||
-            empty($args['id'])) {
+        if (
+            !array_key_exists('id', $args) ||
+            in_array($args['id'], [null, '', 0], true)
+        ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/status', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->order) && $json->status === 'ok') {
-            /** @var OrderTrait $order */
-            $order = $this->jsonMapper->map($json->order, new Order());
-
-            return $order;
+        if (isset($json->order) && 'ok' === $json->status) {
+            return $this->jsonMapper->map($json->order, new Order());
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * @param array $args
-     *
-     * @return bool
+     * @param array<string, integer|string> $args
      *
      * @throws \Http\Client\Exception
-     * @throws Exception
+     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
-    public function setMarketOrderStatus(array $args)
+    public function setMarketOrderStatus(array $args): bool
     {
-        if (!isset($args['order']) ||
-            empty($args['order'])) {
+        if (
+            !array_key_exists('order', $args) ||
+            in_array($args['order'], [null, '', 0], true)
+        ) {
             throw new InvalidArgumentException("Order id is invalid.");
         }
 
-        if (!isset($args['status']) ||
-            empty($args['status'])) {
+        if (
+            !array_key_exists('status', $args) ||
+            in_array($args['status'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Order status is invalid.");
         }
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/orders/update-status', [], $data); // phpcs:ignore
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->updatedStatus) && $json->status === 'ok') {
-            return true;
-        }
-
-        return false;
+        return isset($json->updatedStatus) && 'ok' === $json->status;
     }
 }

@@ -1,9 +1,12 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Auth;
 
@@ -21,21 +24,16 @@ class Bearer implements Authentication
     private $token;
 
     /**
-     * @param string $token
      */
-    public function __construct($token)
+    public function __construct(string $token)
     {
         $this->token = $token;
     }
 
     /**
      * Authenticates a request.
-     *
-     * @param RequestInterface $request
-     *
-     * @return RequestInterface
      */
-    public function authenticate(RequestInterface $request)
+    public function authenticate(RequestInterface $request): RequestInterface
     {
         $header = sprintf('Token %s', $this->token);
 

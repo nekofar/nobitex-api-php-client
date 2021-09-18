@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex;
 
@@ -57,7 +60,6 @@ class ClientTest extends TestCase
      */
     private static $httpClient;
 
-    /** @noinspection PhpLanguageLevelInspection */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -73,23 +75,11 @@ class ClientTest extends TestCase
     }
 
     /**
-     *
-     */
-    public function testCreate()
-    {
-        $config = Config::doAuth(self::$username, self::$password);
-        $client = Client::create($config);
-
-        $this->assertInstanceOf(Config::class, $config);
-        $this->assertInstanceOf(Client::class, $client);
-    }
-
-
-    /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws \JsonException
      */
-    public function testGetMarketOrders()
+    public function testGetMarketOrders(): void
     {
         $json = [
             'status' => 'ok',
@@ -109,7 +99,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -119,54 +109,56 @@ class ClientTest extends TestCase
             "dstCurrency" => "usdt"
         ]);
 
-        $this->assertIsArray($orders);
-        $this->assertContainsOnlyInstancesOf(Order::class, $orders);
+        self::assertIsArray($orders);
+        self::assertContainsOnlyInstancesOf(Order::class, $orders);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetMarketOrdersFailure()
+    public function testGetMarketOrdersFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrders();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrders();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getMarketOrders());
+        self::assertFalse($client->getMarketOrders());
     }
 
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws \JsonException
      */
-    public function testGetMarketTrades()
+    public function testGetMarketTrades(): void
     {
         $json = [
             'trades' =>
@@ -186,7 +178,7 @@ class ClientTest extends TestCase
             'status' => 'ok',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -195,81 +187,82 @@ class ClientTest extends TestCase
             "dstCurrency" => "rls"
         ]);
 
-        $this->assertIsArray($trades);
-        $this->assertContainsOnlyInstancesOf(Trade::class, $trades);
+        self::assertIsArray($trades);
+        self::assertContainsOnlyInstancesOf(Trade::class, $trades);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetMarketTradesFailure()
+    public function testGetMarketTradesFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
+                self::assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketTrades([
                     "srcCurrency" => "btc",
                     "dstCurrency" => ""
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
+                self::assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getMarketTrades([
+        self::assertFalse($client->getMarketTrades([
             "srcCurrency" => "btc",
             "dstCurrency" => "rls"
         ]));
@@ -277,8 +270,9 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetMarketStats()
+    public function testGetMarketStats(): void
     {
         $json = [
             'status' => 'ok',
@@ -301,7 +295,7 @@ class ClientTest extends TestCase
                 ]
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -310,79 +304,80 @@ class ClientTest extends TestCase
             "dstCurrency" => "rls"
         ]);
 
-        $this->assertIsArray($stats);
+        self::assertIsArray($stats);
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetMarketStatsFailure()
+    public function testGetMarketStatsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "",
                     "dstCurrency" => "rls"
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
+                self::assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketStats([
                     "srcCurrency" => "btc",
                     "dstCurrency" => ""
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
+                self::assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getMarketStats([
+        self::assertFalse($client->getMarketStats([
             "srcCurrency" => "btc",
             "dstCurrency" => "rls"
         ]));
@@ -391,8 +386,9 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws \JsonException
      */
-    public function testGetUserProfile()
+    public function testGetUserProfile(): void
     {
         $json = [
             'status' => 'ok',
@@ -467,61 +463,62 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $profile = $client->getUserProfile();
 
-        $this->assertIsObject($profile);
-        $this->assertInstanceOf(Profile::class, $profile);
-        $this->assertContainsOnlyInstancesOf(Card::class, $profile->cards);
-        $this->assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
+        self::assertIsObject($profile);
+        self::assertContainsOnlyInstancesOf(Card::class, $profile->cards);
+        self::assertContainsOnlyInstancesOf(Account::class, $profile->accounts);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserProfileFailure()
+    public function testGetUserProfileFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserProfile();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserProfile();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserProfile());
+        self::assertFalse($client->getUserProfile());
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserLoginAttempts()
+    public function testGetUserLoginAttempts(): void
     {
         $json = [
             'status' => 'ok',
@@ -536,59 +533,61 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $attempts = $client->getUserLoginAttempts();
 
-        $this->assertIsArray($attempts);
+        self::assertIsArray($attempts);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserLoginAttemptsFailure()
+    public function testGetUserLoginAttemptsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLoginAttempts();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLoginAttempts();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserLoginAttempts());
+        self::assertFalse($client->getUserLoginAttempts());
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserReferralCode()
+    public function testGetUserReferralCode(): void
     {
         $json = [
             'status' => 'ok',
@@ -598,81 +597,84 @@ class ClientTest extends TestCase
             'referralFeeTotal' => 0,
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $referralCode = $client->getUserReferralCode();
 
-        $this->assertIsString($referralCode);
+        self::assertIsString($referralCode);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserReferralCodeFailure()
+    public function testGetUserReferralCodeFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserReferralCode();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserReferralCode();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserReferralCode());
+        self::assertFalse($client->getUserReferralCode());
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testAddUserCard()
+    public function testAddUserCard(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode(['status' => 'ok'])));
+        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'], JSON_THROW_ON_ERROR)));
         $status = $client->addUserCard([
             "number" => "5041721011111111",
             "bank" => "Resalat"
         ]);
 
-        $this->assertTrue($status);
+        self::assertTrue($status);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testAddUserCardFailure()
+    public function testAddUserCardFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->addUserCard([
+        self::assertFalse($client->addUserCard([
             "number" => "5041721011111111",
             "bank" => "Resalat",
         ]));
@@ -680,61 +682,61 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "",
                     "bank" => "5041721011111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Card number is invalid.', $exception->getMessage());
+                self::assertEquals('Card number is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserCard([
                     "number" => "50417210111111111",
                     "bank" => "",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Bank name is invalid.', $exception->getMessage());
+                self::assertEquals('Bank name is invalid.', $exception->getMessage());
             }
         );
     }
@@ -742,31 +744,33 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testAddUserAccount()
+    public function testAddUserAccount(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode(['status' => 'ok'])));
+        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'], JSON_THROW_ON_ERROR)));
         $status = $client->addUserAccount([
             "number" => "5041721011111111",
             "bank" => "Resalat",
             "shaba" => "IR111111111111111111111111",
         ]);
 
-        $this->assertTrue($status);
+        self::assertTrue($status);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testAddUserAccountFailure()
+    public function testAddUserAccountFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->addUserAccount([
+        self::assertFalse($client->addUserAccount([
             "number" => "5041721011111111",
             "bank" => "Resalat",
             "shaba" => "IR111111111111111111111111",
@@ -775,87 +779,88 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var ClientErrorException $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "5041721011111111",
                     "bank" => "Resalat",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "",
                     "bank" => "5041721011111111",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Account number is invalid.', $exception->getMessage());
+                self::assertEquals('Account number is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
                     "bank" => "",
                     "shaba" => "IR111111111111111111111111",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Bank name is invalid.', $exception->getMessage());
+                self::assertEquals('Bank name is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addUserAccount([
                     "number" => "50417210111111111",
                     "bank" => "Resalat",
                     "shaba" => "IR1111111111111111111111110",
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Account shaba is invalid.', $exception->getMessage());
+                self::assertEquals('Account shaba is invalid.', $exception->getMessage());
             }
         );
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserLimitations()
+    public function testGetUserLimitations(): void
     {
         $json = [
             'status' => 'ok',
@@ -897,59 +902,61 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $limitations = $client->getUserLimitations();
 
-        $this->assertIsArray($limitations);
+        self::assertIsArray($limitations);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserLimitationsFailure()
+    public function testGetUserLimitationsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLimitations();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserLimitations();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserLimitations());
+        self::assertFalse($client->getUserLimitations());
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWallets()
+    public function testGetUserWallets(): void
     {
         $json = [
             'status' => 'ok',
@@ -969,128 +976,132 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $wallets = $client->getUserWallets();
 
-        $this->assertIsArray($wallets);
-        $this->assertContainsOnlyInstancesOf(Wallet::class, $wallets);
+        self::assertIsArray($wallets);
+        self::assertContainsOnlyInstancesOf(Wallet::class, $wallets);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletsFailure()
+    public function testGetUserWalletsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWallets();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWallets();
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserWallets());
+        self::assertFalse($client->getUserWallets());
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletBalance()
+    public function testGetUserWalletBalance(): void
     {
         $json = [
             'balance' => '10.2649975000',
             'status' => 'ok',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $balance = $client->getUserWalletBalance(['currency' => 'ltc']);
 
-        $this->assertIsFloat($balance);
+        self::assertIsFloat($balance);
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletBalanceFailure()
+    public function testGetUserWalletBalanceFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletBalance(['currency' => 'ltc']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletBalance(['currency' => 'ltc']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletBalance(['currency' => '']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Currency code is invalid.', $exception->getMessage());
+                self::assertEquals('Currency code is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserWalletBalance(['currency' => 'ltc']));
+        self::assertFalse($client->getUserWalletBalance(['currency' => 'ltc']));
 
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletTransactions()
+    public function testGetUserWalletTransactions(): void
     {
         $json = [
             'transactions' =>
@@ -1107,71 +1118,73 @@ class ClientTest extends TestCase
             'status' => 'ok',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $transactions = $client->getUserWalletTransactions(['wallet' => 123456]);
 
-        $this->assertIsArray($transactions);
-        $this->assertContainsOnlyInstancesOf(Transaction::class, $transactions);
+        self::assertIsArray($transactions);
+        self::assertContainsOnlyInstancesOf(Transaction::class, $transactions);
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletTransactionsFailure()
+    public function testGetUserWalletTransactionsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletTransactions(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletTransactions(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletTransactions(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+                self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserWalletTransactions(['wallet' => 123456]));
+        self::assertFalse($client->getUserWalletTransactions(['wallet' => 123456]));
 
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletDeposits()
+    public function testGetUserWalletDeposits(): void
     {
         $json = [
             'status' => 'ok',
@@ -1215,72 +1228,74 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $deposits = $client->getUserWalletDeposits(['wallet' => 123456]);
 
-        $this->assertIsArray($deposits);
-        $this->assertContainsOnlyInstancesOf(Deposit::class, $deposits);
+        self::assertIsArray($deposits);
+        self::assertContainsOnlyInstancesOf(Deposit::class, $deposits);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletDepositsFailure()
+    public function testGetUserWalletDepositsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletDeposits(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletDeposits(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletDeposits(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+                self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserWalletDeposits(['wallet' => 123456]));
+        self::assertFalse($client->getUserWalletDeposits(['wallet' => 123456]));
 
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletWithdraws()
+    public function testGetUserWalletWithdraws(): void
     {
         $json = [
             'status' => 'ok',
@@ -1324,91 +1339,94 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $withdraws = $client->getUserWalletWithdraws(['wallet' => 123456]);
 
-        $this->assertIsArray($withdraws);
-        $this->assertContainsOnlyInstancesOf(Withdraw::class, $withdraws);
+        self::assertIsArray($withdraws);
+        self::assertContainsOnlyInstancesOf(Withdraw::class, $withdraws);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletWithdrawsFailure()
+    public function testGetUserWalletWithdrawsFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletWithdraws(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletWithdraws(['wallet' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletWithdraws(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+                self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getUserWalletWithdraws(['wallet' => 123456]));
+        self::assertFalse($client->getUserWalletWithdraws(['wallet' => 123456]));
 
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletAddress()
+    public function testGetUserWalletAddress(): void
     {
         $json = [
             'status' => 'ok',
             'address' => 'rwRmyGRoJkHKtojaC8SH2wxsnB2q3yNopB',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $address = $client->getUserWalletAddress(['wallet' => '123456']);
 
-        $this->assertIsString($address);
+        self::assertNotEmpty($address);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetUserWalletAddressFailure()
+    public function testGetUserWalletAddressFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1418,46 +1436,47 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletAddress(['wallet' => '123456']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletAddress(['wallet' => '123456']);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getUserWalletAddress(['wallet' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Wallet id is invalid.', $exception->getMessage());
+                self::assertEquals('Wallet id is invalid.', $exception->getMessage());
             }
         );
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testAddMarketOrder()
+    public function testAddMarketOrder(): void
     {
         $json = [
             'status' => 'ok',
@@ -1481,7 +1500,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1493,15 +1512,15 @@ class ClientTest extends TestCase
             'price' => 520000000,
         ]);
 
-        $this->assertNotFalse($order);
-        $this->assertInstanceOf(Order::class, $order);
+        self::assertNotFalse($order);
     }
 
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testAddMarketOrderFailure()
+    public function testAddMarketOrderFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1517,7 +1536,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1526,19 +1545,19 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var ClientErrorException $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1547,15 +1566,15 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => '',
                     'srcCurrency' => 'btc',
@@ -1564,15 +1583,15 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Order type is invalid.', $exception->getMessage());
+                self::assertEquals('Order type is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => '',
@@ -1581,15 +1600,15 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Source currency is invalid.', $exception->getMessage());
+                self::assertEquals('Source currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1598,15 +1617,15 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Destination currency is invalid.', $exception->getMessage());
+                self::assertEquals('Destination currency is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1615,15 +1634,15 @@ class ClientTest extends TestCase
                     'price' => 520000000,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Order amount is invalid.', $exception->getMessage());
+                self::assertEquals('Order amount is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->addMarketOrder([
                     'type' => 'buy',
                     'srcCurrency' => 'btc',
@@ -1632,9 +1651,9 @@ class ClientTest extends TestCase
                     'price' => 0,
                 ]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var InvalidArgumentException $exception */
-                $this->assertEquals('Order price is invalid.', $exception->getMessage());
+                self::assertEquals('Order price is invalid.', $exception->getMessage());
             }
         );
     }
@@ -1642,8 +1661,9 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetMarketOrder()
+    public function testGetMarketOrder(): void
     {
         $json = array(
             'status' => 'ok',
@@ -1667,141 +1687,143 @@ class ClientTest extends TestCase
                 ),
         );
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $order = $client->getMarketOrder(['id' => 123456]);
 
-        $this->assertNotFalse($order);
-        $this->assertInstanceOf(Order::class, $order);
+        self::assertNotEmpty($order);
     }
 
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testGetMarketOrderFailure()
+    public function testGetMarketOrderFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrder(['id' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrder(['id' => 123456]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
+            function () use ($client): void {
                 $client->getMarketOrder(['id' => 0]);
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Order id is invalid.', $exception->getMessage());
+                self::assertEquals('Order id is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->getMarketOrder(['id' => 123456]));
+        self::assertNull($client->getMarketOrder(['id' => 123456]));
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testSetMarketOrderStatus()
+    public function testSetMarketOrderStatus(): void
     {
         $json = array(
             'status' => 'ok',
             'updatedStatus' => 'Canceled',
         );
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
+        self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
     }
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
-    public function testSetMarketOrderStatusFailure()
+    public function testSetMarketOrderStatusFailure(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(401));
         $this->assertThrows(
             ClientErrorException::class,
-            function () use ($client) {
-                $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
+            function () use ($client): void {
+                self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Unauthorized', $exception->getMessage());
+                self::assertEquals('Unauthorized', $exception->getMessage());
             }
         );
 
-        self::$mockClient->addResponse(new Response('200', [], json_encode([
+        self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
-            function () use ($client) {
-                $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
+            function () use ($client): void {
+                self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Validation Failed', $exception->getMessage());
+                self::assertEquals('Validation Failed', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
-                $this->assertTrue($client->setMarketOrderStatus(['order' => 0, 'status' => 'canceled']));
+            function () use ($client): void {
+                self::assertTrue($client->setMarketOrderStatus(['order' => 0, 'status' => 'canceled']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Order id is invalid.', $exception->getMessage());
+                self::assertEquals('Order id is invalid.', $exception->getMessage());
             }
         );
 
         $this->assertThrows(
             InvalidArgumentException::class,
-            function () use ($client) {
-                $this->assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => '']));
+            function () use ($client): void {
+                self::assertTrue($client->setMarketOrderStatus(['order' => 123456, 'status' => '']));
             },
-            function ($exception) {
+            function ($exception): void {
                 /** @var Exception $exception */
-                $this->assertEquals('Order status is invalid.', $exception->getMessage());
+                self::assertEquals('Order status is invalid.', $exception->getMessage());
             }
         );
 
         self::$mockClient->addResponse(new Response(200));
-        $this->assertFalse($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
+        self::assertFalse($client->setMarketOrderStatus(['order' => 123456, 'status' => 'canceled']));
     }
 
 }

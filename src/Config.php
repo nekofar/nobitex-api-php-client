@@ -1,9 +1,12 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex;
 
@@ -25,11 +28,11 @@ use Nekofar\Nobitex\Auth\Basic;
  */
 class Config
 {
-    const DEFAULT_API_URL = 'https://api.nobitex.ir';
-    const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
+    public const DEFAULT_API_URL = 'https://api.nobitex.ir';
+    protected const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
 
     /**
-     * @var Basic
+     * @var \Nekofar\Nobitex\Auth\Basic
      */
     private $auth;
 
@@ -40,7 +43,6 @@ class Config
 
     /**
      * Config constructor.
-     * @param Authentication $auth
      */
     public function __construct(Authentication $auth)
     {
@@ -49,41 +51,32 @@ class Config
     }
 
     /**
-     * @param string $username
-     * @param string $password
-     * @param boolean $remember
-     * @param integer|null $totpToken
      *
-     * @return Config
      */
     public static function doAuth(
-        $username,
-        $password,
-        $remember = true,
-        $totpToken = null
-    ) {
-        return new static(new Basic(
+        string $username,
+        string $password,
+        bool $remember = true,
+        ?int $totpToken = null
+    ): Config {
+        return new self(new Basic(
             $username,
             $password,
             $remember,
-            $totpToken
+            $totpToken,
         ));
     }
 
-
     /**
-     * @return JsonMapper
      */
-    public function createJsonMapper()
+    public function createJsonMapper(): JsonMapper
     {
         return new JsonMapper();
     }
 
-
     /**
-     * @return HttpMethodsClient
      */
-    public function createHttpClient()
+    public function createHttpClient(): HttpMethodsClient
     {
         return new HttpMethodsClient(
             new PluginClient(HttpClientDiscovery::find(), [
@@ -94,10 +87,10 @@ class Config
                 ]),
                 new BaseUriPlugin(
                     UriFactoryDiscovery::find()->createUri($this->apiUrl),
-                    ['replace' => true]
+                    ['replace' => true],
                 ),
             ]),
-            MessageFactoryDiscovery::find()
+            MessageFactoryDiscovery::find(),
         );
     }
 }

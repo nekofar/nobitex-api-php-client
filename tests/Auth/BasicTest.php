@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Auth;
 
@@ -17,8 +20,9 @@ class BasicTest extends TestCase
 {
     /**
      * @throws Exception
+     * @throws \JsonException
      */
-    public function testRefreshToken()
+    public function testRefreshToken(): void
     {
         $username = 'username';
         $password = 'password';
@@ -27,16 +31,17 @@ class BasicTest extends TestCase
         $accessToken = md5('accessToken');
 
         $httpClient = new Client();
-        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
+        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken], JSON_THROW_ON_ERROR)));
 
         $auth = new Basic($username, $password, $remember, null, $httpClient);
-        $this->assertEquals($accessToken, $auth->refreshToken());
+        self::assertEquals($accessToken, $auth->refreshToken());
     }
 
     /**
      * @throws Exception
+     * @throws \JsonException
      */
-    public function testAuthenticate()
+    public function testAuthenticate(): void
     {
 
         $username = 'username';
@@ -46,7 +51,7 @@ class BasicTest extends TestCase
         $accessToken = md5('accessToken');
 
         $httpClient = new Client();
-        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
+        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken], JSON_THROW_ON_ERROR)));
 
         $auth = new Basic($username, $password, $remember, null, $httpClient);
         $auth->refreshToken();
@@ -54,13 +59,14 @@ class BasicTest extends TestCase
         $request = new Request('GET', '/');
 
         $header = $auth->authenticate($request)->getHeaderLine('Authorization');
-        $this->assertEquals(sprintf('Token %s', $accessToken), $header);
+        self::assertEquals(sprintf('Token %s', $accessToken), $header);
     }
 
     /**
      * @throws Exception
+     * @throws \JsonException
      */
-    public function testAuthenticateWithToken()
+    public function testAuthenticateWithToken(): void
     {
 
         $username = 'username';
@@ -72,7 +78,7 @@ class BasicTest extends TestCase
         $accessToken = md5('accessToken');
 
         $httpClient = new Client();
-        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
+        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken], JSON_THROW_ON_ERROR)));
 
         $auth = new Basic($username, $password, $remember, $totpToken, $httpClient);
         $auth->refreshToken();
@@ -81,13 +87,13 @@ class BasicTest extends TestCase
         $request = $httpClient->getLastRequest();
 
         $header = $request->getHeaderLine('X-TOTP');
-        $this->assertEquals($totpToken, $header);
+        self::assertEquals($totpToken, $header);
     }
 
     /**
      * @throws Exception
      */
-    public function testAuthenticateWithFailure()
+    public function testAuthenticateWithFailure(): void
     {
 
         $username = 'username';
@@ -105,6 +111,6 @@ class BasicTest extends TestCase
         $request = new Request('GET', '/');
 
         $header = $auth->authenticate($request)->getHeaderLine('Authorization');
-        $this->assertNotEquals(sprintf('Token %s', $accessToken), $header);
+        self::assertNotEquals(sprintf('Token %s', $accessToken), $header);
     }
 }

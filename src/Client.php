@@ -1,14 +1,16 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
+declare(strict_types=1);
+
 namespace Nekofar\Nobitex;
 
 use Http\Client\Common\HttpMethodsClient;
-use Http\Client\HttpClient;
 use JsonMapper;
 
 /**
@@ -23,20 +25,17 @@ class Client
     use Client\WalletTrait;
 
     /**
-     * @var HttpClient
+     * @var \Http\Client\HttpClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
      * Client constructor.
-     *
-     * @param HttpMethodsClient $http
-     * @param JsonMapper $mapper
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
@@ -45,15 +44,13 @@ class Client
     }
 
     /**
-     * @param Config $config
      *
-     * @return Client
      */
-    public static function create(Config $config)
+    public static function create(Config $config): Client
     {
-        return new static(
+        return new self(
             $config->createHttpClient(),
-            $config->createJsonMapper()
+            $config->createJsonMapper(),
         );
     }
 }

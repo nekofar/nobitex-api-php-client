@@ -1,9 +1,12 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Model;
 
@@ -16,34 +19,42 @@ class Deposit
      * @var string
      */
     public $txHash;
+
     /**
      * @var string
      */
     public $address;
+
     /**
-     * @var bool
+     * @var boolean
      */
     public $confirmed;
+
     /**
-     * @var Transaction
+     * @var \Nekofar\Nobitex\Model\Transaction
      */
     public $transaction;
+
     /**
      * @var string
      */
     public $currency;
+
     /**
      * @var string
      */
     public $blockchainUrl;
+
     /**
-     * @var int
+     * @var integer
      */
     public $confirmations;
+
     /**
-     * @var int
+     * @var integer
      */
     public $requiredConfirmations;
+
     /**
      * @var float
      */

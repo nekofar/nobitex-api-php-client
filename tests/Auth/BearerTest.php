@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  * @author Milad Nekofar <milad@nekofar.com>
  */
+
+declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Auth;
 
@@ -12,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class BearerTest extends TestCase
 {
 
-    public function testAuthenticate()
+    public function testAuthenticate(): void
     {
         $accessToken = md5('accessToken');
 
@@ -21,6 +24,6 @@ class BearerTest extends TestCase
         $request = new Request('GET', '/');
 
         $header = $auth->authenticate($request)->getHeaderLine('Authorization');
-        $this->assertEquals(sprintf('Token %s', $accessToken), $header);
+        self::assertEquals(sprintf('Token %s', $accessToken), $header);
     }
 }

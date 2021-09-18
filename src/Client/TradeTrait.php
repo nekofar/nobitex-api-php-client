@@ -1,17 +1,17 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
+declare(strict_types=1);
+
 namespace Nekofar\Nobitex\Client;
 
 use Exception;
-use Http\Client\Common\HttpMethodsClient;
 use InvalidArgumentException;
-use JsonMapper;
-use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Trade;
 
 /**
@@ -20,51 +20,54 @@ use Nekofar\Nobitex\Model\Trade;
 trait TradeTrait
 {
 
-
     /**
-     * @var HttpMethodsClient
+     * @var \Http\Client\Common\HttpMethodsClient
      */
     private $httpClient;
 
     /**
-     * @var JsonMapper
+     * @var \JsonMapper
      */
     private $jsonMapper;
 
     /**
-     * @param array $args
+     * Return and array on success or false on unexpected errors.
      *
-     * @return Trade[]|false Return and array on success or false on
-     *                       unexpected errors.
+     * @param array<string,integer|string> $args
      *
-     * @throws JsonMapper_Exception
+     * @return array<\Nekofar\Nobitex\Model\Trade>|false
+     *
+     * @throws \JsonMapper_Exception
      * @throws \Http\Client\Exception
-     * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function getMarketTrades(array $args)
     {
-        if (!isset($args['srcCurrency']) ||
-            empty($args['srcCurrency'])) {
+        if (
+            !array_key_exists('srcCurrency', $args)
+            || in_array($args['srcCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Source currency is invalid.");
         }
 
-        if (!isset($args['dstCurrency']) ||
-            empty($args['dstCurrency'])) {
+        if (
+            !array_key_exists('dstCurrency', $args)
+            || in_array($args['dstCurrency'], [null, ''], true)
+        ) {
             throw new InvalidArgumentException("Destination currency is invalid."); // phpcs:ignore
         }
 
         $data = json_encode($args);
         $resp = $this->httpClient->post('/market/trades/list', [], $data);
-        $json = json_decode($resp->getBody());
+        $json = json_decode((string) $resp->getBody());
 
-        if (isset($json->message) && $json->status === 'failed') {
+        if (isset($json->message) && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
-        if (isset($json->trades) && $json->status === 'ok') {
-            return $this->jsonMapper
-                ->mapArray($json->trades, [], Trade::class);
+        if (isset($json->trades) && 'ok' === $json->status) {
+            return $this->jsonMapper->mapArray($json->trades, [], Trade::class);
         }
 
         return false;

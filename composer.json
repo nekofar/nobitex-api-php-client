@@ -9,7 +9,6 @@
     "crypto",
     "bitcoin"
   ],
-  "homepage": "https://github.com/nekofar/nobitex-api-php",
   "license": "MIT",
   "authors": [
     {
@@ -31,7 +30,7 @@
   "require-dev": {
     "guzzlehttp/psr7": "^2.0",
     "jchook/phpunit-assert-throws": "^1.0",
-    "nekofar/dev-tools": "^1.0",
+    "nekofar/dev-tools": "^1.1",
     "pestphp/pest": "^1.18",
     "php-http/curl-client": "^2.0",
     "php-http/mock-client": "^1.0",
@@ -64,8 +63,5 @@
     "phpcs": "vendor/bin/phpcs",
     "test": "vendor/bin/phpunit",
     "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-  },
-  "support": {
-    "issues": "https://github.com/nekofar/nobitex-api-php/issues"
   }
 }

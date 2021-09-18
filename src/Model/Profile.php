@@ -1,14 +1,16 @@
 <?php
+
 /**
  * @package Nekofar\Nobitex
  *
  * @author Milad Nekofar <milad@nekofar.com>
  */
 
+declare(strict_types=1);
+
 namespace Nekofar\Nobitex\Model;
 
 use JsonMapper;
-use JsonMapper_Exception;
 
 /**
  * Class Profile
@@ -19,101 +21,115 @@ class Profile
      * @var string
      */
     public $username;
+
     /**
      * @var string
      */
     public $email;
+
     /**
-     * @var int
+     * @var integer
      */
     public $level;
+
     /**
      * @var string
      */
     public $firstName;
+
     /**
      * @var string
      */
     public $lastName;
+
     /**
      * @var string
      */
     public $nationalCode;
+
     /**
      * @var string
      */
     public $nickname;
+
     /**
      * @var string
      */
     public $phone;
+
     /**
      * @var string
      */
     public $mobile;
+
     /**
      * @var string|null
      */
     public $province;
+
     /**
      * @var string
      */
     public $city;
+
     /**
      * @var string
      */
     public $address;
+
     /**
-     * @var Card[]
+     * @var array<\Nekofar\Nobitex\Model\Card>
      */
     public $cards;
+
     /**
-     * @var Account[]
+     * @var array<\Nekofar\Nobitex\Model\Account>
      */
     public $accounts;
+
+    /**
+     * @codingStandardsIgnoreStart
+     *
+     * @var array
+     */
+    public $verifications; // @phpstan-ignore-line
+
     /**
      * @var array
      */
-    public $verifications;
+    public $pendingVerifications; // @phpstan-ignore-line
+
     /**
      * @var array
      */
-    public $pendingVerifications;
+    public $options; // @phpstan-ignore-line
+
     /**
-     * @var array
-     */
-    public $options;
-    /**
-     * @var bool
+     * @var boolean
+     *
+     * @codingStandardsIgnoreEnd
      */
     public $withdrawEligible;
 
-
     /**
-     * @param object $object
-     * @param string $propName
      * @param mixed $jsonValue
      *
-     * @throws JsonMapper_Exception
+     * @throws \JsonMapper_Exception
      */
-    public static function setUndefinedProperty($object, $propName, $jsonValue)
+    public static function setUndefinedProperty(object $object, string $propName, $jsonValue): void
     {
+        if (!in_array($propName, ['bankAccounts', 'bankCards'], true)) {
+            return;
+        }
+
         $mapper = new JsonMapper();
 
         if ('bankCards' === $propName) {
-            $object->{'cards'} = $mapper->mapArray(
-                $jsonValue,
-                [],
-                Card::class
-            );
+            // @phpstan-ignore-next-line
+            $object->{'cards'} = $mapper->mapArray($jsonValue, [], Card::class);
         }
 
-        if ('bankAccounts' === $propName) {
-            $object->{'accounts'} = $mapper->mapArray(
-                $jsonValue,
-                [],
-                Account::class
-            );
-        }
+        // @phpstan-ignore-next-line
+        $object->{'accounts'} = $mapper->mapArray($jsonValue, [], Account::class);
     }
 }
