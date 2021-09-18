@@ -28,8 +28,8 @@ use Nekofar\Nobitex\Auth\Basic;
  */
 class Config
 {
-    const DEFAULT_API_URL = 'https://api.nobitex.ir';
-    const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
+    protected const DEFAULT_API_URL = 'https://api.nobitex.ir';
+    protected const TESTNET_API_URL = 'https://testnetapi.nobitex.ir';
 
     /**
      * @var \Nekofar\Nobitex\Auth\Basic

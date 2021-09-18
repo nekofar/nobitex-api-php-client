@@ -47,7 +47,7 @@ trait OrderTrait
         $resp = $this->httpClient->post('/market/orders/list', [], $data);
         $json = json_decode((string) $resp->getBody());
 
-        if (property_exists($json,'message') && 'failed' === $json->status) {
+        if (property_exists($json, 'message') && 'failed' === $json->status) {
             throw new Exception($json->message);
         }
 
