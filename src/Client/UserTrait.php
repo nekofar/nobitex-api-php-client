@@ -118,15 +118,13 @@ trait UserTrait
      */
     public function addUserCard(array $args)
     {
-        if (
-            !isset($args['bank']) ||
+        if (!isset($args['bank']) ||
             empty($args['bank'])
         ) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (
-            !isset($args['number']) ||
+        if (!isset($args['number']) ||
             !preg_match('/^[0-9]{16}$/', $args['number'])
         ) {
             throw new InvalidArgumentException("Card number is invalid.");
@@ -157,22 +155,19 @@ trait UserTrait
      */
     public function addUserAccount(array $args)
     {
-        if (
-            !isset($args['bank']) ||
+        if (!isset($args['bank']) ||
             empty($args['bank'])
         ) {
             throw new InvalidArgumentException("Bank name is invalid.");
         }
 
-        if (
-            !isset($args['number']) ||
+        if (!isset($args['number']) ||
             !preg_match('/^[0-9]+$/', $args['number'])
         ) {
             throw new InvalidArgumentException("Account number is invalid.");
         }
 
-        if (
-            !isset($args['shaba']) ||
+        if (!isset($args['shaba']) ||
             !preg_match('/^IR[0-9]{24}$/', $args['shaba'])
         ) {
             throw new InvalidArgumentException("Account shaba is invalid.");
