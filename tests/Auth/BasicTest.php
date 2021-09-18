@@ -20,6 +20,7 @@ class BasicTest extends TestCase
 {
     /**
      * @throws Exception
+     * @throws \JsonException
      */
     public function testRefreshToken(): void
     {
@@ -30,7 +31,7 @@ class BasicTest extends TestCase
         $accessToken = md5('accessToken');
 
         $httpClient = new Client();
-        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
+        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken], JSON_THROW_ON_ERROR)));
 
         $auth = new Basic($username, $password, $remember, null, $httpClient);
         self::assertEquals($accessToken, $auth->refreshToken());
@@ -38,6 +39,7 @@ class BasicTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \JsonException
      */
     public function testAuthenticate(): void
     {
@@ -49,7 +51,7 @@ class BasicTest extends TestCase
         $accessToken = md5('accessToken');
 
         $httpClient = new Client();
-        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
+        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken], JSON_THROW_ON_ERROR)));
 
         $auth = new Basic($username, $password, $remember, null, $httpClient);
         $auth->refreshToken();
@@ -62,6 +64,7 @@ class BasicTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \JsonException
      */
     public function testAuthenticateWithToken(): void
     {
@@ -75,7 +78,7 @@ class BasicTest extends TestCase
         $accessToken = md5('accessToken');
 
         $httpClient = new Client();
-        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken])));
+        $httpClient->addResponse(new Response(200, [], json_encode(['key' => $accessToken], JSON_THROW_ON_ERROR)));
 
         $auth = new Basic($username, $password, $remember, $totpToken, $httpClient);
         $auth->refreshToken();

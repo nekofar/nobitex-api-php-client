@@ -91,6 +91,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws \JsonException
      */
     public function testGetMarketOrders(): void
     {
@@ -112,7 +113,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -129,6 +130,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetMarketOrdersFailure(): void
     {
@@ -149,7 +151,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -168,6 +170,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws \JsonException
      */
     public function testGetMarketTrades(): void
     {
@@ -189,7 +192,7 @@ class ClientTest extends TestCase
             'status' => 'ok',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -205,6 +208,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetMarketTradesFailure(): void
     {
@@ -228,7 +232,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -280,6 +284,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetMarketStats(): void
     {
@@ -304,7 +309,7 @@ class ClientTest extends TestCase
                 ]
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -318,6 +323,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetMarketStatsFailure(): void
     {
@@ -341,7 +347,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -394,6 +400,7 @@ class ClientTest extends TestCase
     /**
      * @throws \Http\Client\Exception
      * @throws JsonMapper_Exception
+     * @throws \JsonException
      */
     public function testGetUserProfile(): void
     {
@@ -470,7 +477,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -485,6 +492,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserProfileFailure(): void
     {
@@ -505,7 +513,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -523,6 +531,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserLoginAttempts(): void
     {
@@ -539,7 +548,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -551,6 +560,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserLoginAttemptsFailure(): void
     {
@@ -571,7 +581,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -590,6 +600,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserReferralCode(): void
     {
@@ -601,7 +612,7 @@ class ClientTest extends TestCase
             'referralFeeTotal' => 0,
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -613,6 +624,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserReferralCodeFailure(): void
     {
@@ -633,7 +645,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -652,12 +664,13 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testAddUserCard(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'])));
+        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'], JSON_THROW_ON_ERROR)));
         $status = $client->addUserCard([
             "number" => "5041721011111111",
             "bank" => "Resalat"
@@ -669,6 +682,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testAddUserCardFailure(): void
     {
@@ -698,7 +712,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -745,12 +759,13 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testAddUserAccount(): void
     {
         $client = new Client(self::$httpClient, new JsonMapper());
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'])));
+        self::$mockClient->addResponse(new Response(200, [], json_encode(['status' => 'ok'], JSON_THROW_ON_ERROR)));
         $status = $client->addUserAccount([
             "number" => "5041721011111111",
             "bank" => "Resalat",
@@ -763,6 +778,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testAddUserAccountFailure(): void
     {
@@ -794,7 +810,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -857,6 +873,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserLimitations(): void
     {
@@ -900,7 +917,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -912,6 +929,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserLimitationsFailure(): void
     {
@@ -932,7 +950,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -951,6 +969,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWallets(): void
     {
@@ -972,7 +991,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -985,6 +1004,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletsFailure(): void
     {
@@ -1005,7 +1025,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1023,6 +1043,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletBalance(): void
     {
@@ -1031,7 +1052,7 @@ class ClientTest extends TestCase
             'status' => 'ok',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1042,6 +1063,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletBalanceFailure(): void
     {
@@ -1062,7 +1084,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1092,6 +1114,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletTransactions(): void
     {
@@ -1110,7 +1133,7 @@ class ClientTest extends TestCase
             'status' => 'ok',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1122,6 +1145,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletTransactionsFailure(): void
     {
@@ -1142,7 +1166,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1173,6 +1197,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletDeposits(): void
     {
@@ -1218,7 +1243,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1231,6 +1256,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletDepositsFailure(): void
     {
@@ -1251,7 +1277,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1282,6 +1308,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletWithdraws(): void
     {
@@ -1327,7 +1354,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1340,6 +1367,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletWithdrawsFailure(): void
     {
@@ -1360,7 +1388,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1390,6 +1418,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletAddress(): void
     {
@@ -1398,7 +1427,7 @@ class ClientTest extends TestCase
             'address' => 'rwRmyGRoJkHKtojaC8SH2wxsnB2q3yNopB',
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1410,6 +1439,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetUserWalletAddressFailure(): void
     {
@@ -1433,7 +1463,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1459,6 +1489,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testAddMarketOrder(): void
     {
@@ -1484,7 +1515,7 @@ class ClientTest extends TestCase
                 ],
         ];
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1503,6 +1534,7 @@ class ClientTest extends TestCase
     /**
      *
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testAddMarketOrderFailure(): void
     {
@@ -1538,7 +1570,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1645,6 +1677,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetMarketOrder(): void
     {
@@ -1670,7 +1703,7 @@ class ClientTest extends TestCase
                 ),
         );
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1683,6 +1716,7 @@ class ClientTest extends TestCase
     /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testGetMarketOrderFailure(): void
     {
@@ -1703,7 +1737,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
@@ -1732,6 +1766,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testSetMarketOrderStatus(): void
     {
@@ -1740,7 +1775,7 @@ class ClientTest extends TestCase
             'updatedStatus' => 'Canceled',
         );
 
-        self::$mockClient->addResponse(new Response(200, [], json_encode($json)));
+        self::$mockClient->addResponse(new Response(200, [], json_encode($json, JSON_THROW_ON_ERROR)));
 
         $client = new Client(self::$httpClient, new JsonMapper());
 
@@ -1749,6 +1784,7 @@ class ClientTest extends TestCase
 
     /**
      * @throws \Http\Client\Exception
+     * @throws \JsonException
      */
     public function testSetMarketOrderStatusFailure(): void
     {
@@ -1769,7 +1805,7 @@ class ClientTest extends TestCase
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
-        ])));
+        ], JSON_THROW_ON_ERROR)));
         $this->assertThrows(
             Exception::class,
             function () use ($client): void {
