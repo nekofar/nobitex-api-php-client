@@ -15,13 +15,13 @@ This wrapper relies on HTTPlug, which defines how HTTP message should be sent an
 You can use any library to send HTTP messages that implements [php-http/client-implementation][5].
 
 ```bash
-composer require nekofar/nobitex:^1.0@dev
+composer require nekofar/nobitex:^2.0
 ```
 
 To install with cURL you may run the following command:
 
 ```bash
-composer require nekofar/nobitex:^1.0@dev php-http/curl-client:^1.0
+composer require nekofar/nobitex:^2.0 php-http/curl-client:^2.0
 ```
 
 ## Usage
