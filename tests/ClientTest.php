@@ -546,8 +546,21 @@ class ClientTest extends TestCase
         $client = new Client(self::$httpClient, new JsonMapper());
 
         $attempts = $client->getUserLoginAttempts();
-
         self::assertIsArray($attempts);
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserLoginAttemptsUnauthorized(): void
+    {
+        $this->expectException(ClientErrorException::class);
+        $this->expectErrorMessage('Unauthorized');
+
+        self::$mockClient->addResponse(new Response(401));
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+        $client->getUserLoginAttempts();
     }
 
     /**
@@ -557,37 +570,29 @@ class ClientTest extends TestCase
      */
     public function testGetUserLoginAttemptsFailure(): void
     {
-        $client = new Client(self::$httpClient, new JsonMapper());
-
-        self::$mockClient->addResponse(new Response(401));
-        $this->assertThrows(
-            ClientErrorException::class,
-            function () use ($client): void {
-                $client->getUserLoginAttempts();
-            },
-            function ($exception): void {
-                /** @var Exception $exception */
-                self::assertEquals('Unauthorized', $exception->getMessage());
-            }
-        );
+        $this->expectException(PayloadException::class);
+        $this->expectErrorMessage('Validation Failed');
 
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ], JSON_THROW_ON_ERROR)));
-        $this->assertThrows(
-            Exception::class,
-            function () use ($client): void {
-                $client->getUserLoginAttempts();
-            },
-            function ($exception): void {
-                /** @var Exception $exception */
-                self::assertEquals('Validation Failed', $exception->getMessage());
-            }
-        );
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+        $client->getUserLoginAttempts();
+    }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserLoginAttemptsNoContents(): void
+    {
+        $this->expectException(RuntimeException::class);
 
         self::$mockClient->addResponse(new Response(200));
-        self::assertFalse($client->getUserLoginAttempts());
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+        $client->getUserLoginAttempts();
     }
 
     /**
