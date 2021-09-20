@@ -16,35 +16,8 @@ use Nekofar\Nobitex\Model\Profile;
 /**
  * @JMS\ExclusionPolicy("all")
  */
-class UserProfilePayload implements PayloadInterface
+class UserProfilePayload extends AbstractPayload
 {
-    /**
-     * @var string|null
-     *
-     * @JMS\Expose()
-     *
-     * @JMS\Type("string")
-     */
-    public $status;
-
-    /**
-     * @var string|null
-     *
-     * @JMS\Expose()
-     *
-     * @JMS\Type("string")
-     */
-    public $code;
-
-    /**
-     * @var string|null
-     *
-     * @JMS\Expose()
-     *
-     * @JMS\Type("string")
-     */
-    public $message;
-
     /**
      * @var \Nekofar\Nobitex\Model\Profile|null
      *
@@ -53,27 +26,6 @@ class UserProfilePayload implements PayloadInterface
      * @JMS\Type("Nekofar\Nobitex\Model\Profile")
      */
     public $profile;
-
-    /**
-     */
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    /**
-     */
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    /**
-     */
-    public function getMessage(): ?string
-    {
-        return $this->message;
-    }
 
     /**
      */
