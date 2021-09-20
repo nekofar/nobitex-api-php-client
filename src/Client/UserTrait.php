@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace Nekofar\Nobitex\Client;
 
-use Exception;
 use InvalidArgumentException;
 use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Payload\PayloadException;
+use Nekofar\Nobitex\Payload\UserLoginAttemptsPayload;
 use Nekofar\Nobitex\Payload\UserProfilePayload;
 
 /**
@@ -59,25 +59,26 @@ trait UserTrait
     /**
      * Return an array on success or false on unexpected errors.
      *
-     * @return array<string,string|array>|false
+     * @return array<array<string,string>>|null
      *
      * @throws \Http\Client\Exception
      * @throws \Exception
      */
-    public function getUserLoginAttempts()
+    public function getUserLoginAttempts(): ?array
     {
-        $resp = $this->httpClient->post('/users/login-attempts');
-        $json = json_decode((string) $resp->getBody());
+        $response = $this->httpClient->post('/users/login-attempts');
 
-        if (isset($json->message) && 'failed' === $json->status) {
-            throw new Exception($json->message);
+        $payload = $this->serializer->deserialize(
+            (string) $response->getBody(),
+            UserLoginAttemptsPayload::class,
+            'json',
+        );
+
+        if ('ok' === $payload->getStatus()) {
+            return $payload->getAttempts();
         }
 
-        if (isset($json->attempts) && 'ok' === $json->status) {
-            return (array) $json->attempts;
-        }
-
-        return false;
+        throw new PayloadException($payload->getMessage() ?? '');
     }
 
     /**
@@ -92,7 +93,7 @@ trait UserTrait
         $json = json_decode((string) $resp->getBody());
 
         if (isset($json->message) && 'failed' === $json->status) {
-            throw new Exception($json->message);
+            throw new PayloadException($json->message);
         }
 
         if (isset($json->referralCode) && 'ok' === $json->status) {
@@ -130,7 +131,7 @@ trait UserTrait
         $json = json_decode((string) $resp->getBody());
 
         if (isset($json->message) && 'failed' === $json->status) {
-            throw new Exception($json->message);
+            throw new PayloadException($json->message);
         }
 
         return isset($json->status) && 'ok' === $json->status;
@@ -171,7 +172,7 @@ trait UserTrait
         $json = json_decode((string) $resp->getBody());
 
         if (isset($json->message) && 'failed' === $json->status) {
-            throw new Exception($json->message);
+            throw new PayloadException($json->message);
         }
 
         return isset($json->status) && 'ok' === $json->status;
@@ -191,7 +192,7 @@ trait UserTrait
         $json = json_decode((string) $resp->getBody());
 
         if (isset($json->message) && 'failed' === $json->status) {
-            throw new Exception($json->message);
+            throw new PayloadException($json->message);
         }
 
         if (isset($json->limitations) && 'ok' === $json->status) {
