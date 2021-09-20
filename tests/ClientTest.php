@@ -18,17 +18,18 @@ use Http\Client\Common\PluginClient;
 use Http\Discovery\MessageFactoryDiscovery;
 use InvalidArgumentException;
 use Jchook\AssertThrows\AssertThrows;
+use JMS\Serializer\Exception\RuntimeException;
 use JsonMapper;
 use JsonMapper_Exception;
 use Nekofar\Nobitex\Model\Account;
 use Nekofar\Nobitex\Model\Card;
 use Nekofar\Nobitex\Model\Deposit;
 use Nekofar\Nobitex\Model\Order;
-use Nekofar\Nobitex\Model\Profile;
 use Nekofar\Nobitex\Model\Trade;
 use Nekofar\Nobitex\Model\Transaction;
 use Nekofar\Nobitex\Model\Wallet;
 use Nekofar\Nobitex\Model\Withdraw;
+use Nekofar\Nobitex\Payload\PayloadException;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -475,43 +476,50 @@ class ClientTest extends TestCase
     }
 
     /**
+     * @throws \Http\Client\Exception
+     * @throws JsonMapper_Exception
+     */
+    public function testGetUserProfileUnauthorized(): void
+    {
+        $this->expectException(ClientErrorException::class);
+        $this->expectErrorMessage('Unauthorized');
+
+        $client = new Client(self::$httpClient, new JsonMapper());
+
+        self::$mockClient->addResponse(new Response(401));
+        $client->getUserProfile();
+    }
+  /**
      * @throws JsonMapper_Exception
      * @throws \Http\Client\Exception
      * @throws \JsonException
      */
     public function testGetUserProfileFailure(): void
     {
-        $client = new Client(self::$httpClient, new JsonMapper());
+        $this->expectException(PayloadException::class);
+        $this->expectErrorMessage('Validation Failed');
 
-        self::$mockClient->addResponse(new Response(401));
-        $this->assertThrows(
-            ClientErrorException::class,
-            function () use ($client): void {
-                $client->getUserProfile();
-            },
-            function ($exception): void {
-                /** @var Exception $exception */
-                self::assertEquals('Unauthorized', $exception->getMessage());
-            }
-        );
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(200, [], json_encode([
             'status' => 'failed',
             'message' => 'Validation Failed'
         ], JSON_THROW_ON_ERROR)));
-        $this->assertThrows(
-            Exception::class,
-            function () use ($client): void {
-                $client->getUserProfile();
-            },
-            function ($exception): void {
-                /** @var Exception $exception */
-                self::assertEquals('Validation Failed', $exception->getMessage());
-            }
-        );
+        $client->getUserProfile();
+    }
+
+    /**
+     * @throws JsonMapper_Exception
+     * @throws \Http\Client\Exception
+     */
+    public function testGetUserProfileNoContent():void
+    {
+        $this->expectException(RuntimeException::class);
+
+        $client = new Client(self::$httpClient, new JsonMapper());
 
         self::$mockClient->addResponse(new Response(200));
-        self::assertFalse($client->getUserProfile());
+        $client->getUserProfile();
     }
 
     /**
