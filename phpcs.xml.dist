@@ -52,4 +52,10 @@
             <property name="enableNativeTypeHint" value="false" />
         </properties>
     </rule>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <properties>
+            <property name="enableUnionTypeHint" value="false" />
+        </properties>
+    </rule>
 </ruleset>
