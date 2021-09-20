@@ -13,6 +13,8 @@ namespace Nekofar\Nobitex\Client;
 use Exception;
 use InvalidArgumentException;
 use Nekofar\Nobitex\Model\Profile;
+use Nekofar\Nobitex\Payload\PayloadException;
+use Nekofar\Nobitex\Payload\UserProfilePayload;
 
 /**
  * Trait User
@@ -33,31 +35,25 @@ trait UserTrait
     /**
      * Return a Profile object on success or false on unexpected errors
      *
-     * @return \Nekofar\Nobitex\Model\Profile|false
-     *
      * @throws \Http\Client\Exception
      * @throws \JsonMapper_Exception
      * @throws \Exception
      */
-    public function getUserProfile()
+    public function getUserProfile(): ?Profile
     {
-        $resp = $this->httpClient->post('/users/profile');
-        $json = json_decode((string) $resp->getBody());
+        $response = $this->httpClient->post('/users/profile');
 
-        if (isset($json->message) && 'failed' === $json->status) {
-            throw new Exception($json->message);
+        $payload = $this->serializer->deserialize(
+            (string) $response->getBody(),
+            UserProfilePayload::class,
+            'json',
+        );
+
+        if ('ok' === $payload->getStatus()) {
+            return $payload->getProfile();
         }
 
-        if (isset($json->profile) && 'ok' === $json->status) {
-            $this->jsonMapper->undefinedPropertyHandler = [
-                Profile::class,
-                'setUndefinedProperty',
-            ];
-
-            return $this->jsonMapper->map($json->profile, new Profile());
-        }
-
-        return false;
+        throw new PayloadException($payload->getMessage() ?? '');
     }
 
     /**

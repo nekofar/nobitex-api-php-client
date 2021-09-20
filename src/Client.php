@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Nekofar\Nobitex;
 
 use Http\Client\Common\HttpMethodsClient;
+use JMS\Serializer\SerializerBuilder;
 use JsonMapper;
 
 /**
@@ -35,12 +36,19 @@ class Client
     private $jsonMapper;
 
     /**
+     * @var \JMS\Serializer\SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * Client constructor.
      */
     public function __construct(HttpMethodsClient $http, JsonMapper $mapper)
     {
         $this->httpClient = $http;
         $this->jsonMapper = $mapper;
+
+        $this->serializer = SerializerBuilder::create()->build();
     }
 
     /**
