@@ -34,6 +34,15 @@ class UserProfilePayload implements PayloadInterface
      *
      * @JMS\Type("string")
      */
+    public $code;
+
+    /**
+     * @var string|null
+     *
+     * @JMS\Expose()
+     *
+     * @JMS\Type("string")
+     */
     public $message;
 
     /**
@@ -54,9 +63,9 @@ class UserProfilePayload implements PayloadInterface
 
     /**
      */
-    public function getProfile(): ?Profile
+    public function getCode(): ?string
     {
-        return $this->profile;
+        return $this->code;
     }
 
     /**
@@ -64,5 +73,12 @@ class UserProfilePayload implements PayloadInterface
     public function getMessage(): ?string
     {
         return $this->message;
+    }
+
+    /**
+     */
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
     }
 }
