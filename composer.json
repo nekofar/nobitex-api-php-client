@@ -32,6 +32,7 @@
     "guzzlehttp/psr7": "^2.0",
     "jchook/phpunit-assert-throws": "^1.0",
     "nekofar/dev-tools": "^1.1",
+    "nekofar/pest-plugin-mock-client": "^1.0@alpha",
     "pestphp/pest": "^1.18",
     "php-http/curl-client": "^2.0",
     "php-http/mock-client": "^1.0",
