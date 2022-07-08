@@ -61,13 +61,13 @@
   "prefer-stable": true,
   "scripts": {
     "lint": "@scan",
-    "pest": "./vendor/bin/pest",
-    "phpcbf": "./vendor/bin/phpcbf",
-    "phpcs": "./vendor/bin/phpcs",
-    "phpmd": "./vendor/bin/phpmd src ansi phpmd.xml.dist",
-    "phpstan": "./vendor/bin/phpstan analyse --no-progress --ansi --memory-limit 256M",
-    "phpunit": "./vendor/bin/phpunit",
-    "psalm": "./vendor/bin/psalm --no-progress --stats --show-info=true --show-snippet",
+    "pest": "pest",
+    "phpcbf": "phpcbf",
+    "phpcs": "phpcs",
+    "phpmd": "phpmd src ansi phpmd.xml.dist",
+    "phpstan": "phpstan analyse --no-progress --ansi --memory-limit 256M",
+    "phpunit": "phpunit",
+    "psalm": "psalm --no-progress --stats --show-info=true --show-snippet",
     "scan": [
       "@phpcs",
       "@phpstan"
