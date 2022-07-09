@@ -40,7 +40,14 @@
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true,
+      "infection/extension-installer": true,
+      "phpstan/extension-installer": true,
+      "composer/installers": true
+    }
   },
   "extra": {
     "branch-alias": {
